@@ -1,0 +1,20 @@
+{
+  "name": "trnznd-landing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TRNZND — scroll-driven cinematic product landing page for the ZEND currency-neutral stablecoin.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:portable": "vite build --base=./",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

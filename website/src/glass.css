@@ -1,0 +1,77 @@
+/* =========================================================================
+   TRNZND — glass panels, buttons, chips
+   Used sparingly for a premium, uncluttered feel (per brand kit + skill).
+   ========================================================================= */
+
+.glass {
+  position: relative;
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.46);
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  backdrop-filter: blur(22px) saturate(1.18);
+  -webkit-backdrop-filter: blur(22px) saturate(1.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    transparent 38%,
+    rgba(var(--accent-rgb), 0.05)
+  );
+  pointer-events: none;
+}
+
+.glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Buttons ---------- */
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1;
+  padding: 0.9rem 1.5rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.2s ease;
+  will-change: transform;
+}
+.glass-btn:hover { transform: translateY(-2px); }
+.glass-btn:active { transform: translateY(0); }
+
+.glass-btn--primary {
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent) 70%, #ffffff 20%)
+  );
+  color: var(--bg);
+  box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.28);
+}
+.glass-btn--primary:hover {
+  box-shadow: 0 14px 40px rgba(var(--accent-rgb), 0.42);
+}
+
+.glass-btn--ghost {
+  background: rgba(17, 24, 39, 0.3);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.glass-btn--ghost:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+  border-color: var(--accent);
+}

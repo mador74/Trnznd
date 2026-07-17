@@ -96,6 +96,22 @@ window.__bgv.duration     // video length in seconds
 window.__ST.refresh()     // recompute ScrollTrigger positions
 ```
 
+## Publishing (GitHub Pages — live link)
+
+The built site is committed to the repo-root **`docs/`** folder and served via
+GitHub Pages "Deploy from a branch". To (re)publish after changes:
+
+```bash
+cd website
+npm run build
+rm -rf ../docs && mkdir -p ../docs && cp -r dist/* ../docs/ && touch ../docs/.nojekyll
+git add ../docs && git commit -m "Update published site" && git push
+```
+
+One-time repo setting: **Settings → Pages → Build and deployment → Source:
+"Deploy from a branch" → Branch: `claude/brand-kit-landing-page-hfnxg8`, folder
+`/docs` → Save.** The site then goes live at `https://<user>.github.io/<repo>/`.
+
 ## Notes
 
 - No real logos, third-party marks, or baked-in text appear in the media.

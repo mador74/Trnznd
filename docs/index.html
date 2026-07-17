@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TRNZND — currency-neutral settlement. ZEND is a stablecoin backed by a multi-currency blended reserve. Purpose Beyond Payment."
+    />
+    <title>TRNZND — Purpose Beyond Payment</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="./assets/index-C-yfy6W8.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CAH-l0ni.css">
+  </head>
+  <body>
+    <!-- Preloader -->
+    <div class="preloader">
+      <div class="preloader__word">trnznd</div>
+    </div>
+
+    <!-- Fixed cinematic background layers -->
+    <video
+      id="bgv"
+      class="bg-video"
+      muted
+      playsinline
+      preload="auto"
+      poster="./img/mobile-poster.png"
+    >
+      <source src="./bg.mp4" type="video/mp4" />
+    </video>
+    <div class="bg-tint" aria-hidden="true"></div>
+    <img class="mobile-poster" src="./img/mobile-poster.png" alt="" aria-hidden="true" />
+    <div class="motion-glow" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav">
+      <a href="#home" class="nav__logo" data-scroll>trnznd</a>
+      <nav class="nav__links">
+        <a href="#reserve" data-scroll>Reserve</a>
+        <a href="#settle" data-scroll>Settlement</a>
+        <a href="#design" data-scroll>Design</a>
+        <a href="#workflow" data-scroll>Institutions</a>
+        <a href="#specs" data-scroll>Specs</a>
+      </nav>
+      <a href="#buy" class="glass-btn glass-btn--primary nav__cta" data-scroll>Register</a>
+    </header>
+
+    <main id="page">
+      <!-- 1 · HERO -->
+      <section id="home" class="hero section">
+        <div class="hero__inner">
+          <p class="overline" data-reveal>Currency-Neutral Settlement</p>
+          <h1 class="hero__title" data-reveal>Purpose<br />Beyond Payment</h1>
+          <p class="hero__lead" data-reveal>
+            ZEND is a currency-neutral stablecoin backed by a multi-currency blended
+            reserve — sovereign-grade stability engineered for cross-border trade.
+          </p>
+          <div class="hero__cta" data-reveal>
+            <a href="#buy" class="glass-btn glass-btn--primary" data-scroll>Register for Access</a>
+            <a href="#buy" class="glass-btn glass-btn--ghost" data-scroll>Speak to the Team</a>
+          </div>
+          <div class="hero__chip mono" data-reveal>
+            <span class="dot"></span> ZEND · Multi-Currency Reserve
+          </div>
+        </div>
+        <div class="hero__scroll mono" aria-hidden="true">Scroll</div>
+      </section>
+
+      <!-- 2 · IMPACT STATEMENT (pinned reveal) -->
+      <section id="impact" class="impact section--flush">
+        <div class="impact__pin">
+          <p class="overline overline--center">The Promise</p>
+          <h2 class="impact__head">
+            <span class="word">Value</span> <span class="word">that</span>
+            <span class="word">stays</span> <span class="word">value.</span>
+            <span class="word">In</span> <span class="word">every</span>
+            <span class="word">currency.</span> <span class="word">Across</span>
+            <span class="word">every</span> <span class="word">border.</span>
+          </h2>
+          <p class="impact__sub">
+            No importing risk in a currency you neither need nor want. Just stable,
+            borderless value that settles the moment you do.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3 · KEY FEATURE 1 · The reserve -->
+      <section id="reserve" class="section feature">
+        <div class="feature__grid">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>01 — Stability</p>
+            <h2 class="feature__title" data-reveal>A reserve, not a peg.</h2>
+            <p class="body" data-reveal>
+              ZEND is backed by a deeply researched, multi-currency blended reserve of
+              fiat currencies. No single-currency dependency — stability is diversified
+              by construction, not anchored to one economy's monetary policy.
+            </p>
+            <div class="stat-row" data-reveal>
+              <div class="stat glass">
+                <div class="stat__value mono">−70%</div>
+                <div class="stat__label">volatility vs. single-currency exposure</div>
+              </div>
+              <div class="stat glass">
+                <div class="stat__value mono">∞</div>
+                <div class="stat__label">stable from any currency's perspective</div>
+              </div>
+            </div>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax>
+            <img src="./img/hero-reference.png" alt="The ZEND artifact — an open ring machined in brushed metal with a teal light channel" />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 4 · KEY FEATURE 2 · Settlement -->
+      <section id="settle" class="section feature">
+        <div class="feature__grid feature__grid--reverse">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>02 — Efficiency</p>
+            <h2 class="feature__title" data-reveal>Settle in seconds.<br />Cost in pennies.</h2>
+            <p class="body" data-reveal>
+              Value moves in seconds, not correspondent-banking days — with transaction
+              costs reduced from dollars to pennies. No forced single-fiat intermediation,
+              no FX conversion chains eating your margin.
+            </p>
+            <div class="stat-row" data-reveal>
+              <div class="stat glass">
+                <div class="stat__value mono">~sec</div>
+                <div class="stat__label">cross-border settlement</div>
+              </div>
+              <div class="stat glass">
+                <div class="stat__value mono">¢</div>
+                <div class="stat__label">not dollars, per transaction</div>
+              </div>
+            </div>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax>
+            <img src="./img/workspace-reference.png" alt="The ZEND artifact on a treasury desk in a global trading environment" />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 5 · DESIGN & MATERIALS -->
+      <section id="design" class="section design">
+        <div class="design__inner">
+          <div class="design__head">
+            <p class="overline" data-reveal>Design &amp; Materials</p>
+            <h2 class="feature__title" data-reveal>Engineered like an instrument.</h2>
+            <p class="body" data-reveal>
+              Brushed gunmetal titanium. Frosted dark glass. A single recessed channel of
+              teal light, drawn in one deliberate stroke. The form mirrors the system:
+              precise, transparent, unshakeable — a closed loop of value that never has
+              to break.
+            </p>
+            <ul class="material-list" data-reveal>
+              <li><span class="mono">01</span> Brushed gunmetal — solidity &amp; precision</li>
+              <li><span class="mono">02</span> Frosted glass — transparency by design</li>
+              <li><span class="mono">03</span> Teal light channel — value in motion</li>
+            </ul>
+          </div>
+          <figure class="design__media glass" data-reveal data-parallax>
+            <img src="./img/material-reference.png" alt="Macro detail of the ZEND artifact — brushed metal meeting a teal-lit glass channel" />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 6 · MADE FOR THE AUDIENCE (pinned gallery) -->
+      <section id="workflow" class="workflow section--flush">
+        <div class="workflow__pin">
+          <p class="overline overline--center">Built for Institutions</p>
+          <div id="workflow-track" class="workflow__track">
+            <article class="workflow-card glass">
+              <div class="workflow-card__num mono">01</div>
+              <h3 class="workflow-card__title">Cross-border traders</h3>
+              <p class="workflow-card__body">
+                Settle invoices and transfers without importing FX risk from a currency
+                you neither need nor want. Protect your margin at the point of settlement.
+              </p>
+            </article>
+            <article class="workflow-card glass">
+              <div class="workflow-card__num mono">02</div>
+              <h3 class="workflow-card__title">Treasury &amp; finance teams</h3>
+              <p class="workflow-card__body">
+                Manage multi-currency exposure against a stable, diversified base —
+                measured from any currency, not just the dollar's perspective.
+              </p>
+            </article>
+            <article class="workflow-card glass">
+              <div class="workflow-card__num mono">03</div>
+              <h3 class="workflow-card__title">Institutions &amp; PSPs</h3>
+              <p class="workflow-card__body">
+                Currency-neutral settlement rails with regulated infrastructure and
+                deeply researched reserve transparency built in.
+              </p>
+            </article>
+            <article class="workflow-card glass">
+              <div class="workflow-card__num mono">04</div>
+              <h3 class="workflow-card__title">Institutional portfolios</h3>
+              <p class="workflow-card__body">
+                A low-volatility digital settlement asset — sovereign-grade stability
+                without holding any single sovereign's currency.
+              </p>
+            </article>
+          </div>
+          <p class="workflow__hint mono" aria-hidden="true">Scroll to explore →</p>
+        </div>
+      </section>
+
+      <!-- 7 · SPECS -->
+      <section id="specs" class="section specs">
+        <div class="specs__inner">
+          <div class="specs__head">
+            <p class="overline" data-reveal>Specs &amp; Performance</p>
+            <h2 class="feature__title" data-reveal>The numbers behind the stability.</h2>
+          </div>
+          <div class="specs__table" data-reveal>
+            <div class="spec-row">
+              <div class="spec__label">Token</div>
+              <div class="spec__value mono">ZEND</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Reserve design</div>
+              <div class="spec__value mono">Multi-currency fiat blend</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Volatility reduction</div>
+              <div class="spec__value mono">up to 70%</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Settlement time</div>
+              <div class="spec__value mono">Seconds</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Transaction cost</div>
+              <div class="spec__value mono">Pennies</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Stability reference</div>
+              <div class="spec__value mono">Any currency</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Infrastructure</div>
+              <div class="spec__value mono">Regulated · Transparent</div>
+            </div>
+            <div class="spec-row">
+              <div class="spec__label">Purpose</div>
+              <div class="spec__value mono">Reserve yield → social impact</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 · PRE-ORDER / REGISTER CTA -->
+      <section id="buy" class="section buy">
+        <div class="buy__card glass" data-reveal>
+          <p class="overline overline--center">Institutional Access</p>
+          <h2 class="buy__title">Register for early access.</h2>
+          <div class="buy__amount mono">By invitation</div>
+          <ul class="buy__list">
+            <li>Priority onboarding for the early institutional cohort</li>
+            <li>Direct settlement desk &amp; integration support</li>
+            <li>Reserve transparency &amp; stability reporting</li>
+          </ul>
+          <div class="buy__cta">
+            <a href="mailto:cs@trnznd.io?subject=ZEND%20Access" class="glass-btn glass-btn--primary">Register for Access</a>
+            <a href="mailto:cs@trnznd.io?subject=Speak%20to%20the%20Team" class="glass-btn glass-btn--ghost">Speak to the Team</a>
+          </div>
+          <p class="buy__fine mono">Currency Neutral Settlement Driving Social Impact</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- 9 · FOOTER -->
+    <footer class="footer">
+      <div class="footer__big">trnznd</div>
+      <p class="footer__tag">Purpose Beyond Payment</p>
+      <div class="footer__row">
+        <span class="mono">trnznd.io</span>
+        <nav class="footer__links">
+          <a href="#home" data-scroll>Top</a>
+          <a href="mailto:cs@trnznd.io">Contact</a>
+          <a href="#specs" data-scroll>Specs</a>
+        </nav>
+      </div>
+      <p class="footer__legal mono">© 2026 TRNZND · Currency Neutral Settlement Driving Social Impact</p>
+    </footer>
+
+  </body>
+</html>

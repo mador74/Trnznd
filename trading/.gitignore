@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Project data / artifacts (do not commit datasets, models, secrets)
+data/
+artifacts/
+*.parquet
+*.pkl
+*.joblib
+
+# Secrets — NEVER commit exchange API keys
+.env
+secrets.yaml
+*.key

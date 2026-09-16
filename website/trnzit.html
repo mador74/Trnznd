@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Trnzit — non-custodial multi-sig treasury for corporates. Create wallets your company controls across EVM and Solana, assign user authorities, whitelist counterparties, and audit every transaction. By TRNZND — Purpose Beyond Payment."
+    />
+    <title>Trnzit — Non-Custodial Corporate Treasury by TRNZND</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Preloader -->
+    <div class="preloader">
+      <div class="preloader__word">trnzit</div>
+    </div>
+
+    <!-- Product-led background (no scrubbed video) -->
+    <div class="bg-field" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="motion-glow" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="nav">
+      <a href="#home" class="brandlock" data-scroll>
+        <span class="nav__logo">trnznd</span>
+        <span class="brandlock__tag">Trnzit</span>
+      </a>
+      <nav class="nav__links">
+        <a href="#platform" data-scroll>Platform</a>
+        <a href="#control" data-scroll>Control</a>
+        <a href="#roles" data-scroll>Roles</a>
+        <a href="#audit" data-scroll>Audit</a>
+        <a href="#zend" data-scroll>ZEND</a>
+      </nav>
+      <a href="#access" class="glass-btn glass-btn--primary nav__cta" data-scroll>Register</a>
+    </header>
+
+    <main id="page">
+      <!-- 1 · HERO -->
+      <section id="home" class="hero--split section--flush">
+        <div class="hero__inner">
+          <p class="overline" data-reveal>Corporate Treasury · Non-Custodial</p>
+          <h1 class="hero__title" data-reveal>
+            Your keys.<br />Your treasury.<br />Your control.
+          </h1>
+          <p class="hero__lead" data-reveal>
+            Trnzit is a non-custodial platform for corporate treasury teams. Create
+            multi-sig wallets your company fully controls across EVM and Solana —
+            assign user authorities, whitelist counterparties, and audit every
+            transaction. No one holds your keys but you.
+          </p>
+          <div class="hero__cta" data-reveal>
+            <a href="#access" class="glass-btn glass-btn--primary" data-scroll>Register for Access</a>
+            <a href="#access" class="glass-btn glass-btn--ghost" data-scroll>Speak to the Team</a>
+          </div>
+          <div class="hero__trust" data-reveal>
+            <span><span class="tick">✓</span> Non-custodial by design</span>
+            <span><span class="tick">✓</span> EVM &amp; Solana</span>
+            <span><span class="tick">✓</span> Multi-sig control</span>
+          </div>
+        </div>
+
+        <!-- Product UI mockup: treasury wallet + live approval -->
+        <div class="hero__media" data-reveal data-parallax>
+          <div class="ui glass">
+            <div class="ui__bar">
+              <span class="ui__dots"><i></i><i></i><i></i></span>
+              <span class="ui__title">Treasury · Operating Wallet</span>
+              <span class="ui__badge"><span class="live"></span> Live</span>
+            </div>
+            <div class="ui__body">
+              <div class="ui__wallet">
+                <div>
+                  <div class="ui__wallet-name">Operating Wallet — EVM</div>
+                  <div class="ui__wallet-addr">0x7f3a…8b2c</div>
+                </div>
+                <div class="ui__wallet-bal">
+                  <b data-countup data-to="2418500" data-prefix="$" data-mono>$0</b>
+                  <span>3-of-5 policy</span>
+                </div>
+              </div>
+
+              <div class="ui__rows" style="margin-bottom: 0.9rem;">
+                <div class="ui__row">
+                  <span class="coin coin--usdt">₮</span>
+                  <span>USDT <span class="chain-tag">Ethereum</span></span>
+                  <span class="amt">1,204,900</span>
+                </div>
+                <div class="ui__row">
+                  <span class="coin coin--usdc">$</span>
+                  <span>USDC <span class="chain-tag">Base</span></span>
+                  <span class="amt">908,600</span>
+                </div>
+                <div class="ui__row">
+                  <span class="coin coin--zend">Z</span>
+                  <span>ZEND <span class="chain-tag">EVM · SOL</span></span>
+                  <span class="amt">305,000</span>
+                </div>
+              </div>
+
+              <div class="approval">
+                <div class="approval__top">
+                  <span class="approval__desc">Pay supplier — Whitelisted</span>
+                  <span class="approval__amt">250,000 USDC</span>
+                </div>
+                <div class="sig">
+                  <span class="sig__pips"><i class="on"></i><i class="on"></i><i></i></span>
+                  <span class="sig__label">2 of 3 signatures</span>
+                  <span class="approval__meta">· to 0x9c1d…4af0</span>
+                </div>
+                <button class="approval__btn" type="button" aria-hidden="true">Approve</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero__scroll mono" aria-hidden="true">Scroll</div>
+      </section>
+
+      <!-- 2 · THE PROBLEM -->
+      <section id="problem" class="section">
+        <div class="head-block">
+          <p class="overline overline--center" data-reveal>Why Trnzit</p>
+          <h2 class="feature__title" data-reveal>Digital-asset operations shouldn't mean giving up control.</h2>
+          <p class="body" data-reveal>
+            Most corporate teams face a false choice: hand assets to a custodian, or
+            share a private key across a spreadsheet of people. Trnzit removes the
+            trade-off — self-custody with the controls a finance team actually needs.
+          </p>
+        </div>
+        <div class="pillars">
+          <article class="pillar glass" data-reveal>
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <h3 class="pillar__title">Custodial risk</h3>
+            <p class="pillar__body">
+              Third-party custody means counterparty exposure and someone else's
+              controls over your money. Trnzit is non-custodial — assets never leave
+              wallets you own.
+            </p>
+          </article>
+          <article class="pillar glass" data-reveal>
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+            </div>
+            <h3 class="pillar__title">Shared keys</h3>
+            <p class="pillar__body">
+              A single key passed between staff is a single point of failure. Multi-sig
+              policies mean no one person can move funds alone — approvals are enforced
+              on-chain.
+            </p>
+          </article>
+          <article class="pillar glass" data-reveal>
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+            </div>
+            <h3 class="pillar__title">No audit trail</h3>
+            <p class="pillar__body">
+              Finance needs a defensible record. Every transaction, approval, and
+              policy change in Trnzit is captured in a complete, exportable history.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3 · PLATFORM · Non-custodial multi-sig -->
+      <section id="platform" class="section feature">
+        <div class="feature__grid">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>01 — The Platform</p>
+            <h2 class="feature__title" data-reveal>Non-custodial multi-sig, built for treasury.</h2>
+            <p class="body" data-reveal>
+              Spin up wallets your company controls on EVM chains and Solana. Set the
+              signing policy — 2-of-3, 3-of-5, whatever your controls require — and
+              Trnzit enforces it at the protocol level. You manage the treasury; users
+              never get direct, unilateral access to the wallet.
+            </p>
+            <div class="stat-row" data-reveal>
+              <div class="stat glass">
+                <div class="stat__value mono" data-countup data-to="100" data-suffix="%">0%</div>
+                <div class="stat__label">of assets held in wallets you own</div>
+              </div>
+              <div class="stat glass">
+                <div class="stat__value mono">EVM · SOL</div>
+                <div class="stat__label">native asset support across chains</div>
+              </div>
+            </div>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax style="padding: 0;">
+            <div class="ui" style="border: none; box-shadow: none; background: transparent;">
+              <div class="ui__bar">
+                <span class="ui__dots"><i></i><i></i><i></i></span>
+                <span class="ui__title">New Wallet · Signing Policy</span>
+              </div>
+              <div class="ui__body">
+                <div class="ui__wallet">
+                  <div>
+                    <div class="ui__wallet-name">Reserve Wallet</div>
+                    <div class="ui__wallet-addr">Solana · native</div>
+                  </div>
+                  <span class="ui__policy">Threshold: 3 of 5</span>
+                </div>
+                <div class="ui__rows">
+                  <div class="ui__row"><span class="avatar">AR</span><span>Amara R. <span class="sub">CFO</span></span><span class="perm perm--admin">Signer</span></div>
+                  <div class="ui__row"><span class="avatar avatar--2">JC</span><span>Jon C. <span class="sub">Treasury</span></span><span class="perm perm--on">Signer</span></div>
+                  <div class="ui__row"><span class="avatar avatar--3">MP</span><span>Mia P. <span class="sub">Controller</span></span><span class="perm perm--on">Signer</span></div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 4 · CONTROL · Whitelisting -->
+      <section id="control" class="section feature">
+        <div class="feature__grid feature__grid--reverse">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>02 — Controls</p>
+            <h2 class="feature__title" data-reveal>Funds only move where you allow.</h2>
+            <p class="body" data-reveal>
+              Whitelist the external addresses your treasury is permitted to transact
+              with — suppliers, exchanges, sub-accounts. Payments in USDT, USDC, ZEND,
+              or other supported assets can only leave to approved destinations, on the
+              chains you choose. Everything else is blocked before it starts.
+            </p>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax style="padding: 0;">
+            <div class="ui" style="border: none; box-shadow: none; background: transparent;">
+              <div class="ui__bar">
+                <span class="ui__dots"><i></i><i></i><i></i></span>
+                <span class="ui__title">Whitelist · Approved Counterparties</span>
+              </div>
+              <div class="ui__body">
+                <div class="ui__rows">
+                  <div class="ui__row ui__row--head"><span></span><span>Destination</span><span>Status</span></div>
+                  <div class="ui__row"><span class="coin coin--usdc">$</span><span>Supplier — Acme Ltd <span class="sub">0x9c1d…4af0</span></span><span class="perm perm--on">Approved</span></div>
+                  <div class="ui__row"><span class="coin coin--usdt">₮</span><span>Exchange desk <span class="sub">0x41be…77d1</span></span><span class="perm perm--on">Approved</span></div>
+                  <div class="ui__row"><span class="coin coin--sol">◎</span><span>Treasury sub-account <span class="sub">7Qx…gЕ2</span></span><span class="perm perm--on">Approved</span></div>
+                  <div class="ui__row"><span class="coin" style="background:color-mix(in srgb, var(--steel) 60%, transparent);">?</span><span>Unknown address <span class="sub">0x00a2…19ff</span></span><span class="perm">Blocked</span></div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 5 · ROLES · Users & authorities -->
+      <section id="roles" class="section feature">
+        <div class="feature__grid">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>03 — Roles &amp; Authorities</p>
+            <h2 class="feature__title" data-reveal>The right people. The right permissions.</h2>
+            <p class="body" data-reveal>
+              Add your team and assign authority by function — who can initiate a
+              payment, who can approve one, who can manage the whitelist, who can only
+              view. Separation of duties is enforced by the platform, so control of the
+              treasury never rests with a single user.
+            </p>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax style="padding: 0;">
+            <div class="ui" style="border: none; box-shadow: none; background: transparent;">
+              <div class="ui__bar">
+                <span class="ui__dots"><i></i><i></i><i></i></span>
+                <span class="ui__title">Team · Roles &amp; Authorities</span>
+              </div>
+              <div class="ui__body">
+                <div class="ui__rows">
+                  <div class="ui__row ui__row--head"><span></span><span>User</span><span>Authority</span></div>
+                  <div class="ui__row"><span class="avatar">AR</span><span>Amara R. <span class="sub">CFO</span></span><span class="perm perm--admin">Admin</span></div>
+                  <div class="ui__row"><span class="avatar avatar--2">JC</span><span>Jon C. <span class="sub">Treasury</span></span><span class="perm perm--on">Approve</span></div>
+                  <div class="ui__row"><span class="avatar avatar--3">MP</span><span>Mia P. <span class="sub">Controller</span></span><span class="perm perm--on">Initiate</span></div>
+                  <div class="ui__row"><span class="avatar" style="background:linear-gradient(135deg,var(--steel),var(--graphite,#374151));color:#fff;">LT</span><span>Leo T. <span class="sub">Analyst</span></span><span class="perm">View only</span></div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 6 · AUDIT · Transaction history -->
+      <section id="audit" class="section feature">
+        <div class="feature__grid feature__grid--reverse">
+          <div class="feature__copy">
+            <p class="overline" data-reveal>04 — Audit</p>
+            <h2 class="feature__title" data-reveal>Every movement, on the record.</h2>
+            <p class="body" data-reveal>
+              Track the full transaction history of every wallet you own — amounts,
+              counterparties, chains, and the exact signers who approved each transfer.
+              A complete, exportable ledger for reconciliation, reporting, and audit,
+              backed by the immutability of the chain itself.
+            </p>
+          </div>
+          <figure class="feature__media glass" data-reveal data-parallax style="padding: 0;">
+            <div class="ui" style="border: none; box-shadow: none; background: transparent;">
+              <div class="ui__bar">
+                <span class="ui__dots"><i></i><i></i><i></i></span>
+                <span class="ui__title">Activity · Transaction History</span>
+                <span class="ui__badge">Exportable</span>
+              </div>
+              <div class="ui__body">
+                <div class="ui__rows">
+                  <div class="ui__row"><span class="coin coin--usdc">$</span><span>Sent · Acme Ltd <span class="sub">3-of-5 · A.R, J.C, M.P</span></span><span class="amt">−250,000</span></div>
+                  <div class="ui__row"><span class="coin coin--usdt">₮</span><span>Received · Exchange desk <span class="sub">Ethereum</span></span><span class="amt" style="color:var(--accent);">+500,000</span></div>
+                  <div class="ui__row"><span class="coin coin--zend">Z</span><span>Sent · Sub-account <span class="sub">Solana</span></span><span class="amt">−120,000</span></div>
+                  <div class="ui__row"><span class="coin coin--usdc">$</span><span>Received · Client settlement <span class="sub">Base</span></span><span class="amt" style="color:var(--accent);">+310,000</span></div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 7 · CHAINS & ASSETS -->
+      <section id="chains" class="section chains">
+        <p class="overline overline--center" data-reveal>Multi-Chain</p>
+        <h2 class="feature__title" data-reveal>Native assets, across the chains you use.</h2>
+        <div class="chain-grid" data-reveal>
+          <span class="chip-asset"><span class="coin coin--usdt">₮</span> USDT <span class="mono">EVM</span></span>
+          <span class="chip-asset"><span class="coin coin--usdc">$</span> USDC <span class="mono">EVM · SOL</span></span>
+          <span class="chip-asset"><span class="coin coin--zend">Z</span> ZEND <span class="mono">EVM · SOL</span></span>
+          <span class="chip-asset"><span class="coin coin--sol">◎</span> SOL <span class="mono">Solana</span></span>
+          <span class="chip-asset"><span class="coin" style="background:#627eea;color:#fff;">Ξ</span> ETH &amp; ERC-20 <span class="mono">EVM</span></span>
+        </div>
+      </section>
+
+      <!-- 8 · ZEND FEE BENEFIT -->
+      <section id="zend" class="section fee">
+        <div class="fee__card glass" data-reveal>
+          <div>
+            <p class="overline">ZEND · Preferred Asset</p>
+            <h2 class="fee__title">Hold ZEND. Pay zero platform fees.</h2>
+            <p class="body">
+              ZEND is native to both EVM and Solana — and native to Trnzit. Maintain a
+              rolling monthly balance above 20,000 ZEND across your wallets and your
+              platform user fees drop to zero. Currency-neutral stability from the
+              reserve, with the settlement token that pays for itself.
+            </p>
+            <p class="fee__note">Rolling 30-day average balance · applied per organisation</p>
+          </div>
+          <div class="fee__zero">
+            <div class="big">$0</div>
+            <div class="cap">platform fees above<br /><b class="mono" style="color:var(--text);">20,000 ZEND</b> held</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 · SECURITY / TRUST BAND -->
+      <section id="security" class="section">
+        <div class="head-block">
+          <p class="overline overline--center" data-reveal>Non-Custodial by Design</p>
+          <h2 class="feature__title" data-reveal>We never hold your keys. Ever.</h2>
+        </div>
+        <div class="pillars">
+          <article class="pillar glass" data-reveal>
+            <h3 class="pillar__title">You own the wallet</h3>
+            <p class="pillar__body">Assets sit in multi-sig wallets your organisation controls on-chain. Trnzit orchestrates; it never takes custody.</p>
+          </article>
+          <article class="pillar glass" data-reveal>
+            <h3 class="pillar__title">Policies enforced on-chain</h3>
+            <p class="pillar__body">Signing thresholds and approvals are enforced at the protocol level — not by a database we could change.</p>
+          </article>
+          <article class="pillar glass" data-reveal>
+            <h3 class="pillar__title">No unilateral access</h3>
+            <p class="pillar__body">Manage multi-sig control without giving any single user direct, standalone access to move the treasury.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 10 · REGISTER CTA -->
+      <section id="access" class="section buy">
+        <div class="buy__card glass" data-reveal>
+          <p class="overline overline--center">Institutional Access</p>
+          <h2 class="buy__title">Bring your treasury on-chain — on your terms.</h2>
+          <div class="buy__amount mono">By invitation</div>
+          <ul class="buy__list">
+            <li>Non-custodial multi-sig wallets across EVM and Solana</li>
+            <li>User roles, authorities, and counterparty whitelisting</li>
+            <li>Full transaction history and exportable audit trail</li>
+            <li>Zero platform fees with a 20,000+ ZEND rolling balance</li>
+          </ul>
+          <div class="buy__cta">
+            <a href="mailto:cs@trnznd.io?subject=Trnzit%20Access" class="glass-btn glass-btn--primary">Register for Access</a>
+            <a href="mailto:cs@trnznd.io?subject=Speak%20to%20the%20Team%20about%20Trnzit" class="glass-btn glass-btn--ghost">Speak to the Team</a>
+          </div>
+          <p class="buy__fine mono">Currency Neutral Settlement Driving Social Impact</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer__big">trnznd</div>
+      <p class="footer__tag">Purpose Beyond Payment</p>
+      <div class="footer__row">
+        <span class="mono">trnznd.io</span>
+        <nav class="footer__links">
+          <a href="#home" data-scroll>Top</a>
+          <a href="./index.html">ZEND</a>
+          <a href="mailto:cs@trnznd.io">Contact</a>
+        </nav>
+      </div>
+      <p class="footer__legal mono">© 2026 TRNZND · Trnzit is a non-custodial treasury platform · Currency Neutral Settlement Driving Social Impact</p>
+    </footer>
+
+    <script type="module" src="/src/trnzit.js"></script>
+  </body>
+</html>

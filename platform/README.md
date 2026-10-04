@@ -20,6 +20,7 @@ npm run build      # static build in platform/dist (relative base, hash routing)
 |---|---|
 | **Plans** | **Basic** $15/month: 1 user, 5 connections, no approval rules. **Premium** $50/month: 5 users in total (including the owner), 5 connections, approval rules. **Institution** $100/month: everything in Premium, with unlimited users and connections. Bank and card connections count toward the limit. Downgrades are blocked until usage fits the lower plan |
 | **Display currency** | Each user picks the currency all totals are shown in (USD, EUR, GBP, CHF, SGD, AED, AUD, JPY) from the top bar. Display only: values are stored in USD, invoices keep their own currency, and plan prices and policy thresholds stay in USD. The exchange rates are demo values |
+| **Send** | Pay stablecoins or other crypto from a chosen account to a counterparty's whitelisted address. Network and balance checks run first, then a fee estimate is shown. On Premium/Institution the payment follows the approval rules; Basic users authorise their own. **Sign & send** needs a 2-step code, shows "Sent — confirming", then writes the payment into the ledger linked to its approvals. Wallets sign on the user's device; custodians and exchanges need sending switched on per connection (exchanges with a separate withdrawal-only key). Fiat payments are not available yet. In the demo, signing, broadcasting and confirmation are simulated |
 | **Dashboard** | Aggregated treasury value, 90-day trend, allocation by asset, money in/out, the approval queue, and a "bank feed" card per connection with its balance, share of the total and a *Reconcile N items* button |
 | **Open banking** | Bank accounts and credit cards connect with read-only consent and appear alongside crypto. Card balances show as money owed, and each bank's consent-renewal date is shown |
 | **Invoices** | Bill customers in USDC/USDT/BTC/ETH or USD/EUR/GBP. Each invoice has line items and tax, and is paid into your wallet (with a network warning) or bank account. You can download the PDF, or send it as a PDF to the customer, with an optional copy to yourself (in the demo, sending is simulated). Mark an invoice paid by matching it to a receipt in the ledger. Overdue invoices are flagged automatically |
@@ -41,6 +42,7 @@ src/
 ├─ lib/plans.js       plan limits and downgrade checks (pure, unit-tested)
 ├─ lib/invoice.js     invoice totals, status, payment matching (pure, unit-tested)
 ├─ lib/pdf.js         invoice PDF (jsPDF)
+├─ lib/send.js        payment pre-flight checks and signing methods (unit-tested)
 ├─ lib/fx.js          display currencies and demo exchange rates (unit-tested)
 ├─ data/seed.js       deterministic demo data, roles, permissions, plan limits
 ├─ state/store.jsx    reducer + localStorage persistence (stand-in for the API)

@@ -3,8 +3,10 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd, history, priceOf, usdOf } from '../lib/ledger.js';
 import { amount, date, dateTime, relative, money, moneyShort } from '../lib/format.js';
-import { ASSETS, CONNECTION_TYPES, can } from '../data/seed.js';
-import { ConfirmButton, ConnIcon, Stat, StatusBadge } from '../components/ui.jsx';
+import { useState } from 'react';
+import { ASSETS, CONNECTION_TYPES, can, isFiatConn } from '../data/seed.js';
+import { SEND_METHODS } from '../lib/send.js';
+import { ConfirmButton, ConnIcon, Modal, Stat, StatusBadge } from '../components/ui.jsx';
 import Ledger from '../components/Ledger.jsx';
 
 export default function ConnectionDetail() {
@@ -46,6 +48,8 @@ export default function ConnectionDetail() {
         <Stat label="To reconcile" value={unrec} sub={`Connected since ${date(c.connectedAt)}`} />
       </div>
 
+      <SendingPanel c={c} />
+
       <div className="grid cols-2">
         <div className="card">
           <div className="card__head"><h2>Holdings</h2></div>
@@ -83,5 +87,49 @@ export default function ConnectionDetail() {
       <h2>Transactions</h2>
       <Ledger fixedConnection={c.id} />
     </div>
+  );
+}
+
+function SendingPanel({ c }) {
+  const { dispatch, me } = useStore();
+  const [enabling, setEnabling] = useState(false);
+  const manage = can(me, 'manageConnections');
+  if (isFiatConn(c))
+    return <div className="card card__body small"><strong>Sending</strong> · Bank and card payments are not available yet. This account is read-only.</div>;
+  const method = SEND_METHODS[c.type];
+  return (
+    <div className="card card__body row wrap">
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div className="row"><strong>Sending</strong>{c.sendEnabled ? <span className="badge pos">On</span> : <span className="badge">Off</span>}</div>
+        <div className="small muted">{method.label}. {method.detail}</div>
+      </div>
+      {manage && (c.sendEnabled
+        ? <ConfirmButton className="btn sm" prompt="Click again to switch off" onConfirm={() => dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: false })}>Switch off sending</ConfirmButton>
+        : <button className="btn sm primary" onClick={() => (c.type === 'wallet' || c.type === 'custodian' ? dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: true }) : setEnabling(true))}>Switch on sending</button>)}
+      {enabling && <EnableExchangeSending c={c} onClose={() => setEnabling(false)} />}
+    </div>
+  );
+}
+
+function EnableExchangeSending({ c, onClose }) {
+  const { dispatch } = useStore();
+  const [key, setKey] = useState('');
+  const [secret, setSecret] = useState('');
+  const [checks, setChecks] = useState({ scope: false, ip: false, list: false });
+  const ok = key.trim() && secret.trim() && Object.values(checks).every(Boolean);
+  const tick = (k) => setChecks((x) => ({ ...x, [k]: !x[k] }));
+  return (
+    <Modal title={`Switch on sending for ${c.name}`} onClose={onClose} footer={<>
+      <button className="btn" onClick={onClose}>Cancel</button>
+      <button className="btn primary" disabled={!ok} onClick={() => { dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: true }); onClose(); }}>Switch on</button>
+    </>}>
+      <p className="small">Sending from an exchange needs a <strong>second, separate API key</strong> that can make withdrawals. Your existing read-only key stays as it is.</p>
+      <label className="field"><span>Withdrawal API key</span><input id="wk-key" className="mono" value={key} onChange={(e) => setKey(e.target.value)} autoComplete="off" /></label>
+      <label className="field"><span>Withdrawal API secret</span><input id="wk-secret" className="mono" type="password" value={secret} onChange={(e) => setSecret(e.target.value)} autoComplete="off" /></label>
+      <label className="row small"><input type="checkbox" checked={checks.scope} onChange={() => tick('scope')} />The key can withdraw but cannot trade.</label>
+      <label className="row small"><input type="checkbox" checked={checks.ip} onChange={() => tick('ip')} />The key only works from TRNZND’s published IP addresses.</label>
+      <label className="row small"><input type="checkbox" checked={checks.list} onChange={() => tick('list')} />Withdrawals are limited to my whitelisted addresses at the exchange as well.</label>
+      <div className="notice warn small">Demo: nothing is stored or sent. In production the key is encrypted in a key vault, and only used after a payment has passed your approval rules and a 2-step check.</div>
+    </Modal>
   );
 }

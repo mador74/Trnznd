@@ -91,7 +91,11 @@ export function buildSeed(nowDate = new Date()) {
     { id: 'c-cus', name: 'Cold storage — MPC custodian', type: 'custodian', network: 'Multi-chain', assets: ['BTC', 'ETH', 'USDC'] },
     { id: 'c-eth', name: 'Ops wallet — Ethereum', type: 'wallet', network: 'Ethereum', address: '0x' + hex(r, 40), assets: ['ETH', 'USDC', 'USDT'] },
     { id: 'c-trx', name: 'Payments wallet — Tron', type: 'wallet', network: 'Tron', address: 'T' + hex(r, 33), assets: ['USDT'] },
-  ].map((c, i) => ({ ...c, status: 'connected', lastSync: iso(now - (i * 7 + 3) * 60000), connectedAt: iso(now - 200 * DAY) }));
+  ].map((c, i) => ({
+    ...c, status: 'connected', lastSync: iso(now - (i * 7 + 3) * 60000), connectedAt: iso(now - 200 * DAY),
+    // Wallets sign on the user's own device and the custodian has a payments API; exchanges need a withdrawal key first.
+    sendEnabled: c.type === 'wallet' || c.type === 'custodian',
+  }));
 
   const opening = {
     'c-ex1': { BTC: 6, ETH: 120, SOL: 2500, USDT: 900000, USDC: 400000 },
@@ -212,7 +216,7 @@ export function buildSeed(nowDate = new Date()) {
 
   const k = Object.fromEntries(contacts.map((c) => [c.id, c]));
   const requests = [
-    { id: 'r5', type: 'withdrawal', connectionId: 'c-trx', asset: 'USDT', amount: 48500, usdValue: 48500, to: k.k1.name,
+    { id: 'r5', type: 'withdrawal', connectionId: 'c-eth', asset: 'USDT', amount: 48500, usdValue: 48500, to: k.k1.name,
       toAddress: k.k1.address, reference: 'INV-2291 freight Q3', requestedBy: 'u-tm', createdAt: iso(now - 0.2 * DAY),
       approvals: [{ userId: 'u-cfo', at: iso(now - 0.1 * DAY), note: 'Matches PO-1182' }], rejections: [], status: 'pending' },
     { id: 'r4', type: 'internal_transfer', connectionId: 'c-ex1', asset: 'BTC', amount: 2, usdValue: 120000, to: 'Cold storage — MPC custodian',
@@ -224,7 +228,7 @@ export function buildSeed(nowDate = new Date()) {
     { id: 'r2', type: 'withdrawal', connectionId: 'c-eth', asset: 'USDC', amount: 15000, usdValue: 15000, to: k.k6.name,
       toAddress: k.k6.address, reference: 'Advisory retainer — Sept', requestedBy: 'u-acc', createdAt: iso(now - 6 * DAY),
       approvals: [], rejections: [{ userId: 'u-cfo', at: iso(now - 5.8 * DAY), note: 'Invoice not yet received' }], status: 'rejected' },
-    { id: 'r1', type: 'withdrawal', connectionId: 'c-trx', asset: 'USDT', amount: 92000, usdValue: 92000, to: k.k5.name,
+    { id: 'r1', type: 'withdrawal', connectionId: 'c-eth', asset: 'USDT', amount: 92000, usdValue: 92000, to: k.k5.name,
       toAddress: k.k5.address, reference: 'Payroll — September', requestedBy: 'u-acc', createdAt: iso(now - 9 * DAY),
       approvals: [{ userId: 'u-cfo', at: iso(now - 8.9 * DAY), note: '' }, { userId: 'u-ops', at: iso(now - 8.8 * DAY), note: '' }],
       rejections: [], status: 'executed', executedAt: iso(now - 8.7 * DAY), executedTxHash: '0x' + hex(r, 64) },
@@ -264,7 +268,7 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 2,
+    version: 3,
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,

@@ -70,8 +70,10 @@ export function progress(request, policies, users) {
 }
 
 export function deriveStatus(request, policies, users) {
-  if (request.status === 'cancelled' || request.status === 'executed') return request.status;
+  if (['cancelled', 'executed', 'broadcast'].includes(request.status)) return request.status;
   if (request.rejections.length > 0) return 'rejected';
+  // Single-user (Basic) payments have nobody else to approve; the sender authorises with 2FA when sending.
+  if (request.policyExempt) return 'approved';
   return progress(request, policies, users).every((p) => p.satisfied) ? 'approved' : 'pending';
 }
 

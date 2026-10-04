@@ -4,8 +4,9 @@ import { ACTION_TYPES, cannotSignReason, deriveStatus, governingPolicies, progre
 import { balances, priceOf } from '../lib/ledger.js';
 import { amount, dateTime, relative, shortAddr, money, usd } from '../lib/format.js';
 import { Link } from 'react-router-dom';
-import { ASSET_NETWORKS, can, isFiatConn } from '../data/seed.js';
+import { can, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
+import { checkPayment, NETWORK_FEE_USD, SEND_METHODS, sourceBlockReason } from '../lib/send.js';
 import { Avatar, Empty, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 export default function Approvals() {
@@ -28,7 +29,7 @@ export default function Approvals() {
     mine,
     pending: withStatus.filter((r) => r.status === 'pending'),
     ready,
-    history: withStatus.filter((r) => ['executed', 'rejected', 'cancelled'].includes(r.status)),
+    history: withStatus.filter((r) => ['broadcast', 'executed', 'rejected', 'cancelled'].includes(r.status)),
   };
 
   return (
@@ -36,7 +37,7 @@ export default function Approvals() {
       <div className="page-head">
         <div>
           <h1>Approvals</h1>
-          <p>Outgoing payments, transfers and new addresses need sign-off under your policies (e.g. 2 of 3) before anyone executes them at the provider.</p>
+          <p>Outgoing payments, transfers and new addresses need sign-off under your policies (e.g. 2 of 3). Once approved, a payment can be signed and sent from the <Link to="/send">Send</Link> page.</p>
         </div>
         <span className="spacer" />
         {can(me, 'createRequest') && <button className="btn primary" onClick={() => setCreating(true)}>+ New request</button>}
@@ -45,7 +46,7 @@ export default function Approvals() {
         {[
           ['mine', `Needs my signature (${mine.length})`],
           ['pending', `All pending (${lists.pending.length})`],
-          ['ready', `Ready to execute (${ready.length})`],
+          ['ready', `Ready to send (${ready.length})`],
           ['history', 'History'],
           ['policies', `Policies (${state.policies.length})`],
           ['whitelist', `Whitelisted addresses (${state.whitelist.length})`],
@@ -65,7 +66,7 @@ export default function Approvals() {
   );
 }
 
-function RequestCard({ r }) {
+export function RequestCard({ r }) {
   const { state, dispatch, me } = useStore();
   const [note, setNote] = useState('');
   const [hash, setHash] = useState('');
@@ -130,27 +131,27 @@ function RequestCard({ r }) {
           {r.requestedBy === me.id && <button className="btn sm ghost" onClick={() => dispatch({ type: 'CANCEL_REQUEST', id: r.id })}>Cancel request</button>}
         </div>
       )}
-      {r.status === 'approved' && (
+      {r.status === 'approved' && r.type !== 'address_whitelist' && <SendFooter r={r} conn={conn} />}
+      {r.status === 'broadcast' && (
         <div className="card__foot row wrap">
-          <span className="small muted">Execute this at the provider, then record the on-chain hash here so the ledger links to this approval.</span>
-          <span className="spacer" />
-          <input className="mono" style={{ maxWidth: 300 }} placeholder="Transaction hash" value={hash} onChange={(e) => setHash(e.target.value)} />
-          <button className="btn primary" disabled={hash.trim().length < 8} onClick={() => dispatch({ type: 'MARK_EXECUTED', id: r.id, txHash: hash.trim() })}>Record execution</button>
+          <span className="badge info">Sent — waiting for network confirmations</span>
+          <span className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.executedTxHash}</span>
         </div>
       )}
     </div>
   );
 }
 
-function NewRequest({ onClose }) {
+export function NewRequest({ onClose, initialType = 'withdrawal', types = Object.keys(ACTION_TYPES) }) {
   const { state, dispatch, me } = useStore();
-  const [type, setType] = useState('withdrawal');
-  const sources = state.connections.filter((c) => !isFiatConn(c));
-  const [connectionId, setConn] = useState(sources[0]?.id || '');
+  const single = !planOf(state).approvals;
+  const [type, setType] = useState(initialType);
+  const sendable = state.connections.filter((c) => !sourceBlockReason(c));
+  const [connectionId, setConn] = useState(sendable[0]?.id || '');
   const conn = state.connections.find((c) => c.id === connectionId);
   const [asset, setAsset] = useState(conn?.assets[0] || 'USDT');
   const [qty, setQty] = useState('');
-  const [dest, setDest] = useState(state.whitelist[0]?.id || '');
+  const [dest, setDest] = useState('');
   const [toConn, setToConn] = useState('');
   const [label, setLabel] = useState('');
   const [addr, setAddr] = useState('');
@@ -160,84 +161,94 @@ function NewRequest({ onClose }) {
   const available = (balances(state)[connectionId] || {})[asset] || 0;
   const n = Number(qty);
   const usdValue = type === 'address_whitelist' ? 0 : n * priceOf(asset);
+  // Only offer addresses this account can actually pay on this network.
+  const destinations = state.whitelist.filter((w) => !checkPayment({ conn, asset, amount: 1, available: 1, dest: w }));
+  const w = destinations.find((x) => x.id === dest) || destinations[0];
+  const target = state.connections.find((c) => c.id === toConn);
   let request = null;
   let error = '';
   if (type === 'address_whitelist') {
     if (!label.trim() || addr.trim().length < 10) error = 'Enter a label and a full address.';
     else request = { type, connectionId, asset: '—', amount: 0, usdValue: 0, to: label.trim(), toAddress: addr.trim(), network, reference };
+  } else if (type === 'withdrawal') {
+    error = checkPayment({ conn, asset, amount: n, available, dest: w })
+      || (destinations.length === 0 ? `No whitelisted address can receive ${asset} from this account.` : '');
+    if (!error) request = { type, connectionId, asset, amount: n, usdValue, reference, to: w.label, toAddress: w.address, network: w.network };
   } else {
-    const w = state.whitelist.find((x) => x.id === dest);
-    const target = state.connections.find((c) => c.id === toConn);
-    if (!(n > 0)) error = 'Enter an amount.';
-    else if (n > available) error = `Exceeds available balance (${amount(available, asset)}).`;
-    else if (type === 'withdrawal' && !w) error = 'Payments can only go to a whitelisted address.';
-    else if (type === 'withdrawal' && !ASSET_NETWORKS[asset]?.includes(w.network))
-      error = `${asset} cannot be sent to a ${w.network} address. Whitelist a ${ASSET_NETWORKS[asset]?.join(' / ')} address first.`;
-    else if (type === 'internal_transfer' && !target) error = 'Choose the destination connection.';
-    else request = {
-      type, connectionId, asset, amount: n, usdValue, reference,
-      to: type === 'withdrawal' ? w.label : target.name,
-      toAddress: type === 'withdrawal' ? w.address : target.address || 'Internal',
-    };
+    error = sourceBlockReason(conn) || (!(n > 0) ? 'Enter an amount.' : n > available ? `Exceeds available balance (${amount(available, asset)}).` : !target ? 'Choose the destination connection.' : '');
+    if (!error) request = { type, connectionId, asset, amount: n, usdValue, reference, to: target.name, toAddress: target.address || 'Internal' };
   }
-  const gov = request ? governingPolicies({ ...request, requestedBy: me.id }, state.policies, state.users) : [];
+  const gov = request && !single ? governingPolicies({ ...request, requestedBy: me.id }, state.policies, state.users) : [];
+  const netForFee = type === 'withdrawal' ? w?.network : conn?.network;
+  const fee = NETWORK_FEE_USD[netForFee];
+  const isPayment = type !== 'address_whitelist';
 
   return (
-    <Modal title="New approval request" onClose={onClose} footer={<>
+    <Modal title={isPayment ? 'New payment' : 'Add whitelisted address'} onClose={onClose} footer={<>
       <button className="btn" onClick={onClose}>Cancel</button>
-      <button className="btn primary" disabled={!request} onClick={() => { dispatch({ type: 'CREATE_REQUEST', request }); onClose(); }}>Submit for approval</button>
+      <button className="btn primary" disabled={!request} onClick={() => { dispatch({ type: 'CREATE_REQUEST', request }); onClose(); }}>
+        {single ? (isPayment ? 'Create payment' : 'Add address') : 'Submit for approval'}
+      </button>
     </>}>
-      <label className="field"><span>Action</span>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          {Object.entries(ACTION_TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-        </select>
-      </label>
+      {types.length > 1 && (
+        <label className="field"><span>What do you want to do?</span>
+          <select id="nr-type" value={type} onChange={(e) => setType(e.target.value)}>
+            {types.map((k) => <option key={k} value={k}>{ACTION_TYPES[k]}</option>)}
+          </select>
+        </label>
+      )}
       {type === 'address_whitelist' ? (
         <>
-          <label className="field"><span>Label (counterparty)</span><input value={label} onChange={(e) => setLabel(e.target.value)} /></label>
+          <label className="field"><span>Label (counterparty)</span><input id="nr-label" value={label} onChange={(e) => setLabel(e.target.value)} /></label>
           <div className="grid cols-2">
             <label className="field"><span>Network</span>
-              <select value={network} onChange={(e) => setNetwork(e.target.value)}>{['Ethereum', 'Tron', 'Solana', 'Bitcoin', 'Polygon', 'Base'].map((x) => <option key={x}>{x}</option>)}</select>
+              <select id="nr-network" value={network} onChange={(e) => setNetwork(e.target.value)}>{['Ethereum', 'Tron', 'Solana', 'Bitcoin', 'Polygon', 'Base', 'Arbitrum'].map((x) => <option key={x}>{x}</option>)}</select>
             </label>
-            <label className="field"><span>Address</span><input className="mono" value={addr} onChange={(e) => setAddr(e.target.value)} /></label>
+            <label className="field"><span>Address</span><input id="nr-addr" className="mono" value={addr} onChange={(e) => setAddr(e.target.value)} /></label>
           </div>
+          {single && <div className="notice small">Your Basic plan has one user, so the address is added straight away and recorded in the audit log.</div>}
         </>
       ) : (
         <>
           <div className="grid cols-2">
-            <label className="field"><span>From connection</span>
-              <select value={connectionId} onChange={(e) => { setConn(e.target.value); const c = state.connections.find((x) => x.id === e.target.value); setAsset(c?.assets[0]); }}>
-                {sources.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            <label className="field"><span>Pay from</span>
+              <select id="nr-from" value={connectionId} onChange={(e) => { setConn(e.target.value); const c = state.connections.find((x) => x.id === e.target.value); setAsset(c?.assets[0]); setDest(''); }}>
+                {state.connections.map((c) => {
+                  const why = sourceBlockReason(c);
+                  return <option key={c.id} value={c.id} disabled={!!why}>{c.name}{why ? (isFiatConn(c) ? ' — fiat payments coming soon' : ' — sending not switched on') : ''}</option>;
+                })}
               </select>
             </label>
-            <label className="field"><span>Asset</span>
-              <select value={asset} onChange={(e) => setAsset(e.target.value)}>{conn?.assets.map((a) => <option key={a}>{a}</option>)}</select>
+            <label className="field"><span>Coin</span>
+              <select id="nr-asset" value={asset} onChange={(e) => { setAsset(e.target.value); setDest(''); }}>{conn?.assets.map((a) => <option key={a}>{a}</option>)}</select>
             </label>
           </div>
           <label className="field"><span>Amount <span className="muted">— available {amount(available, asset)}</span></span>
-            <input type="number" min="0" step="any" value={qty} onChange={(e) => setQty(e.target.value)} />
+            <input id="nr-amount" type="number" min="0" step="any" value={qty} onChange={(e) => setQty(e.target.value)} />
           </label>
           {type === 'withdrawal' ? (
-            <label className="field"><span>To (whitelisted address)</span>
-              <select value={dest} onChange={(e) => setDest(e.target.value)}>
-                {state.whitelist.map((w) => <option key={w.id} value={w.id}>{w.label} · {w.network} · {shortAddr(w.address)}</option>)}
+            <label className="field"><span>Pay to (whitelisted address)</span>
+              <select id="nr-dest" value={w?.id || ''} onChange={(e) => setDest(e.target.value)} disabled={!destinations.length}>
+                {destinations.length === 0 && <option value="">No compatible whitelisted address</option>}
+                {destinations.map((x) => <option key={x.id} value={x.id}>{x.label} · {x.network} · {shortAddr(x.address)}</option>)}
               </select>
             </label>
           ) : (
             <label className="field"><span>To connection</span>
-              <select value={toConn} onChange={(e) => setToConn(e.target.value)}>
+              <select id="nr-to" value={toConn} onChange={(e) => setToConn(e.target.value)}>
                 <option value="">Choose…</option>
-                {sources.filter((c) => c.id !== connectionId && c.assets.includes(asset)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {state.connections.filter((c) => !isFiatConn(c) && c.id !== connectionId && c.assets.includes(asset)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </label>
           )}
         </>
       )}
-      <label className="field"><span>Reference</span><input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Invoice / PO number, purpose" /></label>
-      {error ? <div className="notice warn small">{error}</div> : (
+      <label className="field"><span>Reference</span><input id="nr-ref" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Invoice / PO number, purpose" /></label>
+      {error ? <div className="notice warn small">{error}</div> : isPayment && (
         <div className="notice small">
-          {type !== 'address_whitelist' && <div><strong>{money(usdValue)}</strong> at current demo price.</div>}
-          Will require: {gov.map((p) => `${p.name} (${p.required} of ${p.approverIds.length})`).join(' + ')}
+          <div><strong>{money(usdValue)}</strong> at demo price{fee != null && <> · network fee about {money(fee)} (estimate, paid by the sending account)</>}.</div>
+          <div>Sent by: {SEND_METHODS[conn?.type]?.label}.</div>
+          {single ? <div>You will confirm with your 2-step code when you send.</div> : <div>Needs: {gov.map((p) => `${p.name} (${p.required} of ${p.approverIds.length})`).join(' + ')}</div>}
         </div>
       )}
     </Modal>
@@ -352,5 +363,69 @@ function Whitelist() {
         </table>
       </div>
     </div>
+  );
+}
+
+/** Footer for an approved payment: sign & send through the source connection, or record one made elsewhere. */
+function SendFooter({ r, conn }) {
+  const { state, dispatch, me } = useStore();
+  const [stepUp, setStepUp] = useState(false);
+  const [manual, setManual] = useState(false);
+  const [hash, setHash] = useState('');
+  const block = sourceBlockReason(conn);
+  const available = (balances(state)[r.connectionId] || {})[r.asset] || 0;
+  const short = r.amount > available;
+  const allowed = can(me, 'createRequest');
+  const method = conn && SEND_METHODS[conn.type];
+  return (
+    <div className="card__foot stack" style={{ display: 'block' }}>
+      <div className="row wrap">
+        <div style={{ minWidth: 0 }}>
+          <strong className="small">{method ? method.label : 'Ready to send'}</strong>
+          <div className="muted small">{block || (short ? `Not enough ${r.asset} available (${amount(available, r.asset)}).` : method?.detail)}</div>
+        </div>
+        <span className="spacer" />
+        {allowed && (
+          <>
+            <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZND?</button>
+            <button className="btn primary" disabled={!!block || short} onClick={() => setStepUp(true)}>Sign & send</button>
+          </>
+        )}
+      </div>
+      {manual && (
+        <div className="row wrap">
+          <input className="mono" style={{ maxWidth: 360 }} placeholder="Transaction hash" value={hash} onChange={(e) => setHash(e.target.value)} />
+          <button className="btn sm" disabled={hash.trim().length < 8} onClick={() => dispatch({ type: 'MARK_EXECUTED', id: r.id, txHash: hash.trim() })}>Record payment</button>
+        </div>
+      )}
+      {stepUp && (
+        <StepUp
+          title={`Send ${amount(r.amount, r.asset)}`}
+          summary={<>From <strong>{conn?.name}</strong> to <strong>{r.to}</strong>{r.network && <> on <strong>{r.network}</strong></>}<div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.toAddress}</div></>}
+          onClose={() => setStepUp(false)}
+          onConfirm={() => { dispatch({ type: 'SEND_REQUEST', id: r.id }); setStepUp(false); }}
+        />
+      )}
+    </div>
+  );
+}
+
+/** Second-factor confirmation before money moves. Demo accepts any 6 digits. */
+export function StepUp({ title, summary, onClose, onConfirm }) {
+  const [code, setCode] = useState('');
+  const valid = /^\d{6}$/.test(code);
+  return (
+    <Modal title={title} onClose={onClose} footer={<>
+      <button className="btn" onClick={onClose}>Cancel</button>
+      <button className="btn primary" disabled={!valid} onClick={onConfirm}>Confirm and send</button>
+    </>}>
+      <div>{summary}</div>
+      <div className="notice warn small">Crypto payments cannot be reversed once confirmed. Check the address and network.</div>
+      <label className="field">
+        <span>6-digit code from your authenticator app</span>
+        <input id="stepup-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} autoFocus />
+      </label>
+      <div className="small muted">Demo: any 6 digits work.</div>
+    </Modal>
   );
 }

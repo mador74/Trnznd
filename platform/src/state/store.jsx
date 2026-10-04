@@ -4,18 +4,19 @@ import { setDisplayCurrency } from '../lib/format.js';
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
 import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
-import { usdOf } from '../lib/ledger.js';
+import { balances, usdOf } from '../lib/ledger.js';
+import { sourceBlockReason } from '../lib/send.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v2';
+const KEY = 'trnznd-treasury-v3';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 2) return s;
+      if (s.version === 3) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -34,6 +35,21 @@ function audit(state, action, detail) {
 function describe(req) {
   if (req.type === 'address_whitelist') return `Whitelist ${req.to}`;
   return `${req.amount.toLocaleString('en-US')} ${req.asset} to ${req.to}`;
+}
+
+/** Marks a payment executed and writes its outflow into the ledger, linked to the request. */
+function settle(state, r, txHash) {
+  const tx = {
+    id: uid('t'), connectionId: r.connectionId, date: now(), type: r.type === 'internal_transfer' ? 'transfer_out' : 'withdrawal',
+    asset: r.asset, amount: -r.amount, counterparty: r.to, counterpartyAddress: r.toAddress, txHash,
+    category: r.type === 'internal_transfer' ? 'Internal transfer' : 'Supplier payment', reconciled: true,
+    memo: r.reference, requestId: r.id, internal: r.type === 'internal_transfer',
+  };
+  return {
+    ...state,
+    requests: state.requests.map((x) => (x.id === r.id ? { ...x, status: 'executed', executedAt: now(), executedTxHash: txHash } : x)),
+    transactions: [tx, ...state.transactions],
+  };
 }
 
 function reducer(state, a) {
@@ -78,9 +94,17 @@ function reducer(state, a) {
       };
 
     case 'CREATE_REQUEST': {
-      if (!planOf(state).approvals) return state;
-      const req = { ...a.request, id: uid('r'), requestedBy: state.currentUserId, createdAt: now(), approvals: [], rejections: [], status: 'pending' };
-      return { ...state, requests: [req, ...state.requests], audit: audit(state, 'Created request', describe(req)) };
+      const single = !planOf(state).approvals;
+      if (single && a.request.type === 'address_whitelist') {
+        // Basic has one user and no approval rules: the address is added straight away (and audited).
+        const w = { id: uid('w'), label: a.request.to, address: a.request.toAddress, network: a.request.network || '—', addedAt: now() };
+        return { ...state, whitelist: [w, ...state.whitelist], audit: audit(state, 'Whitelisted address', `${w.label} · ${w.network} · ${w.address}`) };
+      }
+      const req = {
+        ...a.request, id: uid('r'), requestedBy: state.currentUserId, createdAt: now(), approvals: [], rejections: [], status: 'pending',
+        ...(single ? { policyExempt: true } : {}),
+      };
+      return { ...state, requests: [req, ...state.requests], audit: audit(state, single ? 'Created payment' : 'Created request', describe(req)) };
     }
     case 'SIGN_REQUEST': {
       if (!planOf(state).approvals) return state;
@@ -103,17 +127,37 @@ function reducer(state, a) {
     }
     case 'MARK_EXECUTED': {
       const r = state.requests.find((x) => x.id === a.id);
-      const tx = {
-        id: uid('t'), connectionId: r.connectionId, date: now(), type: r.type === 'internal_transfer' ? 'transfer_out' : 'withdrawal',
-        asset: r.asset, amount: -r.amount, counterparty: r.to, counterpartyAddress: r.toAddress, txHash: a.txHash,
-        category: r.type === 'internal_transfer' ? 'Internal transfer' : 'Supplier payment', reconciled: true,
-        memo: r.reference, requestId: r.id, internal: r.type === 'internal_transfer',
-      };
+      if (deriveStatus(r, state.policies, state.users) !== 'approved') return state;
+      return { ...settle(state, r, a.txHash), audit: audit(state, 'Recorded execution', `${describe(r)} · ${a.txHash}`) };
+    }
+    case 'SEND_REQUEST': {
+      // Sign & broadcast an approved payment. Re-checks approval, source and balance at the moment of sending.
+      const r = state.requests.find((x) => x.id === a.id);
+      const conn = state.connections.find((c) => c.id === r?.connectionId);
+      if (!r || deriveStatus(r, state.policies, state.users) !== 'approved' || sourceBlockReason(conn)) return state;
+      const available = (balances(state)[conn.id] || {})[r.asset] || 0;
+      if (r.amount > available) return state;
+      const txHash = '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
       return {
         ...state,
-        requests: state.requests.map((x) => (x.id === a.id ? { ...x, status: 'executed', executedAt: now(), executedTxHash: a.txHash } : x)),
-        transactions: [tx, ...state.transactions],
-        audit: audit(state, 'Recorded execution', `${describe(r)} · ${a.txHash}`),
+        requests: state.requests.map((x) => (x.id === a.id ? { ...x, status: 'broadcast', broadcastAt: now(), sentBy: state.currentUserId, executedTxHash: txHash } : x)),
+        audit: audit(state, 'Signed and sent payment', `${describe(r)} · ${txHash.slice(0, 12)}…`),
+      };
+    }
+    case 'CONFIRM_BROADCASTS': {
+      // Demo stand-in for watching the chain: a broadcast payment confirms a few seconds later.
+      const due = state.requests.filter((r) => r.status === 'broadcast' && Date.now() - new Date(r.broadcastAt).getTime() > 4000);
+      if (!due.length) return state;
+      let next = state;
+      for (const r of due) next = settle(next, r, r.executedTxHash);
+      return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: 'Payment confirmed on-chain', detail: describe(r) }, ...log], next.audit) };
+    }
+    case 'SET_SEND_ENABLED': {
+      const c = state.connections.find((x) => x.id === a.id);
+      return {
+        ...state,
+        connections: state.connections.map((x) => (x.id === a.id ? { ...x, sendEnabled: a.enabled } : x)),
+        audit: audit(state, a.enabled ? 'Enabled sending' : 'Disabled sending', c?.name),
       };
     }
     case 'CANCEL_REQUEST': {
@@ -236,6 +280,12 @@ export function StoreProvider({ children }) {
   const me = useMemo(() => state.users.find((u) => u.id === state.currentUserId), [state.users, state.currentUserId]);
   // Each user picks their own display currency; the organisation's base currency is the default.
   setDisplayCurrency(me?.displayCurrency || state.org.baseCurrency);
+  const broadcasting = state.requests.some((r) => r.status === 'broadcast');
+  useEffect(() => {
+    if (!broadcasting) return undefined;
+    const t = setInterval(() => dispatch({ type: 'CONFIRM_BROADCASTS' }), 1000);
+    return () => clearInterval(t);
+  }, [broadcasting]);
   return <Ctx.Provider value={{ state, dispatch, me }}>{children}</Ctx.Provider>;
 }
 

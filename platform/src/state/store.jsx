@@ -131,7 +131,7 @@ function reducer(state, a) {
       return { ...settle(state, r, a.txHash), audit: audit(state, 'Recorded execution', `${describe(r)} · ${a.txHash}`) };
     }
     case 'SEND_REQUEST': {
-      // Final release by an authorised user. TRNZND only forwards the instruction to the provider holding the
+      // Final release by an authorised user. TRNZIT only forwards the instruction to the provider holding the
       // assets; it never signs with or holds private keys. Re-checks releaser, approval, source and balance.
       const r = state.requests.find((x) => x.id === a.id);
       const conn = state.connections.find((c) => c.id === r?.connectionId);
@@ -147,7 +147,7 @@ function reducer(state, a) {
     }
     case 'CONFIRM_BROADCASTS': {
       // Demo stand-in for the provider: it executes the instruction a few seconds later and reports the
-      // on-chain hash back, which TRNZND then records in the ledger.
+      // on-chain hash back, which TRNZIT then records in the ledger.
       const due = state.requests.filter((r) => r.status === 'broadcast' && Date.now() - new Date(r.broadcastAt).getTime() > 4000);
       if (!due.length) return state;
       let next = state;

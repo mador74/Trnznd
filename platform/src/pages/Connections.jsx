@@ -18,7 +18,7 @@ export default function Connections() {
       <div className="page-head">
         <div>
           <h1>Connections</h1>
-          <p>Exchanges, custodians, wallets, bank accounts and credit cards. TRNZND never holds private keys or your funds. Balances and history are read by API; payments are instructions passed to the provider that holds the assets, and you switch that on per connection.</p>
+          <p>Exchanges, custodians, wallets, bank accounts and credit cards. TRNZIT never holds private keys or your funds. Balances and history are read by API; payments are instructions passed to the provider that holds the assets, and you switch that on per connection.</p>
         </div>
         <span className="spacer" />
         <span className="small muted">{state.connections.length} of {limitLabel(planOf(state).maxConnections)} connections used</span>

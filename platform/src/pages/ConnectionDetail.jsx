@@ -123,11 +123,11 @@ function EnableExchangeSending({ c, onClose }) {
       <button className="btn" onClick={onClose}>Cancel</button>
       <button className="btn primary" disabled={!ok} onClick={() => { dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: true }); onClose(); }}>Switch on</button>
     </>}>
-      <p className="small">To pass payment instructions to the exchange, TRNZND needs a <strong>second, separate API key</strong> that can submit withdrawals. Your read-only key stays as it is. This key lets TRNZND pass on instructions your authorised releasers have approved. It is not a wallet key: the exchange keeps custody of the assets and executes each payment.</p>
+      <p className="small">To pass payment instructions to the exchange, TRNZIT needs a <strong>second, separate API key</strong> that can submit withdrawals. Your read-only key stays as it is. This key lets TRNZIT pass on instructions your authorised releasers have approved. It is not a wallet key: the exchange keeps custody of the assets and executes each payment.</p>
       <label className="field"><span>Withdrawal-instruction API key</span><input id="wk-key" className="mono" value={key} onChange={(e) => setKey(e.target.value)} autoComplete="off" /></label>
       <label className="field"><span>Withdrawal-instruction API secret</span><input id="wk-secret" className="mono" type="password" value={secret} onChange={(e) => setSecret(e.target.value)} autoComplete="off" /></label>
       <label className="row small"><input type="checkbox" checked={checks.scope} onChange={() => tick('scope')} />The key can withdraw but cannot trade.</label>
-      <label className="row small"><input type="checkbox" checked={checks.ip} onChange={() => tick('ip')} />The key only works from TRNZND’s published IP addresses.</label>
+      <label className="row small"><input type="checkbox" checked={checks.ip} onChange={() => tick('ip')} />The key only works from TRNZIT’s published IP addresses.</label>
       <label className="row small"><input type="checkbox" checked={checks.list} onChange={() => tick('list')} />Withdrawals are limited to my whitelisted addresses at the exchange as well.</label>
       <div className="notice warn small">Demo: nothing is stored or sent. In production the API credential is encrypted, and only used to forward a payment after your approval rules are met and an authorised releaser has confirmed it with their own 2-step check.</div>
     </Modal>

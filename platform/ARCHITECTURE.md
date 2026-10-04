@@ -1,13 +1,13 @@
-# TRNZND Treasury: production architecture and open decisions
+# TRNZIT Treasury Management, by TRNZND: production architecture and open decisions
 
 This document covers what it takes to turn the prototype into a real service. Statements about third-party providers are general. **Verify each provider's current API documentation, rate limits and terms before building against it.**
 
 ## 1. Open product decisions (need an answer before build)
 
-1. **Non-custodial principle (decided).** TRNZND never holds private keys and never has custody of customer funds. Payments work like this:
-   - **Instructions, not custody.** A released payment is an *instruction* that TRNZND passes, by API, to the provider that already holds the assets: the customer's custodian, exchange or broker. The provider executes it under its own controls. For a self-custody wallet, TRNZND prepares the transaction and hands it to the customer's own wallet to sign; the key never leaves their device.
+1. **Non-custodial principle (decided).** TRNZIT never holds private keys and never has custody of customer funds. Payments work like this:
+   - **Instructions, not custody.** A released payment is an *instruction* that TRNZIT passes, by API, to the provider that already holds the assets: the customer's custodian, exchange or broker. The provider executes it under its own controls. For a self-custody wallet, TRNZIT prepares the transaction and hands it to the customer's own wallet to sign; the key never leaves their device.
    - **Final release by an authorised person.** After the approval rules are met (e.g. 2 of 3), the final step must be done by a user the business has authorised to release payments, confirmed with their own second factor. The Owner is always a releaser. Other users are authorised individually on the Team page, and Viewers never can.
-   - **Credentials TRNZND does keep.** These are API credentials only, never wallet keys: a read-only key for data, plus, only where the customer switches sending on, a credential that can *submit* withdrawal instructions. The server only uses the second credential after the approval rules and the releaser's confirmation. Prefer providers that also require approval on their side for API-submitted payments (many institutional custodians support approval workflows), and require the customer to whitelist destinations at the provider as well.
+   - **Credentials TRNZIT does keep.** These are API credentials only, never wallet keys: a read-only key for data, plus, only where the customer switches sending on, a credential that can *submit* withdrawal instructions. The server only uses the second credential after the approval rules and the releaser's confirmation. Prefer providers that also require approval on their side for API-submitted payments (many institutional custodians support approval workflows), and require the customer to whitelist destinations at the provider as well.
    - **Every release re-checks:** releaser authorisation, approval status, balance, whitelist and network match. The ledger entry is written only when the provider reports the on-chain transaction.
    - **Verify with each provider:** whether its API supports submitting withdrawals, whether API-submitted payments can require approval in the provider's own app, and what its terms say about third-party platforms submitting instructions. This varies by provider, and I have not checked specific providers.
    - **Not simulated in the demo:** fee estimates are fixed numbers. Production needs live fee quotes, plus handling for provider rejections, stuck transactions and partial failures.
@@ -41,7 +41,7 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 ## 3a. Open banking (bank accounts and cards)
 
-- **How it connects:** use a licensed open-banking aggregator for read-only *account information* access. The customer approves access on their own bank's page, and TRNZND never sees their bank login.
+- **How it connects:** use a licensed open-banking aggregator for read-only *account information* access. The customer approves access on their own bank's page, and TRNZIT never sees their bank login.
 - **Read-only by design:** reading balances and transactions is a different regulated activity from *initiating payments*. The prototype only reads. Adding payments from the platform would need its own licence or a partner, plus approval enforcement.
 - **Consent renewal:** banks require the customer to re-confirm access periodically. The interval depends on the country and the rules change, so check current local requirements. The prototype shows a renewal countdown and flags it 14 days ahead.
 - **Coverage:** aggregator coverage varies by country and bank, and credit-card coverage is patchier than current accounts. Check coverage in your target markets before committing to a vendor.
@@ -64,7 +64,7 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 ## 5. Billing
 
-- **Card:** use a PCI-DSS compliant processor's hosted fields or checkout, so card data never reaches TRNZND servers. Run it as a monthly USD 50 subscription.
+- **Card:** use a PCI-DSS compliant processor's hosted fields or checkout, so card data never reaches TRNZIT servers. Run it as a monthly USD 50 subscription.
 - **USDT/USDC:** issue a unique deposit address per invoice (or use a crypto payment processor). Watch the chain for the exact amount, then mark the invoice paid after N confirmations. Handle underpayment, overpayment and the wrong network explicitly.
 - **Plan limits:** enforce user and connection caps server-side, at invite or connect time and on downgrade. The prototype enforces them in the reducer and UI.
 

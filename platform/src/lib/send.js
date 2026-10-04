@@ -3,24 +3,24 @@
 
 import { ASSET_NETWORKS, isFiatConn } from '../data/seed.js';
 
-// TRNZND is non-custodial: it never holds private keys or customer funds. A released payment is an
+// TRNZIT is non-custodial: it never holds private keys or customer funds. A released payment is an
 // instruction passed through, by API, to the provider that holds the assets; the provider executes it.
 export const SEND_METHODS = {
   wallet: {
     label: 'Passed to your wallet to sign',
-    detail: 'TRNZND prepares the payment and hands it to your own wallet app or hardware wallet. You sign it there; your keys never leave your device.',
+    detail: 'TRNZIT prepares the payment and hands it to your own wallet app or hardware wallet. You sign it there; your keys never leave your device.',
   },
   custodian: {
     label: 'Instruction passed to your custodian',
-    detail: 'TRNZND passes your authorised instruction to the custodian by API. The custodian holds the assets and executes the payment, and its own controls still apply.',
+    detail: 'TRNZIT passes your authorised instruction to the custodian by API. The custodian holds the assets and executes the payment, and its own controls still apply.',
   },
   exchange: {
     label: 'Instruction passed to your exchange',
-    detail: 'TRNZND passes your authorised withdrawal instruction to the exchange by API. The exchange holds the assets and executes the payment, and its own controls still apply.',
+    detail: 'TRNZIT passes your authorised withdrawal instruction to the exchange by API. The exchange holds the assets and executes the payment, and its own controls still apply.',
   },
   otc: {
     label: 'Instruction passed to your broker',
-    detail: 'TRNZND passes your authorised instruction to the broker by API. The broker holds the assets and executes the payment.',
+    detail: 'TRNZIT passes your authorised instruction to the broker by API. The broker holds the assets and executes the payment.',
   },
 };
 

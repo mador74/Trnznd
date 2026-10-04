@@ -85,7 +85,7 @@ h3 { font-size: 14px; }
 .brand:hover { text-decoration: none; }
 .brand__mark { width: 22px; height: 22px; border-radius: 50%; border: 3px solid transparent;
   background: linear-gradient(var(--midnight), var(--midnight)) padding-box, linear-gradient(135deg, var(--teal), var(--blue), var(--violet)) border-box; }
-.brand__sub { font-weight: 500; font-size: 12px; color: #9ca3af; letter-spacing: 0.08em; text-transform: uppercase; }
+.brand__sub { font-weight: 500; font-size: 13px; color: #9ca3af; letter-spacing: 0.01em; white-space: nowrap; }
 .org { font-size: 13px; color: #9ca3af; border-left: 1px solid #374151; padding-left: 16px; white-space: nowrap; }
 .nav { display: flex; gap: 2px; height: 100%; overflow-x: auto; }
 .nav a { color: #d1d5db; padding: 0 12px; display: flex; align-items: center; font-weight: 500; border-bottom: 3px solid transparent; white-space: nowrap; }

@@ -41,9 +41,9 @@ export default function Layout() {
     <>
       <header className="topbar">
         <div className="topbar__inner">
-          <Link to="/" className="brand">
+          <Link to="/" className="brand" aria-label="TRNZIT Treasury Management, by TRNZND">
             <span className="brand__mark" />
-            trnznd <span className="brand__sub">Treasury</span>
+            TRNZIT <span className="brand__sub">Treasury Management, by TRNZND</span>
           </Link>
           <span className="org">{state.org.name} · {plan.name}</span>
           <nav className="nav" aria-label="Main">

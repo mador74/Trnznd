@@ -388,7 +388,7 @@ function SendFooter({ r, conn }) {
           <div className="muted small">Final release by: {releasers.join(', ') || 'nobody yet. An Owner or Admin can authorise releasers on the Team page.'}</div>
         </div>
         <span className="spacer" />
-        {allowed && <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZND?</button>}
+        {allowed && <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZIT?</button>}
         <button className="btn primary" disabled={!!block || short || !!releaseBlock} title={releaseBlock || ''} onClick={() => setStepUp(true)}>Release payment</button>
       </div>
       {releaseBlock && <div className="small" style={{ color: 'var(--warn)' }}>{releaseBlock}</div>}
@@ -422,8 +422,8 @@ export function StepUp({ title, summary, provider, onClose, onConfirm }) {
     </>}>
       <div>{summary}</div>
       <div className="small">
-        This is your personal authorisation. TRNZND passes the instruction to <strong>{provider}</strong> by API; {provider} holds the
-        assets and makes the payment. TRNZND never holds private keys or your funds.
+        This is your personal authorisation. TRNZIT passes the instruction to <strong>{provider}</strong> by API; {provider} holds the
+        assets and makes the payment. TRNZIT never holds private keys or your funds.
       </div>
       <div className="notice warn small">Crypto payments cannot be reversed once confirmed. Check the address and network.</div>
       <label className="field">

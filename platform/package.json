@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "TRNZND Treasury — digital-asset treasury management prototype (aggregation, ledger, approvals, team, billing).",
+  "description": "TRNZIT Treasury Management, by TRNZND — digital-asset treasury management prototype (aggregation, ledger, approvals, team, billing).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

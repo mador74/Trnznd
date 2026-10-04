@@ -35,7 +35,7 @@ export default function Send() {
         <div>
           <h1>Send</h1>
           <p>
-            Instruct your own custodian, exchange or wallet to pay stablecoins or other crypto to a counterparty’s whitelisted address. TRNZND never holds keys or funds.
+            Instruct your own custodian, exchange or wallet to pay stablecoins or other crypto to a counterparty’s whitelisted address. TRNZIT never holds keys or funds.
             {plan.approvals ? ' Each payment follows your approval rules, then an authorised releaser gives the final release.' : ' On Basic you release each payment yourself with your 2-step code.'}
           </p>
         </div>

@@ -102,7 +102,7 @@ function PaymentMethod({ onClose, price }) {
       <label className="row"><input type="radio" checked={type === 'card'} onChange={() => setType('card')} /> Credit or debit card</label>
       <label className="row"><input type="radio" checked={type === 'stablecoin'} onChange={() => setType('stablecoin')} /> Stablecoin (USDT or USDC)</label>
       {type === 'card' ? (
-        <div className="notice small">In production the card form is hosted by a PCI-DSS compliant payment processor; card numbers never touch TRNZND servers. Demo: no card is collected here.</div>
+        <div className="notice small">In production the card form is hosted by a PCI-DSS compliant payment processor; card numbers never touch TRNZIT servers. Demo: no card is collected here.</div>
       ) : (
         <>
           <div className="grid cols-2">

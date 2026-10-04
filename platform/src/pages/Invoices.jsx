@@ -275,7 +275,7 @@ function SendInvoice({ inv, contact, me, onClose }) {
     return (
       <Modal title="Invoice sent" onClose={onClose} footer={<button className="btn primary" onClick={onClose}>Done</button>}>
         <p>{inv.number} is recorded as sent to {recipients.join(', ')}.</p>
-        <div className="notice warn small">Demo: no email actually left this page. In production TRNZND emails each recipient the message with the invoice PDF attached, and tracks delivery.</div>
+        <div className="notice warn small">Demo: no email actually left this page. In production TRNZIT emails each recipient the message with the invoice PDF attached, and tracks delivery.</div>
       </Modal>
     );
 

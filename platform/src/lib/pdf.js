@@ -118,7 +118,7 @@ export function buildInvoicePdf({ inv, org, contact, payTo }) {
 
   doc.setFontSize(8);
   doc.setTextColor(...grey);
-  doc.text(plain(`${org.name} - generated with TRNZND Treasury (demo)`), M, 287);
+  doc.text(plain(`${org.name} - generated with TRNZIT Treasury Management, by TRNZND (demo)`), M, 287);
   return doc;
 }
 

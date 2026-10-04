@@ -45,19 +45,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="row">
-        <h2>Digital asset accounts</h2>
-        <span className="spacer" />
-        <Link className="btn sm" to="/connections">Manage connections</Link>
-      </div>
-      <div className="grid cols-3">
-        {state.connections.filter((c) => !isFiatConn(c)).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
-      </div>
-      <div className="row"><h3 className="muted">Bank accounts and cards</h3></div>
-      <div className="grid cols-3">
-        {state.connections.filter(isFiatConn).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
-      </div>
-
       <div className="grid dash">
         <div className="card">
           <div className="card__head"><h2>Total treasury value — 90 days</h2><span className="spacer" /><span className="muted small">In {displayCurrency()}, at demo prices</span></div>
@@ -163,6 +150,19 @@ export default function Dashboard() {
           ))}
         </div>
         )}
+      </div>
+
+      <div className="row">
+        <h2>Digital asset accounts</h2>
+        <span className="spacer" />
+        <Link className="btn sm" to="/connections">Manage connections</Link>
+      </div>
+      <div className="grid cols-3">
+        {state.connections.filter((c) => !isFiatConn(c)).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
+      </div>
+      <div className="row"><h3 className="muted">Bank accounts and cards</h3></div>
+      <div className="grid cols-3">
+        {state.connections.filter(isFiatConn).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
       </div>
 
       <div className="card">

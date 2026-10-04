@@ -59,7 +59,7 @@ export default function Layout() {
             <NavLink to="/audit">Audit log</NavLink>
             <NavLink to="/settings">Billing</NavLink>
           </nav>
-          <span className="spacer" />
+          <div className="topbar__tools">
           <label className="row small" title="Prototype only: switch user to simulate multi-party approvals">
             <span className="who-label" style={{ color: '#9ca3af', whiteSpace: 'nowrap' }}>Signed in as</span>
             <select aria-label="Signed in as" value={state.currentUserId} onChange={(e) => dispatch({ type: 'SET_CURRENT_USER', userId: e.target.value })}>
@@ -73,6 +73,7 @@ export default function Layout() {
             {Object.entries(DISPLAY_CURRENCIES).map(([code, c]) => <option key={code} value={code} title={c.name}>{code}</option>)}
           </select>
           <button className="icon-btn" onClick={toggle} aria-label="Toggle dark mode">{theme === 'dark' ? '☀' : '☾'}</button>
+          </div>
         </div>
       </header>
       <div className="demo-banner">

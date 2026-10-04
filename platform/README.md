@@ -48,7 +48,7 @@ Every page has a footer stating that TRNZIT is built and operated by TRNZND UAE 
 
 Two ways to move around:
 - **Left sidebar.** Every page is visible, grouped under Overview, Accounts, Payments, Records and Company, with icons and counters. The « button collapses it to an icon rail (hover shows the page name), and the choice is remembered. On phones and small tablets it becomes a drawer opened with the ☰ button.
-- **Top menu.** The same pages as five dropdowns (Dashboard · Accounts · Payments · Books · Company), on its own row under the logo.
+- **Top menu.** All 11 pages as plain links, no dropdowns, on one row under the logo (screens 1000px and wider; narrower screens use the sidebar or the ☰ drawer).
 
 ## Code map
 

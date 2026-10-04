@@ -92,20 +92,10 @@ h3 { font-size: 14px; }
 .nav a { color: #d1d5db; padding: 0 12px; height: 42px; display: flex; align-items: center; font-weight: 500; border-bottom: 3px solid transparent; white-space: nowrap; }
 .nav a:hover { color: #fff; text-decoration: none; }
 .nav a.active { color: #fff; border-bottom-color: var(--teal); }
-.navmenu { position: relative; display: flex; }
-.navmenu__btn { background: none; border: 0; border-bottom: 3px solid transparent; color: #d1d5db; font: inherit; font-weight: 500; padding: 0 12px; height: 42px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; }
-.navmenu__btn:hover, .navmenu__btn[aria-expanded='true'] { color: #fff; }
-.navmenu__btn.active { color: #fff; border-bottom-color: var(--teal); }
-.navmenu__btn:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
-.navmenu__caret { font-size: 10px; opacity: 0.7; }
-.navmenu__btn .count, .navmenu__item .count { margin-left: 4px; background: var(--teal); color: var(--midnight); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 6px; }
-.navmenu__list { position: absolute; top: 100%; left: 0; z-index: 40; min-width: 240px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 12px 32px rgba(10, 15, 30, 0.25); padding: 6px; display: flex; flex-direction: column; }
-.nav .navmenu__item { display: flex; flex-direction: column; align-items: flex-start; height: auto; padding: 8px 10px; border-radius: 8px; border: 0; color: var(--text); white-space: normal; }
-.nav .navmenu__item:hover { background: var(--surface-2); text-decoration: none; color: var(--text); }
-.nav .navmenu__item.active { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--teal); color: var(--text); }
-.navmenu:last-child .navmenu__list, .navmenu:nth-last-child(2) .navmenu__list { left: auto; right: 0; }
-.lbl-short { display: none; }
-.navmenu__hint { font-size: 12px; color: var(--muted); font-weight: 400; }
+@media (max-width: 1280px) { .nav a { padding: 0 9px; font-size: 13.5px; } .nav { margin-left: -9px; } }
+@media (max-width: 1100px) { .nav a { padding: 0 7px; font-size: 13px; } .nav { margin-left: -7px; } }
+/* Below 1000px the top row would wrap: use the sidebar (or the ☰ drawer on phones) instead. */
+@media (max-width: 1000px) { .topbar .nav { display: none; } .topbar__inner { padding-bottom: 8px; } }
 .nav .lock { margin-left: 4px; font-size: 11px; opacity: 0.7; }
 .nav .count { margin-left: 6px; background: var(--teal); color: var(--midnight); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 6px; }
 .topbar select { background: #1f2937; color: #f9fafb; border: 1px solid #374151; border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
@@ -138,13 +128,8 @@ h3 { font-size: 14px; }
   .topbar__inner { padding: 8px 16px 0; column-gap: 10px; }
   .topbar { position: static; } /* the two-row header would take too much of a phone screen if it stuck */
   .topbar .nav a { padding: 0 10px; height: 38px; font-size: 13.5px; }
-  .topbar .nav .navmenu__item { padding: 8px 10px; height: auto; font-size: 14px; }
-  .navmenu__btn { padding: 0 6px; height: 38px; font-size: 13px; gap: 2px; }
   .topbar .nav > a { padding: 0 6px; font-size: 13px; }
   .topbar .nav { margin-left: -6px; }
-  .navmenu__list { min-width: 220px; }
-  .lbl-long, .navmenu__caret { display: none; }
-  .lbl-short { display: inline; }
   .topbar__tools { gap: 6px; }
   .topbar__tools select:not(.ccy) { max-width: 104px; }
   .topbar__tools select.ccy { max-width: 76px; }
@@ -260,7 +245,6 @@ th.col-out { color: var(--neg); }
 .legend__row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
 @media (max-width: 370px) {
-  .navmenu__btn, .topbar .nav > a { padding: 0 4px; font-size: 12.5px; }
   .topbar .nav { margin-left: -4px; }
 }
 

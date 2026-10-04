@@ -256,10 +256,8 @@ export function buildSeed(nowDate = new Date()) {
     { id: 'a1', at: iso(now - 1 * DAY), userId: 'u-owner', action: 'Approved request', detail: 'Whitelist Qadir Trading House' },
   ];
 
-  const subscriptionInvoices = [0, 1, 2, 3].map((i) => ({
-    id: 'SUB-' + (1040 - i), date: iso(now - (i * 30 + 4) * DAY), amountUsd: 100, status: 'paid',
-    method: i % 2 ? 'USDC (Ethereum)' : 'Card •••• 4242',
-  }));
+  // The demo business is on day 3 of its 14-day free trial: card authorised, nothing charged yet.
+  const subscriptionInvoices = [];
 
   // Sales invoices. The paid one is matched to a real receipt in the ledger above.
   const receipt = transactions.find((t) => t.connectionId === 'c-eth' && t.asset === 'USDC' && t.type === 'deposit' && t.reconciled);
@@ -284,7 +282,7 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 9,
+    version: 10,
     priceAnchor: iso(now),
     openingDate: iso(now - 121 * DAY),
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
@@ -293,6 +291,10 @@ export function buildSeed(nowDate = new Date()) {
     partners: { onramp: { status: 'none' }, trnznd: { status: 'none' } },
     onrampOrders: [],
     zendOrders: [],
-    billing: { planId: 'institution', paymentMethod: { type: 'card', label: 'Visa •••• 4242' }, nextInvoice: iso(now + 26 * DAY) },
+    billing: {
+      planId: 'institution', interval: 'monthly',
+      paymentMethod: { type: 'card', label: 'Visa •••• 4242', authorisedAt: iso(now - 3 * DAY) },
+      trialStart: iso(now - 3 * DAY), cancelledAt: null,
+    },
   };
 }

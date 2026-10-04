@@ -79,7 +79,9 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 ## 5. Billing
 
-- **Card:** use a PCI-DSS compliant processor's hosted fields or checkout, so card data never reaches TRNZIT servers. Run it as a monthly USD 50 subscription.
+- **Card:** use a PCI-DSS compliant processor's hosted fields or checkout, so card data never reaches TRNZIT servers. Run subscriptions monthly, or annually in advance at 10× the monthly price.
+- **Free trial and 12-month agreement:** at sign-up, verify and save the card with the processor ("authorise in advance") but charge nothing. Store `trialStart`, `cancelledAt`, `interval` and the agreement start/end server-side, and run the day-14 conversion as a scheduled job, not in the browser. A cancellation is valid only if received before the trial end time, so store and show times in one stated time zone. Send a reminder before the trial ends (counsel to set how many days and which channel). Verify with the chosen processor how it handles saved cards versus authorisation holds: a hold may expire before day 14 on some card schemes (unconfirmed; check the processor's documentation).
+- **Open billing decisions:** renewal after the 12 months, plan changes and downgrades during the agreement (pro-rata or not), whether stablecoin payers (no trial) are also bound for 12 months, and what happens when a card charge fails after the trial. The prototype keeps plan changes open and fixes only the billing interval for the 12 months.
 - **USDT/USDC:** issue a unique deposit address per invoice (or use a crypto payment processor). Watch the chain for the exact amount, then mark the invoice paid after N confirmations. Handle underpayment, overpayment and the wrong network explicitly.
 - **Plan limits:** enforce user and connection caps server-side, at invite or connect time and on downgrade. The prototype enforces them in the reducer and UI.
 

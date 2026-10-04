@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer } from 'react
 import { buildSeed } from '../data/seed.js';
 import { setDisplayCurrency } from '../lib/format.js';
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
-import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../lib/plans.js';
+import { canAddConnection, canAddUser, canCancelFree, intervalBlocker, INTERVALS, paymentMethodBlocker, planBlockers, planOf, PLANS, priceFor, subscriptionStatus, TRIAL_DAYS } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
 import { balances, usdOf } from '../lib/ledger.js';
 import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
@@ -11,14 +11,14 @@ import { PARTNERS, redeemQuote } from '../lib/partners.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v9';
+const KEY = 'trnznd-treasury-v10';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 9) return s;
+      if (s.version === 10) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -431,7 +431,38 @@ function reducer(state, a) {
     }
 
     case 'SET_PAYMENT_METHOD':
+      if (paymentMethodBlocker(state.billing, a.method.type, now())) return state;
       return { ...state, billing: { ...state.billing, paymentMethod: a.method }, audit: audit(state, 'Changed payment method', a.method.label) };
+
+    case 'SET_BILLING_INTERVAL':
+      if (intervalBlocker(state.billing, a.interval, now())) return state;
+      return {
+        ...state,
+        billing: { ...state.billing, interval: a.interval },
+        audit: audit(state, 'Changed billing interval', `${INTERVALS[state.billing.interval || 'monthly'].label} → ${INTERVALS[a.interval].label}`),
+      };
+    case 'CANCEL_TRIAL':
+      if (!canCancelFree(state.billing, now())) return state;
+      return { ...state, billing: { ...state.billing, cancelledAt: now() }, audit: audit(state, 'Cancelled free trial', 'No charge; card authorisation released') };
+    case 'UNDO_CANCEL_TRIAL':
+      if (subscriptionStatus(state.billing, now()).phase !== 'cancelled') return state;
+      return { ...state, billing: { ...state.billing, cancelledAt: null }, audit: audit(state, 'Resumed free trial', 'Cancellation withdrawn before the trial ended') };
+    case 'DEMO_END_TRIAL': {
+      // Prototype only: move the clock past day 14 so the 12-month agreement and first charge can be seen.
+      if (subscriptionStatus(state.billing, now()).phase !== 'trial') return state;
+      const trialStart = new Date(Date.now() - (TRIAL_DAYS * 86400000 + 60000)).toISOString();
+      const ends = new Date(+new Date(trialStart) + TRIAL_DAYS * 86400000).toISOString();
+      const interval = state.billing.interval || 'monthly';
+      const n = 1041 + state.subscriptionInvoices.length;
+      const inv = { id: 'SUB-' + n, date: ends, amountUsd: priceFor(state.billing.planId, interval), status: 'paid',
+        method: state.billing.paymentMethod.label, period: interval === 'annual' ? '12 months in advance' : 'Month 1 of 12' };
+      return {
+        ...state,
+        billing: { ...state.billing, trialStart },
+        subscriptionInvoices: [inv, ...state.subscriptionInvoices],
+        audit: audit(state, 'Trial ended, 12-month agreement started', `${planOf(state).name}, ${INTERVALS[interval].label.toLowerCase()}; first charge ${inv.id}`),
+      };
+    }
 
     default:
       return state;

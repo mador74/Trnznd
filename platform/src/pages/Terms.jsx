@@ -17,19 +17,26 @@ const SECTIONS = [
     'Related-party disclosure: TRNZND UAE and TRNZND S.A. have the same ultimate beneficial owners. They are distinct legal entities and are run as separate businesses. Using ZEND is optional: TRNZIT works with any supported stablecoin. [Counsel to confirm whether any referral arrangement between the two companies must also be disclosed.]',
   ]],
   ['4. Payments to TRNZIT', [
-    'TRNZND UAE never receives payments from you through TRNZIT, except your monthly subscription for the plan you choose (Basic, Premium or Institution).',
-    'Subscriptions can be paid by card, or in USDT or USDC.',
+    'TRNZND UAE never receives payments from you through TRNZIT, except your subscription for the plan you choose (Basic, Premium or Institution).',
+    'Subscriptions can be paid by card, or in USDT or USDC, either monthly or annually. Annual billing costs 10 times the monthly price and is paid in advance.',
   ]],
-  ['5. Your responsibilities', [
+  ['5. Free trial and 12-month agreement', [
+    'New customers who authorise a credit or debit card in advance get a 14-day free trial. Nothing is charged during the trial.',
+    'You can cancel at any time during the 14 days, at no cost. The card authorisation is then released.',
+    'If you do not cancel within the 14 days, your subscription becomes a 12-month agreement starting on the day the trial ends. Your card is charged on that day: either the first of 12 monthly payments, or the full annual price in advance.',
+    'Once the 12-month agreement has started, cancelling does not end it early, and the billing interval cannot be changed until renewal. [Counsel to confirm what happens at the end of the 12 months (automatic renewal, notice period and reminders) and whether early termination, refunds or pro-rata charges apply when changing plan.]',
+    '[Counsel to confirm that this trial-to-commitment model, the pre-authorisation and the reminders before the trial ends meet consumer-protection, automatic-renewal and card-scheme rules in each country where TRNZIT is offered.]',
+  ]],
+  ['6. Your responsibilities', [
     'You choose who can use your account, their roles, your approval rules and who may release payments.',
     'You are responsible for checking recipient addresses and networks. Blockchain payments cannot be reversed once confirmed.',
   ]],
-  ['6. Transaction records', [
+  ['7. Transaction records', [
     'TRNZIT keeps a record of your transactions, reconciliations and user actions for your audit trail, and lets you export them.',
     'TRNZIT is not an accounting system and does not provide accounting, tax or legal advice. Use your own accounting software and advisers for your books.',
   ]],
-  ['7. Data protection', ['[To be drafted for each jurisdiction, e.g. Brazil (LGPD), Nigeria (NDPA), South Africa (POPIA), Indonesia (PDP Law).]']],
-  ['8. Liability, governing law and disputes', ['[To be drafted by counsel.]']],
+  ['8. Data protection', ['[To be drafted for each jurisdiction, e.g. Brazil (LGPD), Nigeria (NDPA), South Africa (POPIA), Indonesia (PDP Law).]']],
+  ['9. Liability, governing law and disputes', ['[To be drafted by counsel.]']],
 ];
 
 export default function Terms() {

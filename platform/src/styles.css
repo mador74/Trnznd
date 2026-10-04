@@ -246,3 +246,9 @@ th.col-out { color: var(--neg); }
 @media (max-width: 370px) {
 }
 
+
+/* Billing interval switch */
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; padding: 3px; background: var(--surface-2); flex-wrap: wrap; }
+.seg button { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+.seg button.active { background: var(--teal); color: var(--midnight); }
+.seg button:disabled { cursor: not-allowed; opacity: 0.6; }

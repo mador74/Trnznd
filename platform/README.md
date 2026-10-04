@@ -31,7 +31,7 @@ npm run build      # static build in platform/dist (relative base, hash routing)
 | **Transactions** | One ledger across all connections recording what, when, how much and who (counterparty plus address), with the tx hash. Money coming in and going out has separate **In** and **Out** columns (green and red), each with its value at the transaction date, and totals for in, out and net. You can filter by direction. Click a row to categorise, add a memo or reconcile it. Filters, search, bulk reconcile, categories, memos and CSV export |
 | **Approvals** | M-of-N policies (e.g. *2 of 3 for payments ≥ $10k*) that can stack (e.g. *Owner co-sign ≥ $250k*), an address whitelist, and a request → sign → execute → record-hash flow. Requesters can't approve their own request, and one rejection rejects |
 | **Team** | Seats follow the plan, with roles (Admin, Approver, Accountant, Viewer), a permissions matrix and suspend/remove. Removing a user also removes them from approver lists |
-| **Billing** | Compare and switch plans; pay by card or USDT/USDC (network selectable); subscription invoice history |
+| **Billing** | Compare and switch plans; pay monthly, or annually in advance at 10× the monthly price (Basic $150, Premium $500, Institution $1,000 a year); pay by card or USDT/USDC (network selectable); subscription invoice history. **Free trial:** 14 days with a card authorised up front and nothing charged. The Owner can cancel inside the 14 days at no cost (and undo that before the trial ends). If not cancelled, a 12-month agreement starts on the day the trial ends and the first charge is taken. The billing interval can be changed during the trial but is then fixed for the 12 months, and stablecoin payment is available once the trial has ended. The demo business starts on day 3 of its trial; *Demo: jump to day 15* shows the agreement starting |
 | **Audit log** | Every state change: who, what and when, exportable to CSV |
 
 Use **"Signed in as"** in the top bar to switch between demo users. That lets you see a 2-of-3 approval collected from several people. **Reset demo** restores the seed data.
@@ -54,7 +54,7 @@ A single header menu: the logo and user controls on top, and all 11 pages as pla
 src/
 ├─ lib/policy.js      approval engine (pure, unit-tested)
 ├─ lib/ledger.js      balances, history, cash flow (pure, unit-tested)
-├─ lib/plans.js       plan limits and downgrade checks (pure, unit-tested)
+├─ lib/plans.js       plan limits, downgrade checks, annual pricing, trial and 12-month agreement (pure, unit-tested)
 ├─ lib/invoice.js     invoice totals, status, payment matching (pure, unit-tested)
 ├─ lib/pdf.js         invoice PDF (jsPDF)
 ├─ lib/send.js        payment pre-flight checks and signing methods (unit-tested)

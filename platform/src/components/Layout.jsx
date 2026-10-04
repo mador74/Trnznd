@@ -48,10 +48,9 @@ export default function Layout() {
       { to: '/convert', text: 'Convert', icon: 'swap', hint: 'Fiat, stablecoins and crypto' },
       { to: '/approvals', text: 'Approvals', icon: 'shield', hint: plan.approvals ? 'Sign-off rules and queue' : 'Premium and Institution', count: plan.approvals ? toSign : 0, lock: !plan.approvals },
     ] },
-    { label: 'Books', items: [
+    { label: 'Records', items: [
       { to: '/transactions', text: 'Transactions', icon: 'list', hint: 'Every movement, in and out' },
       { to: '/invoices', text: 'Invoices', icon: 'invoice', hint: 'Bill customers, get paid' },
-      { to: '/accounting', text: 'Accounting', icon: 'book', hint: 'Journals, reports, period close' },
     ] },
     { label: 'Company', items: [
       { to: '/team', text: 'Team', icon: 'users', hint: 'Users, roles and releasers' },
@@ -99,7 +98,7 @@ export default function Layout() {
                 ['/approvals', plan.approvals ? 'Approvals' : 'Approvals 🔒', plan.approvals ? 'Sign-off rules and queue' : 'Premium and Institution', plan.approvals ? toSign : 0],
               ]}
             />
-            <NavMenu label="Books" items={[['/transactions', 'Transactions', 'Every movement, in and out'], ['/invoices', 'Invoices', 'Bill customers, get paid'], ['/accounting', 'Accounting', 'Journals, reports, period close']]} />
+            <NavMenu label="Records" items={[['/transactions', 'Transactions', 'Every movement, in and out'], ['/invoices', 'Invoices', 'Bill customers, get paid']]} />
             <NavMenu label="Company" items={[['/team', 'Team', 'Users, roles and releasers'], ['/settings', 'Plan & billing', 'Basic, Premium, Institution'], ['/audit', 'Audit log', 'Who did what, and when']]} />
           </nav>
           <div className="topbar__tools">

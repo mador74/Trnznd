@@ -3,8 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { TX_TYPES } from '../lib/ledger.js';
 import { valueAt } from '../lib/prices.js';
-import { ACCOUNTS } from '../lib/accounting.js';
-import { amount, date, dateTime, displayCurrency, download, shortAddr, toCsv, money, usd } from '../lib/format.js';
+import { amount, date, dateTime, displayCurrency, download, shortAddr, toCsv, money } from '../lib/format.js';
 import { fromUsd } from '../lib/fx.js';
 import { ASSETS, CATEGORIES, can } from '../data/seed.js';
 import { Empty, Modal } from './ui.jsx';
@@ -13,7 +12,7 @@ const PAGE = 50;
 
 /** The transaction ledger: what, when, how much, who. `fixedConnection` locks the connection filter. */
 export default function Ledger({ fixedConnection }) {
-  const { state, dispatch, me, books } = useStore();
+  const { state, dispatch, me } = useStore();
   const [params, setParams] = useSearchParams();
   const [selected, setSelected] = useState([]);
   const [open, setOpen] = useState(null);
@@ -53,26 +52,19 @@ export default function Ledger({ fixedConnection }) {
     );
   }, [state.transactions, f.q, f.connection, f.asset, f.type, f.dir, f.status, f.from, f.to]);
 
-  // Values are measured at each transaction's own date (fair value then), not at today's price.
+  // Values are shown at each transaction's own date, not at today's price.
   const anchor = state.priceAnchor;
   const v = (t) => valueAt(t, anchor);
   const inUsd = rows.reduce((s, t) => s + (t.amount > 0 ? v(t) : 0), 0);
   const outUsd = rows.reduce((s, t) => s + (t.amount < 0 ? -v(t) : 0), 0);
-  const lock = state.accounting?.lockDate;
-  const locked = (t) => !!lock && t.date.slice(0, 10) <= lock;
   const toggle = (id) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
   const visible = rows.slice(0, limit);
   const allChecked = visible.length > 0 && visible.every((t) => selected.includes(t.id));
 
   const exportCsv = () => {
-    const header = ['Date (UTC)', 'Connection', 'Type', 'Asset', 'In', 'Out', 'Value at transaction date (USD)', `Value at transaction date (${displayCurrency()})`, 'Cost basis (USD)', 'Realised gain/(loss) (USD)', 'GL account', 'Counterparty', 'Counterparty address', 'Tx hash / ref', 'Category', 'Memo', 'Reconciled', 'Period locked'];
-    const body = rows.map((t) => {
-      const p = books.byTx[t.id];
-      const counter = p?.entry.lines[t.amount >= 0 ? 1 : 0]?.acct;
-      return [t.date, connName(t.connectionId), TX_TYPES[t.type], t.asset, t.amount > 0 ? t.amount : '', t.amount < 0 ? -t.amount : '',
-        Math.abs(v(t)).toFixed(2), fromUsd(Math.abs(v(t)), displayCurrency()).toFixed(2), p?.cost ?? '', p?.cost != null ? p.gain : '',
-        counter ? `${counter} ${ACCOUNTS[counter].name}` : '', t.counterparty, t.counterpartyAddress || '', t.txHash, t.category, t.memo, t.reconciled ? 'yes' : 'no', locked(t) ? 'yes' : 'no'];
-    });
+    const header = ['Date (UTC)', 'Connection', 'Type', 'Asset', 'In', 'Out', 'Value at transaction date (USD)', `Value at transaction date (${displayCurrency()})`, 'Counterparty', 'Counterparty address', 'Tx hash / ref', 'Category', 'Memo', 'Reconciled'];
+    const body = rows.map((t) => [t.date, connName(t.connectionId), TX_TYPES[t.type], t.asset, t.amount > 0 ? t.amount : '', t.amount < 0 ? -t.amount : '',
+      Math.abs(v(t)).toFixed(2), fromUsd(Math.abs(v(t)), displayCurrency()).toFixed(2), t.counterparty, t.counterpartyAddress || '', t.txHash, t.category, t.memo, t.reconciled ? 'yes' : 'no']);
     download(`trnznd-ledger-${new Date().toISOString().slice(0, 10)}.csv`, toCsv([header, ...body]));
   };
 
@@ -152,7 +144,7 @@ export default function Ledger({ fixedConnection }) {
                 <tr key={t.id} className="clickable" onClick={() => setOpen(t.id)}>
                   {canRec && (
                     <td onClick={(e) => e.stopPropagation()}>
-                      <input type="checkbox" aria-label="Select" disabled={locked(t)} checked={selected.includes(t.id)} onChange={() => toggle(t.id)} />
+                      <input type="checkbox" aria-label="Select" checked={selected.includes(t.id)} onChange={() => toggle(t.id)} />
                     </td>
                   )}
                   <td style={{ whiteSpace: 'nowrap' }}>{date(t.date)}</td>
@@ -165,7 +157,7 @@ export default function Ledger({ fixedConnection }) {
                   <td className="num col-in">{t.amount > 0 && <><div className="mono pos">{amount(t.amount, t.asset)}</div><div className="small muted">{money(v(t))}</div></>}</td>
                   <td className="num col-out">{t.amount < 0 && <><div className="mono neg">{amount(-t.amount, t.asset)}</div><div className="small muted">{money(-v(t))}</div></>}</td>
                   <td><span className={`badge${t.category === 'Uncategorised' ? ' warn' : ''}`}>{t.category}</span></td>
-                  <td>{t.reconciled ? <span className="badge pos">Reconciled</span> : <span className="badge">Unreconciled</span>}{locked(t) && <span className="badge" title="In a closed accounting period" style={{ marginLeft: 4 }}>🔒</span>}</td>
+                  <td>{t.reconciled ? <span className="badge pos">Reconciled</span> : <span className="badge">Unreconciled</span>}</td>
                 </tr>
               ))}
             </tbody>
@@ -175,12 +167,12 @@ export default function Ledger({ fixedConnection }) {
           )}
         </div>
       )}
-      {tx && <TxDrawer tx={tx} connName={connName(tx.connectionId)} canEdit={canRec && !locked(tx)} locked={locked(tx)} posting={books.byTx[tx.id]} value={v(tx)} onClose={() => setOpen(null)} dispatch={dispatch} requests={state.requests} invoices={state.invoices} />}
+      {tx && <TxDrawer tx={tx} connName={connName(tx.connectionId)} canEdit={canRec} value={v(tx)} onClose={() => setOpen(null)} dispatch={dispatch} requests={state.requests} invoices={state.invoices} />}
     </div>
   );
 }
 
-function TxDrawer({ tx, connName, canEdit, locked, posting, value, onClose, dispatch, requests, invoices }) {
+function TxDrawer({ tx, connName, canEdit, value, onClose, dispatch, requests, invoices }) {
   const [memo, setMemo] = useState(tx.memo);
   const update = (patch) => dispatch({ type: 'UPDATE_TX', ids: [tx.id], patch });
   const req = tx.requestId && requests.find((r) => r.id === tx.requestId);
@@ -188,7 +180,7 @@ function TxDrawer({ tx, connName, canEdit, locked, posting, value, onClose, disp
   return (
     <Modal title="Transaction" onClose={onClose} drawer>
       <div className={`stat__value ${tx.amount < 0 ? 'neg' : 'pos'}`}>{amount(tx.amount, tx.asset)}</div>
-      <div className="muted">{tx.amount >= 0 ? 'In' : 'Out'} · {money(Math.abs(value))} at fair value on the transaction date</div>
+      <div className="muted">{tx.amount >= 0 ? 'In' : 'Out'} · {money(Math.abs(value))} on the transaction date</div>
       <dl className="kv">
         <dt>When</dt><dd>{dateTime(tx.date)} (UTC {tx.date.slice(11, 16)})</dd>
         <dt>What</dt><dd>{TX_TYPES[tx.type]} · {tx.asset}</dd>
@@ -218,21 +210,7 @@ function TxDrawer({ tx, connName, canEdit, locked, posting, value, onClose, disp
           </button>
         )}
       </div>
-      {locked && <div className="notice small">This transaction is in a closed accounting period, so it cannot be edited. Corrections are posted as adjusting entries in an open period.</div>}
-      {!canEdit && !locked && <div className="notice small">Your role can view but not edit transactions.</div>}
-      {posting && (
-        <div>
-          <div className="stat__label" style={{ marginBottom: 6 }}>Journal entry (USD)</div>
-          <table className="journal">
-            <tbody>
-              {posting.entry.lines.map((l, i) => (
-                <tr key={i}><td className="mono small">{l.acct}</td><td className="small">{ACCOUNTS[l.acct]?.name}</td><td className="num small">{l.dr ? usd(l.dr) : ''}</td><td className="num small">{l.cr ? usd(l.cr) : ''}</td></tr>
-              ))}
-            </tbody>
-          </table>
-          {posting.cost != null && <div className="small muted" style={{ marginTop: 6 }}>Disposal: FIFO cost {usd(posting.cost)}, realised {posting.gain >= 0 ? 'gain' : 'loss'} {usd(Math.abs(posting.gain))}.</div>}
-        </div>
-      )}
+      {!canEdit && <div className="notice small">Your role can view but not edit transactions.</div>}
     </Modal>
   );
 }

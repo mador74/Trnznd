@@ -1,6 +1,6 @@
 # TRNZIT Treasury Management, by TRNZND (prototype)
 
-A treasury management workspace for businesses holding crypto and stablecoins. It is laid out like a fiat accounting ledger (in the spirit of Xero), but its accounts are exchanges, custodians and wallets.
+A treasury management workspace for businesses holding crypto and stablecoins. It is laid out like a business banking dashboard (in the spirit of Xero), but its accounts are exchanges, custodians, wallets, banks and cards. It is not an accounting platform.
 
 **This is a clickable prototype running on demo data.** No real provider is connected, prices are static, and state lives in the browser's localStorage. `ARCHITECTURE.md` covers what a production build needs.
 
@@ -28,14 +28,17 @@ npm run build      # static build in platform/dist (relative base, hash routing)
 | **Open banking** | Bank accounts and credit cards connect with read-only consent and appear alongside crypto. Card balances show as money owed, and each bank's consent-renewal date is shown |
 | **Invoices** | Bill customers in USDC/USDT/BTC/ETH or USD/EUR/GBP. Each invoice has line items and tax, and is paid into your wallet (with a network warning) or bank account. You can download the PDF, or send it as a PDF to the customer, with an optional copy to yourself (in the demo, sending is simulated). Mark an invoice paid by matching it to a receipt in the ledger. Overdue invoices are flagged automatically |
 | **Connections** | Every exchange, custodian and wallet, shown individually and as an aggregated total. "Add connection" asks for a read-only API key or a public address/xpub, never a private key. Each connection has its own detail page with holdings, its balance history and its own ledger |
-| **Transactions** | One ledger across all connections recording what, when, how much and who (counterparty plus address), with the tx hash. Money coming in and going out has separate **In** and **Out** columns (green and red), each with its value at the transaction date, and totals for in, out and net. You can filter by direction. Click a row to see its journal entry, cost basis and realised gain. Filters, search, bulk reconcile, categories, memos and CSV export |
-| **Accounting** | A general ledger for the target markets (Latin America, Africa, South-East Asia), with **IFRS by default** and US GAAP as an option. Policies: **IFRS IAS 38 cost model** (carried at cost, impaired when value falls below cost), **IFRS IAS 38 revaluation model** (carried at fair value, with gains above cost in OCI), or **US GAAP ASU 2023-08** (fair value through net income). Every transaction becomes a balanced double-entry journal at its value on the day it happened, with FIFO cost basis, realised gains and accrual for invoices. Reports: trial balance, income statement (with OCI), digital asset rollforward, journal and chart of accounts, all exportable to CSV. Period close locks past transactions. Policies need your accountant's sign-off |
+| **Transactions** | One ledger across all connections recording what, when, how much and who (counterparty plus address), with the tx hash. Money coming in and going out has separate **In** and **Out** columns (green and red), each with its value at the transaction date, and totals for in, out and net. You can filter by direction. Click a row to categorise, add a memo or reconcile it. Filters, search, bulk reconcile, categories, memos and CSV export |
 | **Approvals** | M-of-N policies (e.g. *2 of 3 for payments ≥ $10k*) that can stack (e.g. *Owner co-sign ≥ $250k*), an address whitelist, and a request → sign → execute → record-hash flow. Requesters can't approve their own request, and one rejection rejects |
 | **Team** | Seats follow the plan, with roles (Admin, Approver, Accountant, Viewer), a permissions matrix and suspend/remove. Removing a user also removes them from approver lists |
 | **Billing** | Compare and switch plans; pay by card or USDT/USDC (network selectable); subscription invoice history |
 | **Audit log** | Every state change: who, what and when, exportable to CSV |
 
 Use **"Signed in as"** in the top bar to switch between demo users. That lets you see a 2-of-3 approval collected from several people. **Reset demo** restores the seed data.
+
+## Not an accounting platform
+
+TRNZIT keeps transactions, reconciliation status and the audit log for audit purposes, and exports them to CSV for the customer's own accounting software. It does not keep a general ledger, produce financial statements or apply accounting standards.
 
 ## Footer and terms
 
@@ -44,7 +47,7 @@ Every page has a footer stating that TRNZIT is built and operated by TRNZND UAE 
 ## Menu
 
 Two ways to move around:
-- **Left sidebar.** Every page is visible, grouped under Overview, Accounts, Payments, Books and Company, with icons and counters. The « button collapses it to an icon rail (hover shows the page name), and the choice is remembered. On phones and small tablets it becomes a drawer opened with the ☰ button.
+- **Left sidebar.** Every page is visible, grouped under Overview, Accounts, Payments, Records and Company, with icons and counters. The « button collapses it to an icon rail (hover shows the page name), and the choice is remembered. On phones and small tablets it becomes a drawer opened with the ☰ button.
 - **Top menu.** The same pages as five dropdowns (Dashboard · Accounts · Payments · Books · Company), on its own row under the logo.
 
 ## Code map
@@ -57,8 +60,7 @@ src/
 ├─ lib/invoice.js     invoice totals, status, payment matching (pure, unit-tested)
 ├─ lib/pdf.js         invoice PDF (jsPDF)
 ├─ lib/send.js        payment pre-flight checks and signing methods (unit-tested)
-├─ lib/accounting.js  general ledger, FIFO cost basis, fair-value remeasurement, reports (unit-tested)
-├─ lib/prices.js     demo price history (fair value at a date)
+├─ lib/prices.js     demo price history (value at a transaction's date)
 ├─ lib/fx.js          display currencies and demo exchange rates (unit-tested)
 ├─ data/seed.js       deterministic demo data, roles, permissions, plan limits
 ├─ state/store.jsx    reducer + localStorage persistence (stand-in for the API)

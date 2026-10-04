@@ -249,8 +249,6 @@ dl.kv dd { margin: 0; overflow-wrap: anywhere; }
 .col-out { background: color-mix(in srgb, var(--neg-bg) 35%, transparent); }
 th.col-in { color: var(--pos); }
 th.col-out { color: var(--neg); }
-.journal { width: 100%; }
-.journal td { padding: 4px 6px; }
 .footer { border-top: 1px solid var(--border); background: var(--surface); margin-top: 32px; }
 .footer__inner { max-width: 1400px; margin: 0 auto; padding: 20px 24px 28px; font-size: 12.5px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
 .footer__inner p { margin: 0; max-width: 90ch; }

@@ -24,9 +24,9 @@ const SECTIONS = [
     'You choose who can use your account, their roles, your approval rules and who may release payments.',
     'You are responsible for checking recipient addresses and networks. Blockchain payments cannot be reversed once confirmed.',
   ]],
-  ['6. Accounting and reports', [
-    'Ledgers, journals and reports are tools to support your bookkeeping under the framework you select (for example IFRS or US GAAP).',
-    'They are not accounting, tax or legal advice. Your accountant decides your accounting policies.',
+  ['6. Transaction records', [
+    'TRNZIT keeps a record of your transactions, reconciliations and user actions for your audit trail, and lets you export them.',
+    'TRNZIT is not an accounting system and does not provide accounting, tax or legal advice. Use your own accounting software and advisers for your books.',
   ]],
   ['7. Data protection', ['[To be drafted for each jurisdiction, e.g. Brazil (LGPD), Nigeria (NDPA), South Africa (POPIA), Indonesia (PDP Law).]']],
   ['8. Liability, governing law and disputes', ['[To be drafted by counsel.]']],

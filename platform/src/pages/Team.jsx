@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { subUserCount, useStore } from '../state/store.jsx';
 import { MAX_SUB_USERS, PERMISSIONS, ROLES, can } from '../data/seed.js';
-import { Avatar, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
+import { Avatar, ConfirmButton, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 const PERM_LABELS = {
   manageBilling: 'Manage plan & billing',
@@ -60,7 +60,7 @@ export default function Team() {
                         {u.status === 'invited' && <button className="btn sm" onClick={() => dispatch({ type: 'UPDATE_USER', id: u.id, patch: { status: 'active' } })} title="Prototype shortcut">Simulate accept</button>}
                         {u.status === 'active' && <button className="btn sm" onClick={() => dispatch({ type: 'UPDATE_USER', id: u.id, patch: { status: 'suspended' } })}>Suspend</button>}
                         {u.status === 'suspended' && <button className="btn sm" onClick={() => dispatch({ type: 'UPDATE_USER', id: u.id, patch: { status: 'active' } })}>Reactivate</button>}
-                        <button className="btn sm danger" onClick={() => confirm(`Remove ${u.name}? They will also be removed from every approval policy.`) && dispatch({ type: 'REMOVE_USER', id: u.id })}>Remove</button>
+                        <ConfirmButton className="btn sm danger" prompt="Confirm remove" onConfirm={() => dispatch({ type: 'REMOVE_USER', id: u.id })}>Remove</ConfirmButton>
                       </div>
                     )}
                   </td>

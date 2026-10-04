@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ROLES } from '../data/seed.js';
 
 export function Modal({ title, onClose, children, footer, wide, drawer }) {
@@ -63,3 +63,18 @@ export const Stat = ({ label, value, sub }) => (
 export const Empty = ({ children }) => <div className="empty">{children}</div>;
 
 export const SERIES = ['#00d4aa', '#0088ff', '#6c3aed', '#06b6d4', '#f59e0b', '#9ca3af'];
+
+/** Two-step button: first click asks, second click within 4s confirms. Avoids window.confirm, which embedded viewers block. */
+export function ConfirmButton({ onConfirm, children, prompt = 'Click again to confirm', className = 'btn' }) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return undefined;
+    const t = setTimeout(() => setArmed(false), 4000);
+    return () => clearTimeout(t);
+  }, [armed]);
+  return (
+    <button className={className} onClick={() => (armed ? (setArmed(false), onConfirm()) : setArmed(true))}>
+      {armed ? prompt : children}
+    </button>
+  );
+}

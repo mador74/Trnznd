@@ -4,7 +4,7 @@ import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd, history, priceOf, usdOf } from '../lib/ledger.js';
 import { amount, date, dateTime, relative, usd, usdShort } from '../lib/format.js';
 import { ASSETS, CONNECTION_TYPES, can } from '../data/seed.js';
-import { ConnIcon, Stat, StatusBadge } from '../components/ui.jsx';
+import { ConfirmButton, ConnIcon, Stat, StatusBadge } from '../components/ui.jsx';
 import Ledger from '../components/Ledger.jsx';
 
 export default function ConnectionDetail() {
@@ -33,12 +33,10 @@ export default function ConnectionDetail() {
         <StatusBadge status={c.status} />
         <button className="btn" onClick={() => dispatch({ type: 'SYNC_CONNECTION', id: c.id })}>Sync now</button>
         {can(me, 'manageConnections') && (
-          <button className="btn danger" onClick={() => {
-            if (confirm(`Disconnect “${c.name}”? Its balances will no longer be included in totals.`)) {
-              dispatch({ type: 'REMOVE_CONNECTION', id: c.id });
-              nav('/connections');
-            }
-          }}>Disconnect</button>
+          <ConfirmButton className="btn danger" prompt="Click again to disconnect" onConfirm={() => {
+            dispatch({ type: 'REMOVE_CONNECTION', id: c.id });
+            nav('/connections');
+          }}>Disconnect</ConfirmButton>
         )}
       </div>
 

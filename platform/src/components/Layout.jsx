@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { ROLES } from '../data/seed.js';
 import { deriveStatus, cannotSignReason } from '../lib/policy.js';
+import { ConfirmButton } from './ui.jsx';
 
 function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -65,7 +66,7 @@ export default function Layout() {
       </header>
       <div className="demo-banner">
         Prototype with demo data only — no real accounts are connected and prices are static.{' '}
-        <button className="btn ghost sm" onClick={() => confirm('Reset all demo data?') && dispatch({ type: 'RESET' })}>Reset demo</button>
+        <ConfirmButton className="btn ghost sm" prompt="Click again to reset everything" onConfirm={() => dispatch({ type: 'RESET' })}>Reset demo</ConfirmButton>
       </div>
       <main className="page">
         <Outlet />

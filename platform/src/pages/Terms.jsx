@@ -14,6 +14,7 @@ const SECTIONS = [
     'Services such as fiat on-ramps, custody, exchange, conversion and open banking are provided by independent third-party providers, licensed or registered as required in their own jurisdictions.',
     'Each provider contracts with you directly under its own terms, and is responsible for its own checks, licences and execution.',
     'ZEND is issued by TRNZND S.A., a company incorporated in Panama and a separate legal entity from TRNZND UAE. Minting and redemption are agreements between your business and TRNZND S.A., under TRNZND S.A.’s own terms. Funds for minting are paid to TRNZND S.A., never to TRNZND UAE or through TRNZIT.',
+    'Related-party disclosure: TRNZND UAE and TRNZND S.A. have the same ultimate beneficial owners. They are distinct legal entities and are run as separate businesses. Using ZEND is optional: TRNZIT works with any supported stablecoin. [Counsel to confirm whether any referral arrangement between the two companies must also be disclosed.]',
   ]],
   ['4. Payments to TRNZIT', [
     'TRNZND UAE never receives payments from you through TRNZIT, except your monthly subscription for the plan you choose (Basic, Premium or Institution).',

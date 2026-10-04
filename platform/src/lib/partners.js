@@ -20,7 +20,7 @@ export const PARTNERS = {
     name: 'TRNZND S.A. (Panama)',
     ref: 'TRNZND S.A.',
     role: 'ZEND minting & redemption',
-    blurb: 'Mint ZEND by sending fiat to TRNZND S.A., or redeem ZEND back to fiat in your bank account. TRNZND S.A. (Panama) is the issuer of ZEND: a TRNZND group company and a separate legal entity from TRNZND UAE, which operates TRNZIT. Minting and redemption are under TRNZND S.A.’s own terms.',
+    blurb: 'Mint ZEND by sending fiat to TRNZND S.A., or redeem ZEND back to fiat in your bank account. TRNZND S.A. (Panama) is the issuer of ZEND: a TRNZND group company and a separate legal entity from TRNZND UAE, which operates TRNZIT. The two companies share the same ultimate owners but run as separate businesses. Minting and redemption are optional and under TRNZND S.A.’s own terms.',
     // ZEND networks confirmed: Ethereum, Solana, Tron. PLACEHOLDER: confirm accepted currencies, minimums and fees.
     fiat: ['USD', 'EUR', 'GBP'],
     networks: ['Ethereum', 'Solana', 'Tron'],

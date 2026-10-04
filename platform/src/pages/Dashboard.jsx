@@ -68,7 +68,7 @@ export default function Dashboard() {
         </div>
         <div className="card">
           <div className="card__head"><h2>Holdings by asset</h2><span className="spacer" /><span className="muted small">USD includes bank, net of cards</span></div>
-          <div className="card__body row" style={{ alignItems: 'center' }}>
+          <div className="card__body row wrap" style={{ alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ width: 150, height: 150, flex: 'none' }}>
               <ResponsiveContainer>
                 <PieChart>
@@ -79,7 +79,7 @@ export default function Dashboard() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="legend" style={{ flex: 1 }}>
+            <div className="legend" style={{ flex: '1 1 150px', minWidth: 0 }}>
               {positive.map((a, i) => (
                 <div className="legend__row" key={a.asset}>
                   <span className="dot" style={{ background: SERIES[i % SERIES.length] }} />

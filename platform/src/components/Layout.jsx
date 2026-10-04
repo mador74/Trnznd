@@ -86,15 +86,6 @@ export default function Layout() {
             TRNZIT <span className="brand__sub">Treasury Management, by TRNZND</span>
           </Link>
           <span className="org">{state.org.name} · {plan.name}</span>
-          <nav className="nav" aria-label="Main">
-            {sections.flatMap((sec) => sec.items).map((it) => (
-              <NavLink key={it.to} to={it.to} end={it.end} title={it.hint}>
-                {it.text}
-                {it.lock && <span className="lock" title="Not included in Basic">🔒</span>}
-                {it.count > 0 && <span className="count">{it.count}</span>}
-              </NavLink>
-            ))}
-          </nav>
           <div className="topbar__tools">
           <label className="row small" title="Prototype only: switch user to simulate multi-party approvals">
             <span className="who-label" style={{ color: '#9ca3af', whiteSpace: 'nowrap' }}>Signed in as</span>

@@ -6,6 +6,7 @@ import { deriveStatus } from '../lib/policy.js';
 import { amount, date, displayCurrency, relative, money, moneyShort } from '../lib/format.js';
 import { CONNECTION_TYPES, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
+import { connectionConvertBlock } from '../lib/convert.js';
 import { invoiceTotal, invoiceStatus } from '../lib/invoice.js';
 import { ConnIcon, SERIES, Stat, StatusBadge } from '../components/ui.jsx';
 
@@ -45,7 +46,7 @@ export default function Dashboard() {
 
       <div className="grid cols-3">
         <Stat label="Net treasury" value={money(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {moneyShort(Math.abs(change30))} in 30 days</span>} />
-        <Stat label="Digital assets" value={money(digital)} sub={`Stablecoins ${money(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
+        <Stat label="Exchanges, custodians & wallets" value={money(digital)} sub={`Stablecoins ${money(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
         <Stat label="Bank cash · card balances" value={money(bank)} sub={<span>Credit cards owed <span className="neg">{money(-cards)}</span></span>} />
         <Stat label="Unpaid invoices" value={money(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
         {plan.approvals ? (
@@ -220,6 +221,7 @@ function ConnCard({ c, bal, total, unrec }) {
           <span className="badge pos">All reconciled</span>
         )}
         <span className="spacer" />
+        {!connectionConvertBlock(c) && <Link className="small" to={`/convert?connection=${c.id}`}>Convert</Link>}
         <Link className="small" to={`/connections/${c.id}`}>View account</Link>
       </div>
     </div>

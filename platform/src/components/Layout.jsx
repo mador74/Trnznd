@@ -35,7 +35,7 @@ export default function Layout() {
   ).length;
   const active = state.users.filter((u) => u.status === 'active');
   const plan = planOf(state);
-  const ready = state.requests.filter((r) => r.type !== 'address_whitelist' && deriveStatus(r, state.policies, state.users) === 'approved').length;
+  const ready = state.requests.filter((r) => !['address_whitelist', 'conversion'].includes(r.type) && deriveStatus(r, state.policies, state.users) === 'approved').length;
 
   return (
     <>
@@ -51,6 +51,7 @@ export default function Layout() {
             <NavLink to="/connections">Connections</NavLink>
             <NavLink to="/transactions">Transactions</NavLink>
             <NavLink to="/send">Send{ready > 0 && <span className="count" title="Approved payments ready to send">{ready}</span>}</NavLink>
+            <NavLink to="/convert">Convert</NavLink>
             <NavLink to="/invoices">Invoices</NavLink>
             <NavLink to="/approvals">
               Approvals{plan.approvals ? toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span> : <span className="lock" title="Not included in Basic">🔒</span>}

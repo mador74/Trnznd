@@ -3,6 +3,7 @@
 // on every screen reconcile with each other.
 
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
+import { defaultConvertKinds } from '../lib/convert.js';
 
 
 export const ASSETS = {
@@ -86,20 +87,25 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   const connections = [
-    { id: 'c-ex1', name: 'Main exchange — trading', type: 'exchange', network: 'Multi-chain', assets: ['BTC', 'ETH', 'SOL', 'USDT', 'USDC'] },
-    { id: 'c-ex2', name: 'EU exchange — settlement', type: 'exchange', network: 'Multi-chain', assets: ['BTC', 'ETH', 'USDC'] },
-    { id: 'c-cus', name: 'Cold storage — MPC custodian', type: 'custodian', network: 'Multi-chain', assets: ['BTC', 'ETH', 'USDC'] },
+    { id: 'c-ex1', name: 'Main exchange — trading', type: 'exchange', network: 'Multi-chain', assets: ['BTC', 'ETH', 'SOL', 'USDT', 'USDC', 'USD'],
+      convertKinds: ['fiat-stablecoin', 'crypto-stablecoin', 'crypto-fiat', 'crypto-crypto', 'stablecoin-stablecoin'], convertEnabled: true },
+    { id: 'c-ex2', name: 'EU exchange — settlement', type: 'exchange', network: 'Multi-chain', assets: ['BTC', 'ETH', 'USDC', 'EUR'],
+      convertKinds: ['fiat-stablecoin', 'crypto-stablecoin', 'crypto-fiat'], convertEnabled: false },
+    { id: 'c-cus', name: 'Cold storage — MPC custodian', type: 'custodian', network: 'Multi-chain', assets: ['BTC', 'ETH', 'USDC'],
+      convertKinds: ['crypto-stablecoin', 'stablecoin-stablecoin'], convertEnabled: true },
     { id: 'c-eth', name: 'Ops wallet — Ethereum', type: 'wallet', network: 'Ethereum', address: '0x' + hex(r, 40), assets: ['ETH', 'USDC', 'USDT'] },
     { id: 'c-trx', name: 'Payments wallet — Tron', type: 'wallet', network: 'Tron', address: 'T' + hex(r, 33), assets: ['USDT'] },
   ].map((c, i) => ({
     ...c, status: 'connected', lastSync: iso(now - (i * 7 + 3) * 60000), connectedAt: iso(now - 200 * DAY),
     // Wallets sign on the user's own device and the custodian has a payments API; exchanges need a withdrawal key first.
     sendEnabled: c.type === 'wallet' || c.type === 'custodian',
+    convertKinds: c.convertKinds || defaultConvertKinds(c.type),
+    convertEnabled: !!c.convertEnabled,
   }));
 
   const opening = {
-    'c-ex1': { BTC: 6, ETH: 120, SOL: 2500, USDT: 900000, USDC: 400000 },
-    'c-ex2': { BTC: 2, ETH: 40, USDC: 600000 },
+    'c-ex1': { BTC: 6, ETH: 120, SOL: 2500, USDT: 900000, USDC: 400000, USD: 250000 },
+    'c-ex2': { BTC: 2, ETH: 40, USDC: 600000, EUR: 180000 },
     'c-cus': { BTC: 35, ETH: 600, USDC: 1500000 },
     'c-eth': { ETH: 25, USDC: 300000, USDT: 150000 },
     'c-trx': { USDT: 650000 },
@@ -130,7 +136,7 @@ export function buildSeed(nowDate = new Date()) {
     for (let k = 0; k < perDay; k++) {
       const ts = now - d * DAY - Math.floor(r() * DAY * 0.9);
       const conn = pick(cryptoConns);
-      const asset = pick(conn.assets);
+      const asset = pick(conn.assets.filter((a) => ASSETS[a].kind !== 'fiat'));
       const price = ASSETS[asset].price;
       const roll = r();
       const sizeUsd = asset === 'USDT' || asset === 'USDC' ? 2000 + r() * 90000 : 1000 + r() * 40000;
@@ -268,7 +274,7 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 4,
+    version: 5,
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,

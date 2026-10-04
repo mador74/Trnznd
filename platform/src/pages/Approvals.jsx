@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { can, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
 import { cannotReleaseReason, checkPayment, NETWORK_FEE_USD, SEND_METHODS, sourceBlockReason } from '../lib/send.js';
+import { convertBlockReason, quote } from '../lib/convert.js';
+import { ASSETS } from '../data/seed.js';
 import { Avatar, Empty, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 export default function Approvals() {
@@ -74,7 +76,9 @@ export function RequestCard({ r }) {
   const conn = state.connections.find((c) => c.id === r.connectionId);
   const prog = progress(r, state.policies, state.users);
   const reason = cannotSignReason(r, me.id, state.policies, state.users);
-  const title = r.type === 'address_whitelist' ? `Whitelist address for ${r.to}` : `${amount(r.amount, r.asset)} → ${r.to}`;
+  const title = r.type === 'address_whitelist' ? `Whitelist address for ${r.to}`
+    : r.type === 'conversion' ? `Convert ${amount(r.amount, r.asset)} → ${r.toAsset}`
+    : `${amount(r.amount, r.asset)} → ${r.to}`;
 
   return (
     <div className="card">
@@ -142,7 +146,7 @@ export function RequestCard({ r }) {
   );
 }
 
-export function NewRequest({ onClose, initialType = 'withdrawal', types = Object.keys(ACTION_TYPES) }) {
+export function NewRequest({ onClose, initialType = 'withdrawal', types = Object.keys(ACTION_TYPES).filter((t) => t !== 'conversion') }) {
   const { state, dispatch, me } = useStore();
   const single = !planOf(state).approvals;
   const [type, setType] = useState(initialType);
@@ -220,7 +224,7 @@ export function NewRequest({ onClose, initialType = 'withdrawal', types = Object
               </select>
             </label>
             <label className="field"><span>Coin</span>
-              <select id="nr-asset" value={asset} onChange={(e) => { setAsset(e.target.value); setDest(''); }}>{conn?.assets.map((a) => <option key={a}>{a}</option>)}</select>
+              <select id="nr-asset" value={asset} onChange={(e) => { setAsset(e.target.value); setDest(''); }}>{conn?.assets.filter((a) => ASSETS[a]?.kind !== 'fiat').map((a) => <option key={a}>{a}</option>)}</select>
             </label>
           </div>
           <label className="field"><span>Amount <span className="muted">— available {amount(available, asset)}</span></span>
@@ -372,13 +376,16 @@ function SendFooter({ r, conn }) {
   const [stepUp, setStepUp] = useState(false);
   const [manual, setManual] = useState(false);
   const [hash, setHash] = useState('');
-  const block = sourceBlockReason(conn);
+  const isConv = r.type === 'conversion';
+  const block = isConv ? convertBlockReason(conn, r.asset, r.toAsset) : sourceBlockReason(conn);
   const available = (balances(state)[r.connectionId] || {})[r.asset] || 0;
   const short = r.amount > available;
   const allowed = can(me, 'createRequest');
   const releaseBlock = cannotReleaseReason(me);
   const releasers = state.users.filter((u) => !cannotReleaseReason(u)).map((u) => u.name);
-  const method = conn && SEND_METHODS[conn.type];
+  const method = isConv
+    ? { label: `Conversion instruction passed to ${conn?.name}`, detail: `${conn?.name} converts at its own rate when it executes. Indicative now: about ${amount(quote(r.asset, r.toAsset, r.amount).receive, r.toAsset)} after its fee.` }
+    : conn && SEND_METHODS[conn.type];
   return (
     <div className="card__foot stack" style={{ display: 'block' }}>
       <div className="row wrap">
@@ -388,8 +395,8 @@ function SendFooter({ r, conn }) {
           <div className="muted small">Final release by: {releasers.join(', ') || 'nobody yet. An Owner or Admin can authorise releasers on the Team page.'}</div>
         </div>
         <span className="spacer" />
-        {allowed && <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZIT?</button>}
-        <button className="btn primary" disabled={!!block || short || !!releaseBlock} title={releaseBlock || ''} onClick={() => setStepUp(true)}>Release payment</button>
+        {allowed && !isConv && <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZIT?</button>}
+        <button className="btn primary" disabled={!!block || short || !!releaseBlock} title={releaseBlock || ''} onClick={() => setStepUp(true)}>{isConv ? 'Release conversion' : 'Release payment'}</button>
       </div>
       {releaseBlock && <div className="small" style={{ color: 'var(--warn)' }}>{releaseBlock}</div>}
       {manual && (
@@ -400,9 +407,10 @@ function SendFooter({ r, conn }) {
       )}
       {stepUp && (
         <StepUp
-          title={`Release ${amount(r.amount, r.asset)}`}
+          title={isConv ? `Convert ${amount(r.amount, r.asset)} → ${r.toAsset}` : `Release ${amount(r.amount, r.asset)}`}
           provider={conn?.name}
-          summary={<>From <strong>{conn?.name}</strong> to <strong>{r.to}</strong>{r.network && <> on <strong>{r.network}</strong></>}<div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.toAddress}</div></>}
+          irreversible={isConv ? 'Conversions cannot be undone once the provider executes them; the final rate is set by the provider.' : undefined}
+          summary={isConv ? <>In <strong>{conn?.name}</strong></> : <>From <strong>{conn?.name}</strong> to <strong>{r.to}</strong>{r.network && <> on <strong>{r.network}</strong></>}<div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.toAddress}</div></>}
           onClose={() => setStepUp(false)}
           onConfirm={() => { dispatch({ type: 'SEND_REQUEST', id: r.id }); setStepUp(false); }}
         />
@@ -412,7 +420,7 @@ function SendFooter({ r, conn }) {
 }
 
 /** Second-factor confirmation before money moves. Demo accepts any 6 digits. */
-export function StepUp({ title, summary, provider, onClose, onConfirm }) {
+export function StepUp({ title, summary, provider, onClose, onConfirm, irreversible }) {
   const [code, setCode] = useState('');
   const valid = /^\d{6}$/.test(code);
   return (
@@ -425,7 +433,7 @@ export function StepUp({ title, summary, provider, onClose, onConfirm }) {
         This is your personal authorisation. TRNZIT passes the instruction to <strong>{provider}</strong> by API; {provider} holds the
         assets and makes the payment. TRNZIT never holds private keys or your funds.
       </div>
-      <div className="notice warn small">Crypto payments cannot be reversed once confirmed. Check the address and network.</div>
+      <div className="notice warn small">{irreversible || 'Crypto payments cannot be reversed once confirmed. Check the address and network.'}</div>
       <label className="field">
         <span>6-digit code from your authenticator app</span>
         <input id="stepup-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} autoFocus />

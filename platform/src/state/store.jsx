@@ -6,17 +6,18 @@ import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../li
 import { deriveStatus } from '../lib/policy.js';
 import { balances, usdOf } from '../lib/ledger.js';
 import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
+import { convertBlockReason, defaultConvertKinds, quote } from '../lib/convert.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v4';
+const KEY = 'trnznd-treasury-v5';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 4) return s;
+      if (s.version === 5) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -34,11 +35,13 @@ function audit(state, action, detail) {
 
 function describe(req) {
   if (req.type === 'address_whitelist') return `Whitelist ${req.to}`;
+  if (req.type === 'conversion') return `Convert ${req.amount.toLocaleString('en-US')} ${req.asset} to ${req.toAsset}`;
   return `${req.amount.toLocaleString('en-US')} ${req.asset} to ${req.to}`;
 }
 
 /** Marks a payment executed and writes its outflow into the ledger, linked to the request. */
 function settle(state, r, txHash) {
+  if (r.type === 'conversion') return settleConversion(state, r, txHash);
   const tx = {
     id: uid('t'), connectionId: r.connectionId, date: now(), type: r.type === 'internal_transfer' ? 'transfer_out' : 'withdrawal',
     asset: r.asset, amount: -r.amount, counterparty: r.to, counterpartyAddress: r.toAddress, txHash,
@@ -49,6 +52,24 @@ function settle(state, r, txHash) {
     ...state,
     requests: state.requests.map((x) => (x.id === r.id ? { ...x, status: 'executed', executedAt: now(), executedTxHash: txHash } : x)),
     transactions: [tx, ...state.transactions],
+  };
+}
+
+/** Records an executed conversion as three ledger lines: amount out, gross amount in, provider fee. */
+function settleConversion(state, r, ref) {
+  const q = quote(r.asset, r.toAsset, r.amount);
+  const base = { connectionId: r.connectionId, date: now(), type: 'conversion', counterparty: 'Provider conversion', txHash: 'conv-' + ref.slice(2, 14), reconciled: true, memo: r.reference, requestId: r.id };
+  const lines = [
+    { ...base, id: uid('t'), asset: r.asset, amount: -r.amount, category: 'Conversion' },
+    { ...base, id: uid('t'), asset: r.toAsset, amount: +q.gross.toFixed(8), category: 'Conversion' },
+    { ...base, id: uid('t'), asset: r.toAsset, amount: -+q.fee.toFixed(8), type: 'fee', category: 'Exchange fee', counterparty: 'Provider fee' },
+  ];
+  const connections = state.connections.map((c) => (c.id === r.connectionId && !c.assets.includes(r.toAsset) ? { ...c, assets: [...c.assets, r.toAsset] } : c));
+  return {
+    ...state,
+    connections,
+    requests: state.requests.map((x) => (x.id === r.id ? { ...x, status: 'executed', executedAt: now(), received: q.receive, rate: q.rate } : x)),
+    transactions: [...lines, ...state.transactions],
   };
 }
 
@@ -64,7 +85,10 @@ function reducer(state, a) {
 
     case 'ADD_CONNECTION': {
       if (!canAddConnection(state)) return state;
-      const c = { ...a.connection, id: uid('c-'), status: 'connected', lastSync: now(), connectedAt: now() };
+      const c = {
+        convertKinds: defaultConvertKinds(a.connection.type), convertEnabled: false,
+        ...a.connection, id: uid('c-'), status: 'connected', lastSync: now(), connectedAt: now(),
+      };
       return {
         ...state,
         connections: [...state.connections, c],
@@ -136,13 +160,30 @@ function reducer(state, a) {
       const r = state.requests.find((x) => x.id === a.id);
       const conn = state.connections.find((c) => c.id === r?.connectionId);
       const releaser = state.users.find((u) => u.id === state.currentUserId);
-      if (!r || cannotReleaseReason(releaser) || deriveStatus(r, state.policies, state.users) !== 'approved' || sourceBlockReason(conn)) return state;
+      const sourceBlock = r?.type === 'conversion' ? convertBlockReason(conn, r.asset, r.toAsset) : sourceBlockReason(conn);
+      if (!r || cannotReleaseReason(releaser) || deriveStatus(r, state.policies, state.users) !== 'approved' || sourceBlock) return state;
       const available = (balances(state)[conn.id] || {})[r.asset] || 0;
       if (r.amount > available) return state;
       return {
         ...state,
         requests: state.requests.map((x) => (x.id === a.id ? { ...x, status: 'broadcast', broadcastAt: now(), sentBy: state.currentUserId } : x)),
-        audit: audit(state, 'Released payment instruction', `${describe(r)} → passed to ${conn.name}`),
+        audit: audit(state, r.type === 'conversion' ? 'Released conversion instruction' : 'Released payment instruction', `${describe(r)} → passed to ${conn.name}`),
+      };
+    }
+    case 'CONVERT_NOW': {
+      // A conversion no policy covers: create it and release it in one step (still by an authorised releaser).
+      const id = uid('r');
+      const req = { ...a.request, id, requestedBy: state.currentUserId, createdAt: now(), approvals: [], rejections: [], status: 'pending' };
+      if (deriveStatus(req, state.policies, state.users) !== 'approved') return state;
+      const created = { ...state, requests: [req, ...state.requests], audit: audit(state, 'Created conversion', describe(req)) };
+      return reducer(created, { type: 'SEND_REQUEST', id });
+    }
+    case 'SET_CONVERT_ENABLED': {
+      const c = state.connections.find((x) => x.id === a.id);
+      return {
+        ...state,
+        connections: state.connections.map((x) => (x.id === a.id ? { ...x, convertEnabled: a.enabled } : x)),
+        audit: audit(state, a.enabled ? 'Enabled conversions' : 'Disabled conversions', c?.name),
       };
     }
     case 'CONFIRM_BROADCASTS': {
@@ -152,7 +193,7 @@ function reducer(state, a) {
       if (!due.length) return state;
       let next = state;
       for (const r of due) next = settle(next, r, '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join(''));
-      return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: 'Provider executed payment', detail: describe(r) }, ...log], next.audit) };
+      return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: r.type === 'conversion' ? 'Provider executed conversion' : 'Provider executed payment', detail: describe(r) }, ...log], next.audit) };
     }
     case 'SET_RELEASER': {
       const u = state.users.find((x) => x.id === a.id);

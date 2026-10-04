@@ -6,6 +6,7 @@ import { amount, date, dateTime, relative, money, moneyShort } from '../lib/form
 import { useState } from 'react';
 import { ASSETS, CONNECTION_TYPES, can, isFiatConn } from '../data/seed.js';
 import { SEND_METHODS } from '../lib/send.js';
+import { connectionConvertBlock, PAIR_LABELS } from '../lib/convert.js';
 import { ConfirmButton, ConnIcon, Modal, Stat, StatusBadge } from '../components/ui.jsx';
 import Ledger from '../components/Ledger.jsx';
 
@@ -49,6 +50,7 @@ export default function ConnectionDetail() {
       </div>
 
       <SendingPanel c={c} />
+      <ConvertPanel c={c} />
 
       <div className="grid cols-2">
         <div className="card">
@@ -130,6 +132,46 @@ function EnableExchangeSending({ c, onClose }) {
       <label className="row small"><input type="checkbox" checked={checks.ip} onChange={() => tick('ip')} />The key only works from TRNZIT’s published IP addresses.</label>
       <label className="row small"><input type="checkbox" checked={checks.list} onChange={() => tick('list')} />Withdrawals are limited to my whitelisted addresses at the exchange as well.</label>
       <div className="notice warn small">Demo: nothing is stored or sent. In production the API credential is encrypted, and only used to forward a payment after your approval rules are met and an authorised releaser has confirmed it with their own 2-step check.</div>
+    </Modal>
+  );
+}
+
+function ConvertPanel({ c }) {
+  const { dispatch, me } = useStore();
+  const [enabling, setEnabling] = useState(false);
+  const manage = can(me, 'manageConnections');
+  const kinds = c.convertKinds || [];
+  if (isFiatConn(c) || c.type === 'wallet' || !kinds.length)
+    return <div className="card card__body small"><strong>Conversions</strong> · {connectionConvertBlock(c)}</div>;
+  return (
+    <div className="card card__body row wrap">
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div className="row"><strong>Conversions</strong>{c.convertEnabled ? <span className="badge pos">On</span> : <span className="badge">Off</span>}</div>
+        <div className="small muted">Allowed by this provider’s API: {kinds.map((k) => PAIR_LABELS[k]).join(' · ')}. Each conversion is a one-off instruction released by an authorised user. TRNZIT never trades on its own.</div>
+      </div>
+      {c.convertEnabled && <Link className="btn sm" to={`/convert?connection=${c.id}`}>Convert</Link>}
+      {manage && (c.convertEnabled
+        ? <ConfirmButton className="btn sm" prompt="Click again to switch off" onConfirm={() => dispatch({ type: 'SET_CONVERT_ENABLED', id: c.id, enabled: false })}>Switch off</ConfirmButton>
+        : <button className="btn sm primary" onClick={() => setEnabling(true)}>Switch on conversions</button>)}
+      {enabling && (
+        <EnableConversions c={c} onClose={() => setEnabling(false)} onDone={() => { dispatch({ type: 'SET_CONVERT_ENABLED', id: c.id, enabled: true }); setEnabling(false); }} />
+      )}
+    </div>
+  );
+}
+
+function EnableConversions({ c, onClose, onDone }) {
+  const [checks, setChecks] = useState({ scope: false, nowd: false });
+  const tick = (k) => setChecks((x) => ({ ...x, [k]: !x[k] }));
+  return (
+    <Modal title={`Switch on conversions for ${c.name}`} onClose={onClose} footer={<>
+      <button className="btn" onClick={onClose}>Cancel</button>
+      <button className="btn primary" disabled={!checks.scope || !checks.nowd} onClick={onDone}>Switch on</button>
+    </>}>
+      <p className="small">To pass conversion instructions, the provider’s API key needs permission to place a conversion (spot trade). TRNZIT only uses it when an authorised releaser confirms a conversion with their own 2-step code. It never trades automatically.</p>
+      <label className="row small"><input type="checkbox" checked={checks.scope} onChange={() => tick('scope')} />The key may convert (spot) but not use margin, futures or lending.</label>
+      <label className="row small"><input type="checkbox" checked={checks.nowd} onChange={() => tick('nowd')} />This key cannot withdraw. Withdrawals use the separate sending permission, if switched on.</label>
+      <div className="notice warn small">Demo: no key is collected or stored here.</div>
     </Modal>
   );
 }

@@ -1,7 +1,7 @@
 // Outgoing crypto payments: who can send, how each source signs, and pre-flight checks.
 // Pure functions, unit tested in send.test.js.
 
-import { ASSET_NETWORKS, isFiatConn } from '../data/seed.js';
+import { ASSETS, ASSET_NETWORKS, isFiatConn } from '../data/seed.js';
 
 // TRNZIT is non-custodial: it never holds private keys or customer funds. A released payment is an
 // instruction passed through, by API, to the provider that holds the assets; the provider executes it.
@@ -51,6 +51,7 @@ export function checkPayment({ conn, asset, amount, available, dest }) {
   const block = sourceBlockReason(conn);
   if (block) return block;
   if (!conn.assets.includes(asset)) return `${conn.name} does not hold ${asset}.`;
+  if (ASSETS[asset]?.kind === 'fiat') return 'Fiat payments are not available yet. Convert to a stablecoin first, or pay from your bank.';
   if (!(amount > 0)) return 'Enter an amount.';
   if (amount > available) return `That is more than the available balance (${available.toLocaleString('en-US')} ${asset}).`;
   if (!dest) return 'Payments can only go to a whitelisted address.';

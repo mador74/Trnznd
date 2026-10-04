@@ -9,6 +9,7 @@ export const ACTION_TYPES = {
   withdrawal: 'Withdrawal / outgoing payment',
   internal_transfer: 'Transfer between own accounts',
   address_whitelist: 'Add whitelisted address',
+  conversion: 'Convert between assets',
 };
 
 export const FALLBACK_POLICY_ID = 'fallback';
@@ -52,7 +53,10 @@ function fallbackPolicy(request, users) {
 /** The policies that govern this request (fallback if nothing matches). */
 export function governingPolicies(request, policies, users) {
   const m = matchingPolicies(request, policies);
-  return m.length ? m : [fallbackPolicy(request, users)];
+  if (m.length) return m;
+  // Conversions keep value inside the same account, so they need approval only when a policy says so.
+  // They still need the final release by an authorised user.
+  return request.type === 'conversion' ? [] : [fallbackPolicy(request, users)];
 }
 
 function countsFor(policy, request) {

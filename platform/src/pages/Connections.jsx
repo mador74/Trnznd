@@ -4,7 +4,7 @@ import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd } from '../lib/ledger.js';
 import { relative, shortAddr, money } from '../lib/format.js';
 import { CONNECTION_TYPES, CRYPTO, FIAT, can, isFiatConn } from '../data/seed.js';
-import { canAddConnection, limitLabel, planOf } from '../lib/plans.js';
+import { canAddConnection, canAddFiatConnection, limitLabel, planOf } from '../lib/plans.js';
 import MultisigWizard from '../components/Multisig.jsx';
 import { ConnIcon, Modal, StatusBadge } from '../components/ui.jsx';
 
@@ -84,7 +84,7 @@ function ConsentNote({ iso }) {
 }
 
 function AddConnection({ onClose }) {
-  const { dispatch } = useStore();
+  const { state, dispatch } = useStore();
   const [type, setType] = useState('exchange');
   const [name, setName] = useState('');
   const [network, setNetwork] = useState('Ethereum');
@@ -124,8 +124,10 @@ function AddConnection({ onClose }) {
           <optgroup label="Digital assets">
             {Object.entries(CONNECTION_TYPES).filter(([, v]) => !v.fiat).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </optgroup>
-          <optgroup label="Fiat (open banking)">
-            {Object.entries(CONNECTION_TYPES).filter(([, v]) => v.fiat).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+          <optgroup label={canAddFiatConnection(state) ? 'Fiat (open banking)' : 'Fiat (open banking) — Premium and Institution only'}>
+            {Object.entries(CONNECTION_TYPES).filter(([, v]) => v.fiat).map(([k, v]) => (
+              <option key={k} value={k} disabled={!canAddFiatConnection(state)}>{v.label}{canAddFiatConnection(state) ? '' : ' 🔒'}</option>
+            ))}
           </optgroup>
         </select>
       </label>

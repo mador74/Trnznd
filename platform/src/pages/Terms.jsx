@@ -18,14 +18,18 @@ const SECTIONS = [
   ]],
   ['4. Payments to TRNZIT', [
     'TRNZND UAE never receives payments from you through TRNZIT, except your subscription for the plan you choose (Basic, Premium or Institution).',
-    'Subscriptions can be paid by card, or in USDT or USDC, either monthly or annually. Annual billing costs 10 times the monthly price and is paid in advance.',
+    'Subscriptions can be paid by card, or in USDT or USDC. Billing is annual by default, at 10 times the monthly price paid in advance; you can choose monthly billing instead.',
+    'The Basic plan supports crypto connections only. Bank account and card connections (open banking) need the Premium or Institution plan.',
   ]],
-  ['5. Free trial and 12-month agreement', [
+  ['5. Free trial, 12-month agreement and renewal', [
     'New customers who authorise a credit or debit card in advance get a 14-day free trial. Nothing is charged during the trial.',
     'You can cancel at any time during the 14 days, at no cost. The card authorisation is then released.',
-    'If you do not cancel within the 14 days, your subscription becomes a 12-month agreement starting on the day the trial ends. Your card is charged on that day: either the first of 12 monthly payments, or the full annual price in advance.',
-    'Once the 12-month agreement has started, cancelling does not end it early, and the billing interval cannot be changed until renewal. [Counsel to confirm what happens at the end of the 12 months (automatic renewal, notice period and reminders) and whether early termination, refunds or pro-rata charges apply when changing plan.]',
-    '[Counsel to confirm that this trial-to-commitment model, the pre-authorisation and the reminders before the trial ends meet consumer-protection, automatic-renewal and card-scheme rules in each country where TRNZIT is offered.]',
+    'If you do not cancel within the 14 days, your subscription becomes a 12-month agreement starting on the day the trial ends. Your card is charged on that day: either the full annual price in advance, or the first of 12 monthly payments.',
+    'The agreement renews automatically for a further 12 months on each renewal date, unless you cancel before that date.',
+    'After the free trial, a cancellation takes effect on the next renewal date. Until then you keep access, and any payments due before that date are still payable.',
+    'You can upgrade at any time. The upgrade applies immediately, and you pay the price difference for the rest of the current billing period (pro rata). Downgrades and changes between monthly and annual billing take effect on the next renewal date.',
+    '[Counsel to confirm: any minimum notice period before renewal, renewal reminders, and whether refunds apply in any case.]',
+    '[Counsel to confirm that this trial-to-commitment and automatic-renewal model, the pre-authorisation and the reminders meet consumer-protection, automatic-renewal and card-scheme rules in each country where TRNZIT is offered.]',
   ]],
   ['6. Your responsibilities', [
     'You choose who can use your account, their roles, your approval rules and who may release payments.',

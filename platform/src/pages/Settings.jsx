@@ -2,22 +2,28 @@ import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { can } from '../data/seed.js';
 import { date, usd } from '../lib/format.js';
-import { ANNUAL_MULTIPLIER, INTERVALS, intervalBlocker, limitLabel, nextCharge, paymentMethodBlocker, planBlockers, planOf, PLAN_ORDER, PLANS, priceFor, seatCount, subscriptionStatus, yearCost } from '../lib/plans.js';
+import {
+  ANNUAL_MULTIPLIER, billingNow, DEFAULT_INTERVAL, INTERVALS, intervalBlocker, isUpgrade, limitLabel, nextCharge, paymentMethodBlocker, planBlockers,
+  planChangeTiming, planOf, PLAN_ORDER, PLANS, priceFor, seatCount, subscriptionStatus, yearCost,
+} from '../lib/plans.js';
 import { ConfirmButton, Modal } from '../components/ui.jsx';
 
 export default function Settings() {
   const { state, dispatch, me } = useStore();
   const [changing, setChanging] = useState(false);
-  const { paymentMethod } = state.billing;
-  const interval = state.billing.interval || 'monthly';
+  const b = state.billing;
+  const { paymentMethod } = b;
+  const interval = b.interval || DEFAULT_INTERVAL;
   const per = INTERVALS[interval].per;
   const current = planOf(state);
   const owner = can(me, 'manageBilling');
-  const nowIso = new Date().toISOString();
-  const sub = subscriptionStatus(state.billing, nowIso);
-  const next = nextCharge(state.billing, nowIso);
-  const intervalNote = intervalBlocker(state.billing, interval === 'monthly' ? 'annual' : 'monthly', nowIso);
-  const fixedInterval = intervalNote && !/Already/.test(intervalNote);
+  const t = billingNow(b);
+  const sub = subscriptionStatus(b, t);
+  const next = nextCharge(b, t);
+  const live = sub.phase === 'trial' || sub.phase === 'committed';
+  const intervalNote = intervalBlocker(b, interval === 'monthly' ? 'annual' : 'monthly', t);
+  const shown = b.scheduledInterval?.interval || interval;
+  const short = (n) => usd(n).replace('.00', '');
 
   return (
     <div className="stack">
@@ -26,26 +32,32 @@ export default function Settings() {
           <h1>Plan & billing</h1>
           <p>
             {state.org.name} · {current.name} plan · {INTERVALS[interval].label.toLowerCase()}
-            {next ? ` · next charge ${date(next)}` : ' · no further charges'}
+            {next ? ` · next charge ${date(next.at)}: ${usd(next.amountUsd)}` : ' · no further charges'}
           </p>
         </div>
       </div>
 
-      <Subscription sub={sub} owner={owner} price={priceFor(current.id, interval)} per={per} plan={current} card={paymentMethod} next={next} />
+      {b.clockOffsetMs > 0 && (
+        <div className="notice small">Demo clock moved forward {Math.round(b.clockOffsetMs / 86400000)} days, to {date(t)}. Reset demo to return to today.</div>
+      )}
+
+      <Subscription sub={sub} owner={owner} b={b} plan={current} next={next} />
 
       <div className="row wrap" style={{ gap: 12 }}>
         <div className="seg" role="group" aria-label="Billing interval">
-          {Object.values(INTERVALS).map((iv) => (
-            <button key={iv.id} className={iv.id === interval ? 'active' : ''} aria-pressed={iv.id === interval}
-              disabled={!owner || (iv.id !== interval && !!fixedInterval)}
-              onClick={() => iv.id !== interval && dispatch({ type: 'SET_BILLING_INTERVAL', interval: iv.id })}>
-              {iv.id === 'monthly' ? 'Pay monthly' : 'Pay annually'}
+          {['annual', 'monthly'].map((k) => INTERVALS[k]).map((iv) => (
+            <button key={iv.id} className={iv.id === shown ? 'active' : ''} aria-pressed={iv.id === shown}
+              disabled={!owner || !live || (iv.id !== shown && !!intervalNote && !/Already/.test(intervalNote))}
+              onClick={() => iv.id !== shown && dispatch({ type: 'SET_BILLING_INTERVAL', interval: iv.id })}>
+              {iv.id === 'monthly' ? 'Pay monthly' : 'Pay annually (default)'}
             </button>
           ))}
         </div>
         <span className="small muted">
-          Annual is {ANNUAL_MULTIPLIER}× the monthly price, paid in advance: two months free.
-          {fixedInterval ? ` ${intervalNote}` : ''}
+          Annual is {ANNUAL_MULTIPLIER}× the monthly price, paid in advance: two months free.{' '}
+          {sub.phase === 'committed' && (b.scheduledInterval
+            ? `Switches to ${INTERVALS[b.scheduledInterval.interval].label.toLowerCase()} billing on the renewal date, ${date(b.scheduledInterval.at)}.`
+            : 'A change takes effect on the renewal date.')}
         </span>
       </div>
 
@@ -55,41 +67,60 @@ export default function Settings() {
           const isCurrent = id === current.id;
           const blockers = planBlockers(state, id);
           const yc = yearCost(id);
+          const timing = planChangeTiming(b, id, t);
+          const scheduled = b.scheduledPlan?.planId === id;
           return (
             <div className="card plan" key={id} style={isCurrent ? { borderColor: 'var(--teal)', boxShadow: '0 0 0 1px var(--teal)' } : undefined}>
               <div className="card__head">
                 <h2>{p.name}</h2>
                 <span className="spacer" />
                 {isCurrent && <span className="badge pos">Current plan</span>}
+                {scheduled && <span className="badge warn">From {date(b.scheduledPlan.at)}</span>}
               </div>
               <div className="card__body">
-                <div className="stat__value">{usd(priceFor(id, interval)).replace('.00', '')}<span className="muted" style={{ fontSize: 14, fontWeight: 500 }}> / {per}</span></div>
+                <div className="stat__value">{short(priceFor(id, shown))}<span className="muted" style={{ fontSize: 14, fontWeight: 500 }}> / {INTERVALS[shown].per}</span></div>
                 <p className="muted small" style={{ margin: '4px 0 12px' }}>
-                  {interval === 'annual'
-                    ? `Paid in advance. You save ${usd(yc.saving).replace('.00', '')} against ${usd(yc.monthly).replace('.00', '')} for 12 monthly payments.`
-                    : `Or ${usd(yc.annual).replace('.00', '')} a year paid in advance (save ${usd(yc.saving).replace('.00', '')}).`}{' '}
+                  {shown === 'annual'
+                    ? `Paid in advance. You save ${short(yc.saving)} against ${short(yc.monthly)} for 12 monthly payments.`
+                    : `Or ${short(yc.annual)} a year paid in advance (save ${short(yc.saving)}).`}{' '}
                   {p.blurb} Billed in US dollars.
                 </p>
                 <dl className="kv">
                   <dt>Users</dt><dd>{limitLabel(p.maxUsers)}{p.maxUsers === 1 ? ' (owner only)' : p.maxUsers ? ' in total, including the owner' : ''}</dd>
-                  <dt>Connections</dt><dd>{limitLabel(p.maxConnections)} <span className="muted small">crypto, bank and card combined</span></dd>
+                  <dt>Connections</dt><dd>{limitLabel(p.maxConnections)} <span className="muted small">{p.openBanking ? 'crypto, bank and card combined' : 'crypto only'}</span></dd>
                   <dt>Approval rules</dt><dd>{p.approvals ? 'Yes — M-of-N policies and address whitelist' : <span className="muted">Not included</span>}</dd>
                   <dt>Transactions & invoices</dt><dd>Yes</dd>
-                  <dt>Open banking</dt><dd>Yes</dd>
+                  <dt>Open banking</dt><dd>{p.openBanking ? 'Yes — bank accounts and cards, read-only' : <span className="muted">Not included</span>}</dd>
                 </dl>
               </div>
               <span className="spacer" />
               <div className="card__foot">
                 {isCurrent ? (
                   <span className="small muted">{seatCount(state.users)} users · {state.connections.length} connections in use</span>
+                ) : scheduled ? (
+                  <>
+                    <span className="small muted">Downgrade starts on the renewal date.</span>
+                    {owner && <button className="btn sm" onClick={() => dispatch({ type: 'CANCEL_PLAN_CHANGE' })}>Keep {current.name}</button>}
+                  </>
                 ) : !owner ? (
                   <span className="small muted">Only the Owner can change plans.</span>
+                ) : !live || (b.cancelAt && timing.when === 'renewal') ? (
+                  <span className="small muted">{live ? 'The subscription ends at renewal.' : 'No active subscription.'}</span>
                 ) : blockers.length ? (
                   <span className="small" style={{ color: 'var(--warn)' }}>{blockers.join(' ')}</span>
-                ) : (
-                  <ConfirmButton className="btn primary sm" prompt={`Confirm switch to ${p.name}`} onConfirm={() => dispatch({ type: 'CHANGE_PLAN', planId: id })}>
-                    {p.priceUsd > current.priceUsd ? 'Upgrade' : 'Downgrade'} to {p.name}
+                ) : timing.when === 'renewal' ? (
+                  <ConfirmButton className="btn sm" prompt={`Confirm: ${p.name} from ${date(timing.at)}`} onConfirm={() => dispatch({ type: 'CHANGE_PLAN', planId: id })}>
+                    Downgrade from {date(timing.at)}
                   </ConfirmButton>
+                ) : (
+                  <>
+                    <ConfirmButton className="btn primary sm"
+                      prompt={timing.feeUsd ? `Confirm: pay ${usd(timing.feeUsd)} now` : `Confirm switch to ${p.name}`}
+                      onConfirm={() => dispatch({ type: 'CHANGE_PLAN', planId: id })}>
+                      {isUpgrade(current.id, id) ? 'Upgrade' : 'Downgrade'} to {p.name}
+                    </ConfirmButton>
+                    {timing.feeUsd > 0 && <span className="small muted">Today: {usd(timing.feeUsd)} pro rata for the rest of this {per}</span>}
+                  </>
                 )}
               </div>
             </div>
@@ -115,7 +146,7 @@ export default function Settings() {
         {state.subscriptionInvoices.length ? (
           <div className="table-wrap">
             <table>
-              <thead><tr><th>Invoice</th><th>Date</th><th>Period</th><th>Paid with</th><th className="num">Amount</th><th>Status</th></tr></thead>
+              <thead><tr><th>Invoice</th><th>Date</th><th>For</th><th>Paid with</th><th className="num">Amount</th><th>Status</th></tr></thead>
               <tbody>
                 {state.subscriptionInvoices.map((i) => (
                   <tr key={i.id}><td className="mono">{i.id}</td><td>{date(i.date)}</td><td>{i.period || '—'}</td><td>{i.method}</td><td className="num">{usd(i.amountUsd)}</td><td><span className="badge pos">Paid</span></td></tr>
@@ -132,9 +163,13 @@ export default function Settings() {
   );
 }
 
-function Subscription({ sub, owner, price, per, plan, card, next }) {
+function Subscription({ sub, owner, b, plan, next }) {
   const { dispatch } = useStore();
-  const amount = `${usd(price).replace('.00', '')} per ${per}`;
+  const interval = b.interval || DEFAULT_INTERVAL;
+  const amount = `${usd(priceFor(plan.id, interval)).replace('.00', '')} per ${INTERVALS[interval].per}`;
+  const demo = (to, label) => (
+    <button className="btn ghost sm" title="Prototype only: move the billing clock forward" onClick={() => dispatch({ type: 'DEMO_ADVANCE', to })}>{label}</button>
+  );
   if (sub.phase === 'trial')
     return (
       <div className="notice" role="status">
@@ -143,17 +178,17 @@ function Subscription({ sub, owner, price, per, plan, card, next }) {
           <strong>{sub.daysLeft} day{sub.daysLeft === 1 ? '' : 's'} left · ends {date(sub.trialEnds)}</strong>
         </div>
         <p style={{ margin: '0 0 6px' }}>
-          Your card ({card.label}) is authorised, but nothing has been charged. Cancel before {date(sub.trialEnds)} and you pay nothing.
+          Your card ({b.paymentMethod.label}) is authorised, but nothing has been charged. Cancel before {date(sub.trialEnds)} and you pay nothing.
         </p>
         <p style={{ margin: '0 0 10px' }}>
           <strong>If you do not cancel, a 12-month agreement for {plan.name} starts on {date(sub.trialEnds)}</strong>, and your card is charged {amount}
-          {per === 'year' ? ' in advance' : ' for 12 months'}. After that date, cancelling does not end the agreement early.
+          {interval === 'annual' ? ' in advance' : ' for 12 months'}. The agreement renews automatically every 12 months unless you cancel before the renewal date.
         </p>
         <div className="row wrap" style={{ gap: 8 }}>
           {owner
             ? <ConfirmButton className="btn sm danger" prompt="Click again: cancel trial, no charge" onConfirm={() => dispatch({ type: 'CANCEL_TRIAL' })}>Cancel trial (no charge)</ConfirmButton>
-            : <span className="small muted">Only the Owner can cancel the trial.</span>}
-          <button className="btn ghost sm" title="Prototype only: move the clock past day 14" onClick={() => dispatch({ type: 'DEMO_END_TRIAL' })}>Demo: jump to day 15</button>
+            : <span className="small muted">Only the Owner can cancel.</span>}
+          {demo('trialEnd', 'Demo: jump to day 15')}
         </div>
       </div>
     );
@@ -165,25 +200,42 @@ function Subscription({ sub, owner, price, per, plan, card, next }) {
       </div>
     );
   if (sub.phase === 'ended')
-    return <div className="notice warn" role="status"><strong>The free trial ended after it was cancelled.</strong> No charge was made.</div>;
-  if (sub.phase === 'committed')
     return (
-      <div className="notice" role="status">
-        <div className="row wrap" style={{ gap: 8, marginBottom: 6 }}>
-          <span className="badge pos">12-month agreement</span>
-          <strong>{date(sub.commitmentStart)} to {date(sub.commitmentEnds)}</strong>
-        </div>
-        {plan.name} at {amount}{per === 'year' ? ', paid in advance' : ''}.{next ? ` Next charge on ${date(next)}.` : ''} The free trial has ended, so cancelling now does not end the agreement early.
+      <div className="notice warn" role="status">
+        <strong>The subscription ended{sub.endedAt ? ` on ${date(sub.endedAt)}` : ''}.</strong> No further charges will be made.
       </div>
     );
-  if (sub.phase === 'term-complete')
-    return <div className="notice" role="status"><strong>Your 12-month agreement ended on {date(sub.commitmentEnds)}.</strong> [Renewal terms to be confirmed.]</div>;
-  return null;
+  return (
+    <div className={b.cancelAt ? 'notice warn' : 'notice'} role="status">
+      <div className="row wrap" style={{ gap: 8, marginBottom: 6 }}>
+        <span className={b.cancelAt ? 'badge warn' : 'badge pos'}>{b.cancelAt ? 'Cancelled at renewal' : '12-month agreement'}</span>
+        <strong>Year {sub.term.number}: {date(sub.term.start)} to {date(sub.term.end)}</strong>
+      </div>
+      {b.cancelAt ? (
+        <p style={{ margin: '0 0 10px' }}>
+          Your cancellation takes effect on the renewal date, <strong>{date(b.cancelAt)}</strong>. Until then you keep full access
+          {next ? ` and the remaining payments are still due (next: ${usd(next.amountUsd)} on ${date(next.at)})` : ' and nothing more is charged'}. The agreement will not renew.
+        </p>
+      ) : (
+        <p style={{ margin: '0 0 10px' }}>
+          {plan.name} at {amount}{interval === 'annual' ? ', paid in advance' : ''}.{next ? ` Next charge ${usd(next.amountUsd)} on ${date(next.at)}.` : ''}{' '}
+          <strong>Renews automatically on {date(sub.term.end)} for another 12 months</strong> unless you cancel before then. A cancellation takes effect on the
+          renewal date, not before. Upgrades apply straight away for a pro-rata fee; downgrades start on the renewal date.
+        </p>
+      )}
+      <div className="row wrap" style={{ gap: 8 }}>
+        {!owner ? <span className="small muted">Only the Owner can cancel.</span> : b.cancelAt
+          ? <button className="btn sm" onClick={() => dispatch({ type: 'UNDO_CANCEL_RENEWAL' })}>Keep subscription (undo cancellation)</button>
+          : <ConfirmButton className="btn sm danger" prompt={`Click again: end on ${date(sub.term.end)}`} onConfirm={() => dispatch({ type: 'CANCEL_RENEWAL' })}>Cancel at renewal</ConfirmButton>}
+        {demo('renewal', 'Demo: jump to renewal date')}
+      </div>
+    </div>
+  );
 }
 
 function PaymentMethod({ onClose, price }) {
   const { state, dispatch } = useStore();
-  const coinBlocked = paymentMethodBlocker(state.billing, 'stablecoin', new Date().toISOString());
+  const coinBlocked = paymentMethodBlocker(state.billing, 'stablecoin', billingNow(state.billing));
   const [type, setType] = useState('card');
   const [asset, setAsset] = useState('USDC');
   const [network, setNetwork] = useState('Ethereum');

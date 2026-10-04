@@ -4,7 +4,7 @@ import { useStore } from '../state/store.jsx';
 import { ASSET_NETWORKS, can, isFiatConn } from '../data/seed.js';
 import { balances } from '../lib/ledger.js';
 import { amount, dateTime } from '../lib/format.js';
-import { canAddConnection } from '../lib/plans.js';
+import { canAddConnection, planOf } from '../lib/plans.js';
 import { mintQuote, onrampQuote, PARTNERS, redeemQuote, redemptionAddressFor } from '../lib/partners.js';
 import { Empty, Modal } from '../components/ui.jsx';
 
@@ -279,7 +279,7 @@ function Redeem({ onClose }) {
   const w = redemptionAddressFor(conn, state.whitelist, state.partners.trnznd?.redemptionWhitelistIds);
   const q = n > 0 ? redeemQuote(n, fiat) : null;
   const error = !(n > 0) ? 'Enter an amount.' : n > available ? `More than ${conn?.name} holds (${amount(available, 'ZEND')}).`
-    : !conn?.sendEnabled ? `Sending is not switched on for ${conn?.name}.` : !bank ? 'Connect the bank account to be paid into.' : !w ? 'TRNZND S.A. redemption address missing.' : '';
+    : !conn?.sendEnabled ? `Sending is not switched on for ${conn?.name}.` : !bank ? (planOf(state).openBanking ? 'Connect the bank account to be paid into.' : 'Redemption is paid to a connected bank account, which needs the Premium or Institution plan.') : !w ? 'TRNZND S.A. redemption address missing.' : '';
   return (
     <Modal title="Redeem ZEND" onClose={onClose} footer={<>
       <button className="btn" onClick={onClose}>Cancel</button>

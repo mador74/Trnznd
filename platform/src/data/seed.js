@@ -282,7 +282,7 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 10,
+    version: 11,
     priceAnchor: iso(now),
     openingDate: iso(now - 121 * DAY),
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
@@ -292,9 +292,10 @@ export function buildSeed(nowDate = new Date()) {
     onrampOrders: [],
     zendOrders: [],
     billing: {
-      planId: 'institution', interval: 'monthly',
+      planId: 'institution', interval: 'annual',
       paymentMethod: { type: 'card', label: 'Visa •••• 4242', authorisedAt: iso(now - 3 * DAY) },
       trialStart: iso(now - 3 * DAY), cancelledAt: null,
+      cancelAt: null, scheduledPlan: null, scheduledInterval: null, clockOffsetMs: 0,
     },
   };
 }

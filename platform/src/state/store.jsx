@@ -2,7 +2,10 @@ import { createContext, useContext, useEffect, useMemo, useReducer } from 'react
 import { buildSeed } from '../data/seed.js';
 import { setDisplayCurrency } from '../lib/format.js';
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
-import { canAddConnection, canAddUser, canCancelFree, intervalBlocker, INTERVALS, paymentMethodBlocker, planBlockers, planOf, PLANS, priceFor, subscriptionStatus, TRIAL_DAYS } from '../lib/plans.js';
+import {
+  applyDueChanges, billingNow, canAddConnection, canAddFiatConnection, DEFAULT_INTERVAL, canAddUser, canCancelFree, chargesBetween, intervalBlocker, INTERVALS,
+  paymentMethodBlocker, planBlockers, planChangeTiming, planOf, PLANS, subscriptionStatus,
+} from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
 import { balances, usdOf } from '../lib/ledger.js';
 import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
@@ -11,14 +14,14 @@ import { PARTNERS, redeemQuote } from '../lib/partners.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v10';
+const KEY = 'trnznd-treasury-v11';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 10) return s;
+      if (s.version === 11) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -130,6 +133,7 @@ function reducer(state, a) {
 
     case 'ADD_CONNECTION': {
       if (!canAddConnection(state)) return state;
+      if ((a.connection.type === 'bank' || a.connection.type === 'card') && !canAddFiatConnection(state)) return state;
       const c = {
         convertKinds: defaultConvertKinds(a.connection.type), convertEnabled: false,
         ...a.connection, id: uid('c-'), status: 'connected', lastSync: now(), connectedAt: now(),
@@ -377,12 +381,29 @@ function reducer(state, a) {
 
     case 'CHANGE_PLAN': {
       if (planBlockers(state, a.planId).length) return state;
+      const t = billingNow(state.billing);
+      const timing = planChangeTiming(state.billing, a.planId, t);
+      const from = planOf(state).name;
+      const to = PLANS[a.planId].name;
+      if (timing.when === 'renewal')
+        return {
+          ...state,
+          billing: { ...state.billing, scheduledPlan: { planId: a.planId, at: timing.at } },
+          audit: audit(state, 'Scheduled downgrade', `${from} → ${to} from the renewal date`),
+        };
+      const fee = timing.feeUsd
+        ? [{ id: 'SUB-' + (1041 + state.subscriptionInvoices.length), date: t, amountUsd: timing.feeUsd, status: 'paid',
+            method: state.billing.paymentMethod.label, period: `Upgrade to ${to}, pro rata to the end of the period` }]
+        : [];
       return {
         ...state,
-        billing: { ...state.billing, planId: a.planId },
-        audit: audit(state, 'Changed plan', `${planOf(state).name} → ${PLANS[a.planId].name}`),
+        billing: { ...state.billing, planId: a.planId, scheduledPlan: null },
+        subscriptionInvoices: [...fee, ...state.subscriptionInvoices],
+        audit: audit(state, 'Changed plan', `${from} → ${to}${timing.feeUsd ? ` (pro-rata fee $${timing.feeUsd.toFixed(2)})` : ''}`),
       };
     }
+    case 'CANCEL_PLAN_CHANGE':
+      return { ...state, billing: { ...state.billing, scheduledPlan: null }, audit: audit(state, 'Withdrew scheduled downgrade', '') };
 
     case 'SAVE_INVOICE': {
       const exists = state.invoices.some((i) => i.id === a.invoice.id);
@@ -431,36 +452,59 @@ function reducer(state, a) {
     }
 
     case 'SET_PAYMENT_METHOD':
-      if (paymentMethodBlocker(state.billing, a.method.type, now())) return state;
+      if (paymentMethodBlocker(state.billing, a.method.type, billingNow(state.billing))) return state;
       return { ...state, billing: { ...state.billing, paymentMethod: a.method }, audit: audit(state, 'Changed payment method', a.method.label) };
 
-    case 'SET_BILLING_INTERVAL':
-      if (intervalBlocker(state.billing, a.interval, now())) return state;
+    case 'SET_BILLING_INTERVAL': {
+      const t = billingNow(state.billing);
+      if (intervalBlocker(state.billing, a.interval, t)) return state;
+      const s = subscriptionStatus(state.billing, t);
+      const label = (iv) => INTERVALS[iv].label;
+      if (s.phase === 'trial')
+        return { ...state, billing: { ...state.billing, interval: a.interval, scheduledInterval: null },
+          audit: audit(state, 'Changed billing interval', `${label(state.billing.interval || DEFAULT_INTERVAL)} → ${label(a.interval)}`) };
+      const back = a.interval === (state.billing.interval || DEFAULT_INTERVAL);
       return {
         ...state,
-        billing: { ...state.billing, interval: a.interval },
-        audit: audit(state, 'Changed billing interval', `${INTERVALS[state.billing.interval || 'monthly'].label} → ${INTERVALS[a.interval].label}`),
+        billing: { ...state.billing, scheduledInterval: back ? null : { interval: a.interval, at: s.term.end } },
+        audit: audit(state, back ? 'Withdrew billing interval change' : 'Scheduled billing interval change', back ? '' : `${label(a.interval)} from the renewal date`),
       };
+    }
     case 'CANCEL_TRIAL':
-      if (!canCancelFree(state.billing, now())) return state;
-      return { ...state, billing: { ...state.billing, cancelledAt: now() }, audit: audit(state, 'Cancelled free trial', 'No charge; card authorisation released') };
+      if (!canCancelFree(state.billing, billingNow(state.billing))) return state;
+      return { ...state, billing: { ...state.billing, cancelledAt: billingNow(state.billing) }, audit: audit(state, 'Cancelled free trial', 'No charge; card authorisation released') };
     case 'UNDO_CANCEL_TRIAL':
-      if (subscriptionStatus(state.billing, now()).phase !== 'cancelled') return state;
+      if (subscriptionStatus(state.billing, billingNow(state.billing)).phase !== 'cancelled') return state;
       return { ...state, billing: { ...state.billing, cancelledAt: null }, audit: audit(state, 'Resumed free trial', 'Cancellation withdrawn before the trial ended') };
-    case 'DEMO_END_TRIAL': {
-      // Prototype only: move the clock past day 14 so the 12-month agreement and first charge can be seen.
-      if (subscriptionStatus(state.billing, now()).phase !== 'trial') return state;
-      const trialStart = new Date(Date.now() - (TRIAL_DAYS * 86400000 + 60000)).toISOString();
-      const ends = new Date(+new Date(trialStart) + TRIAL_DAYS * 86400000).toISOString();
-      const interval = state.billing.interval || 'monthly';
-      const n = 1041 + state.subscriptionInvoices.length;
-      const inv = { id: 'SUB-' + n, date: ends, amountUsd: priceFor(state.billing.planId, interval), status: 'paid',
-        method: state.billing.paymentMethod.label, period: interval === 'annual' ? '12 months in advance' : 'Month 1 of 12' };
+    case 'CANCEL_RENEWAL': {
+      const s = subscriptionStatus(state.billing, billingNow(state.billing));
+      if (s.phase !== 'committed' || state.billing.cancelAt) return state;
+      return { ...state, billing: { ...state.billing, cancelAt: s.term.end }, audit: audit(state, 'Cancelled subscription', `Takes effect on the renewal date, ${s.term.end.slice(0, 10)}`) };
+    }
+    case 'UNDO_CANCEL_RENEWAL':
+      if (subscriptionStatus(state.billing, billingNow(state.billing)).phase !== 'committed') return state;
+      return { ...state, billing: { ...state.billing, cancelAt: null }, audit: audit(state, 'Withdrew cancellation', 'Subscription will renew automatically') };
+    case 'DEMO_ADVANCE': {
+      // Prototype only: move the billing clock to just after the trial end or the next renewal date,
+      // taking every charge that falls due on the way and applying scheduled changes.
+      const from = billingNow(state.billing);
+      const s = subscriptionStatus(state.billing, from);
+      const target = a.to === 'trialEnd' ? s.trialEnds : s.term?.end;
+      if (!target || +new Date(target) <= +new Date(from)) return state;
+      const to = new Date(+new Date(target) + 60000).toISOString();
+      const due = chargesBetween(state.billing, from, to);
+      const invoices = due.map((c, i) => ({
+        id: 'SUB-' + (1041 + state.subscriptionInvoices.length + i), date: c.at, amountUsd: c.amountUsd, status: 'paid',
+        method: state.billing.paymentMethod.label, period: `${PLANS[c.planId].name}, ${c.interval === 'annual' ? '12 months in advance' : 'monthly'}`,
+      })).reverse();
+      const billing = applyDueChanges({ ...state.billing, clockOffsetMs: (state.billing.clockOffsetMs || 0) + (+new Date(to) - +new Date(from)) }, to);
+      const ended = subscriptionStatus(billing, to).phase === 'ended';
       return {
         ...state,
-        billing: { ...state.billing, trialStart },
-        subscriptionInvoices: [inv, ...state.subscriptionInvoices],
-        audit: audit(state, 'Trial ended, 12-month agreement started', `${planOf(state).name}, ${INTERVALS[interval].label.toLowerCase()}; first charge ${inv.id}`),
+        billing,
+        subscriptionInvoices: [...invoices, ...state.subscriptionInvoices],
+        audit: audit(state, a.to === 'trialEnd' ? 'Demo: trial ended' : 'Demo: renewal date reached',
+          ended ? 'Subscription ended, no charge' : `${due.length} charge${due.length === 1 ? '' : 's'} taken; ${PLANS[billing.planId].name}, ${INTERVALS[billing.interval || DEFAULT_INTERVAL].label.toLowerCase()}`),
       };
     }
 

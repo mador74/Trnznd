@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { TX_TYPES, usdOf } from '../lib/ledger.js';
-import { amount, date, dateTime, download, shortAddr, toCsv, usd } from '../lib/format.js';
+import { amount, date, dateTime, displayCurrency, download, shortAddr, toCsv, money } from '../lib/format.js';
+import { fromUsd } from '../lib/fx.js';
 import { ASSETS, CATEGORIES, can } from '../data/seed.js';
 import { Empty, Modal } from './ui.jsx';
 
@@ -54,8 +55,8 @@ export default function Ledger({ fixedConnection }) {
   const allChecked = visible.length > 0 && visible.every((t) => selected.includes(t.id));
 
   const exportCsv = () => {
-    const header = ['Date (UTC)', 'Connection', 'Type', 'Asset', 'Amount', 'USD value (demo price)', 'Counterparty', 'Counterparty address', 'Tx hash / ref', 'Category', 'Memo', 'Reconciled'];
-    const body = rows.map((t) => [t.date, connName(t.connectionId), TX_TYPES[t.type], t.asset, t.amount, usdOf(t.asset, t.amount).toFixed(2),
+    const header = ['Date (UTC)', 'Connection', 'Type', 'Asset', 'Amount', `${displayCurrency()} value (demo price)`, 'Counterparty', 'Counterparty address', 'Tx hash / ref', 'Category', 'Memo', 'Reconciled'];
+    const body = rows.map((t) => [t.date, connName(t.connectionId), TX_TYPES[t.type], t.asset, t.amount, fromUsd(usdOf(t.asset, t.amount), displayCurrency()).toFixed(2),
       t.counterparty, t.counterpartyAddress || '', t.txHash, t.category, t.memo, t.reconciled ? 'yes' : 'no']);
     download(`trnznd-ledger-${new Date().toISOString().slice(0, 10)}.csv`, toCsv([header, ...body]));
   };
@@ -90,7 +91,7 @@ export default function Ledger({ fixedConnection }) {
       </div>
       <div className="filters">
         <span className="small muted">
-          {rows.length} transactions · net <strong className={netUsd < 0 ? 'neg' : 'pos'}>{usd(netUsd)}</strong>
+          {rows.length} transactions · net <strong className={netUsd < 0 ? 'neg' : 'pos'}>{money(netUsd)}</strong>
         </span>
         <span className="spacer" />
         {selected.length > 0 && canRec && (
@@ -120,7 +121,7 @@ export default function Ledger({ fixedConnection }) {
                 <th>What</th>
                 <th>Who</th>
                 <th className="num">How much</th>
-                <th className="num">USD</th>
+                <th className="num">{displayCurrency()}</th>
                 <th>Category</th>
                 <th>Status</th>
               </tr>
@@ -141,7 +142,7 @@ export default function Ledger({ fixedConnection }) {
                     <div className="mono muted">{shortAddr(t.counterpartyAddress)}</div>
                   </td>
                   <td className={`num mono ${t.amount < 0 ? 'neg' : 'pos'}`}>{amount(t.amount, t.asset)}</td>
-                  <td className="num">{usd(usdOf(t.asset, t.amount))}</td>
+                  <td className="num">{money(usdOf(t.asset, t.amount))}</td>
                   <td><span className={`badge${t.category === 'Uncategorised' ? ' warn' : ''}`}>{t.category}</span></td>
                   <td>{t.reconciled ? <span className="badge pos">Reconciled</span> : <span className="badge">Unreconciled</span>}</td>
                 </tr>
@@ -166,7 +167,7 @@ function TxDrawer({ tx, connName, canEdit, onClose, dispatch, requests, invoices
   return (
     <Modal title="Transaction" onClose={onClose} drawer>
       <div className={`stat__value ${tx.amount < 0 ? 'neg' : 'pos'}`}>{amount(tx.amount, tx.asset)}</div>
-      <div className="muted">{usd(usdOf(tx.asset, tx.amount))} at current demo price</div>
+      <div className="muted">{money(usdOf(tx.asset, tx.amount))} at current demo price</div>
       <dl className="kv">
         <dt>When</dt><dd>{dateTime(tx.date)} (UTC {tx.date.slice(11, 16)})</dd>
         <dt>What</dt><dd>{TX_TYPES[tx.type]} · {tx.asset}</dd>

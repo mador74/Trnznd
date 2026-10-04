@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { ACTION_TYPES, cannotSignReason, deriveStatus, governingPolicies, progress, validatePolicy } from '../lib/policy.js';
 import { balances, priceOf } from '../lib/ledger.js';
-import { amount, dateTime, relative, shortAddr, usd } from '../lib/format.js';
+import { amount, dateTime, relative, shortAddr, money, usd } from '../lib/format.js';
 import { Link } from 'react-router-dom';
 import { ASSET_NETWORKS, can, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
@@ -89,7 +89,7 @@ function RequestCard({ r }) {
         <dl className="kv">
           <dt>From</dt><dd>{conn?.name || 'Removed connection'}</dd>
           <dt>To</dt><dd>{r.to}<div className="mono muted">{r.toAddress}</div></dd>
-          {r.type !== 'address_whitelist' && (<><dt>Value</dt><dd>{usd(r.usdValue)} <span className="muted small">(at request time)</span></dd></>)}
+          {r.type !== 'address_whitelist' && (<><dt>Value</dt><dd>{money(r.usdValue)} <span className="muted small">(at request time)</span></dd></>)}
           <dt>Reference</dt><dd>{r.reference || '—'}</dd>
           {r.executedTxHash && (<><dt>Executed</dt><dd>{dateTime(r.executedAt)}<div className="mono muted">{shortAddr(r.executedTxHash)}</div></dd></>)}
         </dl>
@@ -236,7 +236,7 @@ function NewRequest({ onClose }) {
       <label className="field"><span>Reference</span><input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Invoice / PO number, purpose" /></label>
       {error ? <div className="notice warn small">{error}</div> : (
         <div className="notice small">
-          {type !== 'address_whitelist' && <div><strong>{usd(usdValue)}</strong> at current demo price.</div>}
+          {type !== 'address_whitelist' && <div><strong>{money(usdValue)}</strong> at current demo price.</div>}
           Will require: {gov.map((p) => `${p.name} (${p.required} of ${p.approverIds.length})`).join(' + ')}
         </div>
       )}
@@ -272,7 +272,7 @@ function Policies() {
             <div className="card__body">
               <dl className="kv">
                 <dt>Applies to</dt><dd>{p.actionTypes.map((t) => ACTION_TYPES[t]).join(', ')}</dd>
-                <dt>Threshold</dt><dd>{Number(p.minUsd) > 0 ? `${usd(p.minUsd)} and above` : 'Any amount'}</dd>
+                <dt>Threshold</dt><dd>{Number(p.minUsd) > 0 ? `${usd(p.minUsd)} and above (USD)` : 'Any amount'}</dd>
                 <dt>Connections</dt><dd>{p.connectionIds.length ? p.connectionIds.map((id) => state.connections.find((c) => c.id === id)?.name).join(', ') : 'All'}</dd>
                 <dt>Approvers</dt><dd>{p.approverIds.map(name).join(', ') || '—'}</dd>
               </dl>

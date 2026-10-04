@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 import { buildSeed } from '../data/seed.js';
+import { setDisplayCurrency } from '../lib/format.js';
+import { DISPLAY_CURRENCIES } from '../lib/fx.js';
 import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
 import { usdOf } from '../lib/ledger.js';
@@ -38,6 +40,9 @@ function reducer(state, a) {
   switch (a.type) {
     case 'RESET':
       return buildSeed();
+    case 'SET_DISPLAY_CURRENCY':
+      if (!DISPLAY_CURRENCIES[a.code]) return state;
+      return { ...state, users: state.users.map((u) => (u.id === state.currentUserId ? { ...u, displayCurrency: a.code } : u)) };
     case 'SET_CURRENT_USER':
       return { ...state, currentUserId: a.userId };
 
@@ -229,6 +234,8 @@ export function StoreProvider({ children }) {
     }
   }, [state]);
   const me = useMemo(() => state.users.find((u) => u.id === state.currentUserId), [state.users, state.currentUserId]);
+  // Each user picks their own display currency; the organisation's base currency is the default.
+  setDisplayCurrency(me?.displayCurrency || state.org.baseCurrency);
   return <Ctx.Provider value={{ state, dispatch, me }}>{children}</Ctx.Provider>;
 }
 

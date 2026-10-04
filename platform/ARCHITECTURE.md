@@ -10,7 +10,7 @@ This document covers what it takes to turn the prototype into a real service. St
    - **C. TRNZND holds withdrawal-enabled keys and executes the transfer.** This is not recommended. It contradicts the read-only security model, makes TRNZND a high-value target, and likely changes the regulatory position (see §6).
    - *Recommendation:* launch with A, add B for the custodians and multisig wallets your customers use most, and avoid C.
 2. **Plan limits.** Basic is $15 for 1 user and 5 connections, with no approval rules. Premium is $50 for 5 users in total (including the owner) and 5 connections. Institution is $100 with no limits. The prototype assumes that bank and card connections count toward the connection limit, and that invoices and open banking are on every plan. Confirm both.
-3. **Reporting currency and pricing source.** The prototype values everything in USD at static prices. Production needs historical prices at transaction time (for accounting) and live prices (for the dashboard), plus a choice of base currency.
+3. **Reporting currency and pricing source.** The prototype stores values in USD and converts them for display into each user's chosen currency, using static demo rates. Production needs live FX and crypto prices for the dashboard, from a named data provider with timestamps shown. It also needs historical prices at transaction time for accounting. Decide whether the organisation's *reporting* currency (used for books and exports) is separate from each user's *display* currency; the prototype treats them as different things.
 4. **Accounting export.** Should the ledger sync to accounting software (journals per connection, with gain/loss on disposals), or is CSV enough for v1?
 
 ## 2. System overview

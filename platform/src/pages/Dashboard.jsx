@@ -3,7 +3,7 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, Res
 import { useStore } from '../state/store.jsx';
 import { balances, cashflow, connectionUsd, history, totalsByAsset, TX_TYPES, usdOf } from '../lib/ledger.js';
 import { deriveStatus } from '../lib/policy.js';
-import { amount, date, relative, usd, usdShort } from '../lib/format.js';
+import { amount, date, displayCurrency, relative, money, moneyShort } from '../lib/format.js';
 import { CONNECTION_TYPES, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
 import { invoiceTotal, invoiceStatus } from '../lib/invoice.js';
@@ -44,10 +44,10 @@ export default function Dashboard() {
       </div>
 
       <div className="grid cols-3">
-        <Stat label="Net treasury" value={usd(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {usdShort(Math.abs(change30))} in 30 days</span>} />
-        <Stat label="Digital assets" value={usd(digital)} sub={`Stablecoins ${usd(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
-        <Stat label="Bank cash · card balances" value={usd(bank)} sub={<span>Credit cards owed <span className="neg">{usd(-cards)}</span></span>} />
-        <Stat label="Unpaid invoices" value={usd(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
+        <Stat label="Net treasury" value={money(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {moneyShort(Math.abs(change30))} in 30 days</span>} />
+        <Stat label="Digital assets" value={money(digital)} sub={`Stablecoins ${money(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
+        <Stat label="Bank cash · card balances" value={money(bank)} sub={<span>Credit cards owed <span className="neg">{money(-cards)}</span></span>} />
+        <Stat label="Unpaid invoices" value={money(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
         {plan.approvals ? (
           <Stat label="Awaiting approval" value={pending.length} sub={<Link to="/approvals">Review requests →</Link>} />
         ) : (
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
       <div className="grid dash">
         <div className="card">
-          <div className="card__head"><h2>Total treasury value — 90 days</h2><span className="spacer" /><span className="muted small">At current demo prices</span></div>
+          <div className="card__head"><h2>Total treasury value — 90 days</h2><span className="spacer" /><span className="muted small">In {displayCurrency()}, at demo prices</span></div>
           <div className="card__body" style={{ height: 260 }}>
             <ResponsiveContainer>
               <AreaChart data={hist} margin={{ left: 8, right: 8, top: 8 }}>
@@ -70,8 +70,8 @@ export default function Dashboard() {
                 </defs>
                 <CartesianGrid stroke="var(--border)" vertical={false} />
                 <XAxis dataKey="date" tick={axis} tickFormatter={(d) => date(d).slice(0, 6)} minTickGap={40} />
-                <YAxis tick={axis} tickFormatter={usdShort} width={64} domain={['auto', 'auto']} />
-                <Tooltip {...tip} formatter={(v) => usd(v)} labelFormatter={date} />
+                <YAxis tick={axis} tickFormatter={moneyShort} width={64} domain={['auto', 'auto']} />
+                <Tooltip {...tip} formatter={(v) => money(v)} labelFormatter={date} />
                 <Area dataKey="usd" name="Value" stroke="#00b894" strokeWidth={2} fill="url(#g)" />
               </AreaChart>
             </ResponsiveContainer>
@@ -86,7 +86,7 @@ export default function Dashboard() {
                   <Pie data={positive} dataKey="usd" nameKey="asset" innerRadius={45} outerRadius={70} stroke="var(--surface)" strokeWidth={2}>
                     {positive.map((a, i) => <Cell key={a.asset} fill={SERIES[i % SERIES.length]} />)}
                   </Pie>
-                  <Tooltip {...tip} formatter={(v) => usd(v)} />
+                  <Tooltip {...tip} formatter={(v) => money(v)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -125,8 +125,8 @@ export default function Dashboard() {
               <BarChart data={flows} margin={{ left: 8, right: 8, top: 8 }}>
                 <CartesianGrid stroke="var(--border)" vertical={false} />
                 <XAxis dataKey="label" tick={axis} />
-                <YAxis tick={axis} tickFormatter={usdShort} width={64} />
-                <Tooltip {...tip} formatter={(v) => usd(v)} cursor={{ fill: 'var(--surface-2)' }} />
+                <YAxis tick={axis} tickFormatter={moneyShort} width={64} />
+                <Tooltip {...tip} formatter={(v) => money(v)} cursor={{ fill: 'var(--surface-2)' }} />
                 <Bar dataKey="in" name="Money in" fill="#00d4aa" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="out" name="Money out" fill="#0088ff" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -167,7 +167,7 @@ export default function Dashboard() {
         <div className="card__head"><h2>Recent activity</h2><span className="spacer" /><Link to="/transactions" className="small">Full ledger</Link></div>
         <div className="table-wrap">
           <table>
-            <thead><tr><th>Date</th><th>Connection</th><th>Type</th><th>Counterparty</th><th className="num">Amount</th><th className="num">USD</th></tr></thead>
+            <thead><tr><th>Date</th><th>Connection</th><th>Type</th><th>Counterparty</th><th className="num">Amount</th><th className="num">{displayCurrency()}</th></tr></thead>
             <tbody>
               {state.transactions.slice(0, 8).map((t) => (
                 <tr key={t.id}>
@@ -176,7 +176,7 @@ export default function Dashboard() {
                   <td>{TX_TYPES[t.type]}</td>
                   <td>{t.counterparty}</td>
                   <td className={`num ${t.amount < 0 ? 'neg' : 'pos'}`}>{amount(t.amount, t.asset)}</td>
-                  <td className="num">{usd(usdOf(t.asset, t.amount))}</td>
+                  <td className="num">{money(usdOf(t.asset, t.amount))}</td>
                 </tr>
               ))}
             </tbody>
@@ -203,7 +203,7 @@ function ConnCard({ c, bal, total, unrec }) {
       </div>
       <div className="feed__bal">
         <span className="muted">{isCard ? 'Balance owed' : 'Balance'}</span>
-        <strong className={isCard ? 'neg' : ''}>{usd(isCard ? -v : v)}</strong>
+        <strong className={isCard ? 'neg' : ''}>{money(isCard ? -v : v)}</strong>
       </div>
       <div className="feed__bal small">
         <span className="muted">{isCard ? 'Account' : 'Share of treasury'}</span>

@@ -32,7 +32,7 @@ export default function Settings() {
               </div>
               <div className="card__body">
                 <div className="stat__value">{usd(p.priceUsd).replace('.00', '')}<span className="muted" style={{ fontSize: 14, fontWeight: 500 }}> / month</span></div>
-                <p className="muted small" style={{ margin: '4px 0 12px' }}>{p.blurb}</p>
+                <p className="muted small" style={{ margin: '4px 0 12px' }}>{p.blurb} Billed in US dollars.</p>
                 <dl className="kv">
                   <dt>Users</dt><dd>{limitLabel(p.maxUsers)}{p.maxUsers === 1 ? ' (owner only)' : p.maxUsers ? ' in total, including the owner' : ''}</dd>
                   <dt>Connections</dt><dd>{limitLabel(p.maxConnections)} <span className="muted small">crypto, bank and card combined</span></dd>

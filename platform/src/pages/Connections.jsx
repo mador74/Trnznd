@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd } from '../lib/ledger.js';
-import { relative, shortAddr, usd } from '../lib/format.js';
+import { relative, shortAddr, money } from '../lib/format.js';
 import { CONNECTION_TYPES, CRYPTO, FIAT, can, isFiatConn } from '../data/seed.js';
 import { canAddConnection, limitLabel, planOf } from '../lib/plans.js';
 import { ConnIcon, Modal, StatusBadge } from '../components/ui.jsx';
@@ -55,14 +55,14 @@ export default function Connections() {
                     </td>
                     <td>{relative(c.lastSync)}</td>
                     <td><StatusBadge status={c.status} /></td>
-                    <td className="num">{usd(v)}</td>
+                    <td className="num">{money(v)}</td>
                     <td className="num">{total ? ((v / total) * 100).toFixed(1) : 0}%</td>
                   </tr>
                 );
               })}
               <tr>
                 <td colSpan={5}><strong>Aggregated total</strong></td>
-                <td className="num"><strong>{usd(total)}</strong></td>
+                <td className="num"><strong>{money(total)}</strong></td>
                 <td className="num">100%</td>
               </tr>
             </tbody>

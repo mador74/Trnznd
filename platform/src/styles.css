@@ -94,6 +94,7 @@ h3 { font-size: 14px; }
 .nav .lock { margin-left: 4px; font-size: 11px; opacity: 0.7; }
 .nav .count { margin-left: 6px; background: var(--teal); color: var(--midnight); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 6px; }
 .topbar select { background: #1f2937; color: #f9fafb; border: 1px solid #374151; border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.topbar select.ccy { width: auto; }
 .icon-btn { background: transparent; border: 1px solid #374151; color: #d1d5db; border-radius: 8px; padding: 6px 9px; cursor: pointer; font: inherit; }
 
 .demo-banner { background: var(--info-bg); color: var(--text); font-size: 12.5px; padding: 6px 24px; text-align: center; border-bottom: 1px solid var(--border); }

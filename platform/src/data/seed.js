@@ -2,6 +2,8 @@
 // Balances are derived from opening balances + the generated ledger so the numbers
 // on every screen reconcile with each other.
 
+import { DISPLAY_CURRENCIES } from '../lib/fx.js';
+
 
 export const ASSETS = {
   BTC: { name: 'Bitcoin', kind: 'crypto', price: 60000 },
@@ -10,8 +12,8 @@ export const ASSETS = {
   USDT: { name: 'Tether USD', kind: 'stablecoin', price: 1 },
   USDC: { name: 'USD Coin', kind: 'stablecoin', price: 1 },
   USD: { name: 'US Dollar', kind: 'fiat', price: 1 },
-  EUR: { name: 'Euro', kind: 'fiat', price: 1.08 },
-  GBP: { name: 'British Pound', kind: 'fiat', price: 1.27 },
+  EUR: { name: 'Euro', kind: 'fiat', price: DISPLAY_CURRENCIES.EUR.usdPer },
+  GBP: { name: 'British Pound', kind: 'fiat', price: DISPLAY_CURRENCIES.GBP.usdPer },
 };
 export const FIAT = ['USD', 'EUR', 'GBP'];
 export const CRYPTO = ['BTC', 'ETH', 'SOL', 'USDT', 'USDC'];

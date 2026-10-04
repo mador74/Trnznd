@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd, history, priceOf, usdOf } from '../lib/ledger.js';
-import { amount, date, dateTime, relative, usd, usdShort } from '../lib/format.js';
+import { amount, date, dateTime, relative, money, moneyShort } from '../lib/format.js';
 import { ASSETS, CONNECTION_TYPES, can } from '../data/seed.js';
 import { ConfirmButton, ConnIcon, Stat, StatusBadge } from '../components/ui.jsx';
 import Ledger from '../components/Ledger.jsx';
@@ -41,7 +41,7 @@ export default function ConnectionDetail() {
       </div>
 
       <div className="grid cols-3">
-        <Stat label="Balance" value={usd(v)} sub={`Last synced ${relative(c.lastSync)} · ${dateTime(c.lastSync)}`} />
+        <Stat label="Balance" value={money(v)} sub={`Last synced ${relative(c.lastSync)} · ${dateTime(c.lastSync)}`} />
         <Stat label="Assets held" value={rows.filter((r) => r.q > 0).length} sub={rows.map((r) => r.a).join(' · ')} />
         <Stat label="To reconcile" value={unrec} sub={`Connected since ${date(c.connectedAt)}`} />
       </div>
@@ -57,8 +57,8 @@ export default function ConnectionDetail() {
                   <tr key={r.a}>
                     <td><strong>{r.a}</strong> <span className="muted small">{ASSETS[r.a]?.name}</span></td>
                     <td className="num mono">{amount(r.q, r.a)}</td>
-                    <td className="num">{usd(priceOf(r.a))}</td>
-                    <td className="num">{usd(r.usd)}</td>
+                    <td className="num">{money(priceOf(r.a))}</td>
+                    <td className="num">{money(r.usd)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -71,8 +71,8 @@ export default function ConnectionDetail() {
             <ResponsiveContainer>
               <AreaChart data={hist}>
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--muted)' }} tickFormatter={(d) => date(d).slice(0, 6)} minTickGap={40} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--muted)' }} tickFormatter={usdShort} width={60} domain={['auto', 'auto']} />
-                <Tooltip formatter={(x) => usd(x)} labelFormatter={date} contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--muted)' }} tickFormatter={moneyShort} width={60} domain={['auto', 'auto']} />
+                <Tooltip formatter={(x) => money(x)} labelFormatter={date} contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }} />
                 <Area dataKey="usd" name="Value" stroke="#0088ff" fill="#0088ff" fillOpacity={0.12} strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>

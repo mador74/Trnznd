@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { ASSETS, can } from '../data/seed.js';
-import { amount, date, dateTime, usd } from '../lib/format.js';
+import { amount, date, dateTime, displayCurrency, money } from '../lib/format.js';
 import { usdOf } from '../lib/ledger.js';
 import { invoiceStatus, invoiceSubtotal, invoiceTax, invoiceTotal, lineTotal, matchCandidates, validateInvoice } from '../lib/invoice.js';
 import { payToDetails, payToOptions } from '../lib/payto.js';
@@ -40,9 +40,9 @@ export default function Invoices() {
       </div>
 
       <div className="grid cols-3">
-        <div className="card card__body"><div className="stat__label">Draft</div><div className="stat__value">{usd(sum('draft'))}</div></div>
-        <div className="card card__body"><div className="stat__label">Awaiting payment</div><div className="stat__value">{usd(sum('sent'))}</div></div>
-        <div className="card card__body"><div className="stat__label">Overdue</div><div className="stat__value neg">{usd(sum('overdue'))}</div></div>
+        <div className="card card__body"><div className="stat__label">Draft</div><div className="stat__value">{money(sum('draft'))}</div></div>
+        <div className="card card__body"><div className="stat__label">Awaiting payment</div><div className="stat__value">{money(sum('sent'))}</div></div>
+        <div className="card card__body"><div className="stat__label">Overdue</div><div className="stat__value neg">{money(sum('overdue'))}</div></div>
       </div>
 
       <div>
@@ -57,7 +57,7 @@ export default function Invoices() {
           {shown.length === 0 ? <Empty>No invoices here.</Empty> : (
             <div className="table-wrap">
               <table>
-                <thead><tr><th>Number</th><th>To</th><th>Issued</th><th>Due</th><th className="num">Amount</th><th className="num">USD</th><th>Status</th></tr></thead>
+                <thead><tr><th>Number</th><th>To</th><th>Issued</th><th>Due</th><th className="num">Amount</th><th className="num">{displayCurrency()}</th><th>Status</th></tr></thead>
                 <tbody>
                   {shown.map((i) => (
                     <tr key={i.id} className="clickable" onClick={() => setViewing(i.id)}>
@@ -66,7 +66,7 @@ export default function Invoices() {
                       <td>{date(i.issueDate)}</td>
                       <td>{date(i.dueDate)}</td>
                       <td className="num mono">{amount(invoiceTotal(i), i.currency)}</td>
-                      <td className="num">{usd(usdOf(i.currency, invoiceTotal(i)))}</td>
+                      <td className="num">{money(usdOf(i.currency, invoiceTotal(i)))}</td>
                       <td><StatusBadge status={i.s} /></td>
                     </tr>
                   ))}

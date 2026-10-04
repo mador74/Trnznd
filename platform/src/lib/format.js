@@ -1,8 +1,25 @@
-const usdFmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
-const usdCompact = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 });
+import { fromUsd } from './fx.js';
 
+// Values are held in USD everywhere. `money` / `moneyShort` show a USD amount in the viewer's
+// chosen display currency; `usd` always shows US dollars (plan prices, policy thresholds).
+const usdFmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
 export const usd = (n) => usdFmt.format(n || 0);
-export const usdShort = (n) => usdCompact.format(n || 0);
+
+let display = 'USD';
+let fmt = usdFmt;
+let compact = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 });
+
+/** Called by the store whenever the signed-in user's display currency changes. */
+export function setDisplayCurrency(code) {
+  if (code === display) return;
+  display = code;
+  const digits = code === 'JPY' ? 0 : 2;
+  fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: code, minimumFractionDigits: digits, maximumFractionDigits: digits });
+  compact = new Intl.NumberFormat('en-US', { style: 'currency', currency: code, notation: 'compact', maximumFractionDigits: 1 });
+}
+export const displayCurrency = () => display;
+export const money = (nUsd) => fmt.format(fromUsd(nUsd || 0, display));
+export const moneyShort = (nUsd) => compact.format(fromUsd(nUsd || 0, display));
 
 export function amount(n, asset) {
   const digits = Math.abs(n) >= 1000 ? 2 : Math.abs(n) >= 1 ? 4 : 6;

@@ -5,6 +5,8 @@ import { ROLES } from '../data/seed.js';
 import { deriveStatus, cannotSignReason } from '../lib/policy.js';
 import { ConfirmButton } from './ui.jsx';
 import { planOf } from '../lib/plans.js';
+import { DISPLAY_CURRENCIES } from '../lib/fx.js';
+import { displayCurrency } from '../lib/format.js';
 
 function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -64,11 +66,15 @@ export default function Layout() {
               ))}
             </select>
           </label>
+          <select className="ccy" aria-label="Display currency" title="Show all totals in this currency (demo exchange rates)"
+            value={displayCurrency()} onChange={(e) => dispatch({ type: 'SET_DISPLAY_CURRENCY', code: e.target.value })}>
+            {Object.entries(DISPLAY_CURRENCIES).map(([code, c]) => <option key={code} value={code} title={c.name}>{code}</option>)}
+          </select>
           <button className="icon-btn" onClick={toggle} aria-label="Toggle dark mode">{theme === 'dark' ? '☀' : '☾'}</button>
         </div>
       </header>
       <div className="demo-banner">
-        Prototype with demo data only — no real accounts are connected and prices are static.{' '}
+        Prototype with demo data only — no real accounts are connected, and prices and exchange rates are static.{' '}
         <ConfirmButton className="btn ghost sm" prompt="Click again to reset everything" onConfirm={() => dispatch({ type: 'RESET' })}>Reset demo</ConfirmButton>
       </div>
       <main className="page">

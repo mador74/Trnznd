@@ -1,0 +1,37 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { HashRouter, Route, Routes } from 'react-router-dom';
+import { StoreProvider } from './state/store.jsx';
+import Layout from './components/Layout.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import Connections from './pages/Connections.jsx';
+import ConnectionDetail from './pages/ConnectionDetail.jsx';
+import Transactions from './pages/Transactions.jsx';
+import Approvals from './pages/Approvals.jsx';
+import Team from './pages/Team.jsx';
+import Audit from './pages/Audit.jsx';
+import Settings from './pages/Settings.jsx';
+import './styles.css';
+
+// HashRouter so the static build works on GitHub Pages without server rewrites.
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <StoreProvider>
+      <HashRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="connections/:id" element={<ConnectionDetail />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="approvals" element={<Approvals />} />
+            <Route path="team" element={<Team />} />
+            <Route path="audit" element={<Audit />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<p>Page not found.</p>} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </StoreProvider>
+  </React.StrictMode>,
+);

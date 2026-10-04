@@ -153,15 +153,16 @@ export default function Ledger({ fixedConnection }) {
           )}
         </div>
       )}
-      {tx && <TxDrawer tx={tx} connName={connName(tx.connectionId)} canEdit={canRec} onClose={() => setOpen(null)} dispatch={dispatch} requests={state.requests} />}
+      {tx && <TxDrawer tx={tx} connName={connName(tx.connectionId)} canEdit={canRec} onClose={() => setOpen(null)} dispatch={dispatch} requests={state.requests} invoices={state.invoices} />}
     </div>
   );
 }
 
-function TxDrawer({ tx, connName, canEdit, onClose, dispatch, requests }) {
+function TxDrawer({ tx, connName, canEdit, onClose, dispatch, requests, invoices }) {
   const [memo, setMemo] = useState(tx.memo);
   const update = (patch) => dispatch({ type: 'UPDATE_TX', ids: [tx.id], patch });
   const req = tx.requestId && requests.find((r) => r.id === tx.requestId);
+  const inv = tx.invoiceId && invoices.find((i) => i.id === tx.invoiceId);
   return (
     <Modal title="Transaction" onClose={onClose} drawer>
       <div className={`stat__value ${tx.amount < 0 ? 'neg' : 'pos'}`}>{amount(tx.amount, tx.asset)}</div>
@@ -174,6 +175,7 @@ function TxDrawer({ tx, connName, canEdit, onClose, dispatch, requests }) {
         <dt>Address</dt><dd className="mono">{tx.counterpartyAddress || '—'}</dd>
         <dt>Tx hash / ref</dt><dd className="mono">{tx.txHash}</dd>
         {req && (<><dt>Approval</dt><dd>Linked to approved request “{req.reference}”</dd></>)}
+        {inv && (<><dt>Invoice</dt><dd>Settles {inv.number}</dd></>)}
       </dl>
       <label className="field">
         <span>Category</span>

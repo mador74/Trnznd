@@ -1,18 +1,19 @@
 import { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
-import { buildSeed, MAX_SUB_USERS } from '../data/seed.js';
+import { buildSeed } from '../data/seed.js';
+import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
 import { usdOf } from '../lib/ledger.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v1';
+const KEY = 'trnznd-treasury-v2';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 1) return s;
+      if (s.version === 2) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -27,7 +28,6 @@ function audit(state, action, detail) {
   return [{ id: uid('a'), at: now(), userId: state.currentUserId, action, detail }, ...state.audit].slice(0, 500);
 }
 
-export const subUserCount = (users) => users.filter((u) => u.role !== 'owner' && u.status !== 'removed').length;
 
 function describe(req) {
   if (req.type === 'address_whitelist') return `Whitelist ${req.to}`;
@@ -42,6 +42,7 @@ function reducer(state, a) {
       return { ...state, currentUserId: a.userId };
 
     case 'ADD_CONNECTION': {
+      if (!canAddConnection(state)) return state;
       const c = { ...a.connection, id: uid('c-'), status: 'connected', lastSync: now(), connectedAt: now() };
       return {
         ...state,
@@ -72,10 +73,12 @@ function reducer(state, a) {
       };
 
     case 'CREATE_REQUEST': {
+      if (!planOf(state).approvals) return state;
       const req = { ...a.request, id: uid('r'), requestedBy: state.currentUserId, createdAt: now(), approvals: [], rejections: [], status: 'pending' };
       return { ...state, requests: [req, ...state.requests], audit: audit(state, 'Created request', describe(req)) };
     }
     case 'SIGN_REQUEST': {
+      if (!planOf(state).approvals) return state;
       let whitelist = state.whitelist;
       let entry;
       const requests = state.requests.map((r) => {
@@ -129,7 +132,7 @@ function reducer(state, a) {
     }
 
     case 'INVITE_USER': {
-      if (subUserCount(state.users) >= MAX_SUB_USERS) return state;
+      if (!canAddUser(state)) return state;
       const u = { ...a.user, id: uid('u-'), status: 'invited', mfa: false };
       return { ...state, users: [...state.users, u], audit: audit(state, 'Invited user', `${u.name} as ${u.role}`) };
     }
@@ -148,6 +151,61 @@ function reducer(state, a) {
         users: state.users.map((x) => (x.id === a.id ? { ...x, status: 'removed' } : x)),
         policies: state.policies.map((p) => ({ ...p, approverIds: p.approverIds.filter((id) => id !== a.id) })),
         audit: audit(state, 'Removed user', `${u?.name} (also removed from approver lists)`),
+      };
+    }
+
+    case 'CHANGE_PLAN': {
+      if (planBlockers(state, a.planId).length) return state;
+      return {
+        ...state,
+        billing: { ...state.billing, planId: a.planId },
+        audit: audit(state, 'Changed plan', `${planOf(state).name} → ${PLANS[a.planId].name}`),
+      };
+    }
+
+    case 'SAVE_INVOICE': {
+      const exists = state.invoices.some((i) => i.id === a.invoice.id);
+      const next = state.invoices.length + 1;
+      const inv = exists
+        ? a.invoice
+        : { ...a.invoice, id: uid('i'), number: `INV-${String(next).padStart(4, '0')}`, status: 'draft', sentLog: [] };
+      return {
+        ...state,
+        invoices: exists ? state.invoices.map((i) => (i.id === inv.id ? inv : i)) : [inv, ...state.invoices],
+        audit: audit(state, exists ? 'Edited invoice' : 'Created invoice', inv.number),
+      };
+    }
+    case 'ADD_CONTACT':
+      return { ...state, contacts: [...state.contacts, a.contact], audit: audit(state, 'Added contact', a.contact.name) };
+    case 'SEND_INVOICE': {
+      const inv = state.invoices.find((i) => i.id === a.id);
+      return {
+        ...state,
+        invoices: state.invoices.map((i) =>
+          i.id === a.id ? { ...i, status: i.status === 'paid' ? 'paid' : 'sent', sentLog: [...i.sentLog, { at: now(), to: a.to }] } : i,
+        ),
+        audit: audit(state, 'Sent invoice', `${inv.number} to ${a.to.join(', ')}`),
+      };
+    }
+    case 'MARK_INVOICE_PAID': {
+      const inv = state.invoices.find((i) => i.id === a.id);
+      return {
+        ...state,
+        invoices: state.invoices.map((i) => (i.id === a.id ? { ...i, status: 'paid', paidAt: now(), paidTxId: a.txId || null } : i)),
+        transactions: a.txId
+          ? state.transactions.map((t) =>
+              t.id === a.txId ? { ...t, reconciled: true, category: 'Customer receipt', memo: t.memo || inv.number, invoiceId: inv.id } : t,
+            )
+          : state.transactions,
+        audit: audit(state, 'Marked invoice paid', `${inv.number}${a.txId ? ' (matched to ledger receipt)' : ' (no ledger match)'}`),
+      };
+    }
+    case 'VOID_INVOICE': {
+      const inv = state.invoices.find((i) => i.id === a.id);
+      return {
+        ...state,
+        invoices: state.invoices.map((i) => (i.id === a.id ? { ...i, status: 'void' } : i)),
+        audit: audit(state, 'Voided invoice', inv.number),
       };
     }
 

@@ -72,4 +72,5 @@ export const TX_TYPES = {
   transfer_out: 'Transfer out',
   conversion: 'Conversion',
   fee: 'Fee',
+  card_spend: 'Card spend',
 };

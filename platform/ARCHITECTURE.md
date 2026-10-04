@@ -9,7 +9,7 @@ This document covers what it takes to turn the prototype into a real service. St
    - **B. Enforced at the asset layer.** Use the provider's own policy engine (many MPC custodians support approval quorums) or an on-chain multisig wallet. TRNZND proposes the transaction, and each signer signs with their *own* key. Signature thresholds are then cryptographically enforced. Each integration is more work.
    - **C. TRNZND holds withdrawal-enabled keys and executes the transfer.** This is not recommended. It contradicts the read-only security model, makes TRNZND a high-value target, and likely changes the regulatory position (see §6).
    - *Recommendation:* launch with A, add B for the custodians and multisig wallets your customers use most, and avoid C.
-2. **Seat limit.** The brief says "as many sub-users as they like, to a maximum of 5 within USD 50/month". The prototype reads this as *Owner + 5 sub-users, hard cap*. If the intent is "5 included, more at extra cost", a per-seat add-on price is needed.
+2. **Plan limits.** Basic is $15 for 1 user and 5 connections, with no approval rules. Premium is $50 for 5 users in total (including the owner) and 5 connections. Institution is $100 with no limits. The prototype assumes that bank and card connections count toward the connection limit, and that invoices and open banking are on every plan. Confirm both.
 3. **Reporting currency and pricing source.** The prototype values everything in USD at static prices. Production needs historical prices at transaction time (for accounting) and live prices (for the dashboard), plus a choice of base currency.
 4. **Accounting export.** Should the ledger sync to accounting software (journals per connection, with gain/loss on disposals), or is CSV enough for v1?
 
@@ -36,6 +36,20 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 - **Internal transfers:** match an outflow from connection X with the inflow to connection Y (same hash, or same amount within a time window) so they net to zero in reporting. The prototype already excludes these from cash flow.
 - **Build vs buy:** writing adapters for every exchange is a large ongoing cost. Data-aggregation vendors exist for this. Evaluate their coverage, cost and data-residency terms against building the top N adapters yourself.
 
+## 3a. Open banking (bank accounts and cards)
+
+- **How it connects:** use a licensed open-banking aggregator for read-only *account information* access. The customer approves access on their own bank's page, and TRNZND never sees their bank login.
+- **Read-only by design:** reading balances and transactions is a different regulated activity from *initiating payments*. The prototype only reads. Adding payments from the platform would need its own licence or a partner, plus approval enforcement.
+- **Consent renewal:** banks require the customer to re-confirm access periodically. The interval depends on the country and the rules change, so check current local requirements. The prototype shows a renewal countdown and flags it 14 days ahead.
+- **Coverage:** aggregator coverage varies by country and bank, and credit-card coverage is patchier than current accounts. Check coverage in your target markets before committing to a vendor.
+
+## 3b. Invoicing
+
+- **PDF:** generated server-side in production, so the emailed attachment and the archived copy are identical and can't be altered by the browser. The prototype builds the same layout in the browser with jsPDF.
+- **Email:** send through a transactional email service, from a verified sending domain. Keep a delivery log (sent, bounced) per recipient. The prototype records the send but does not email anyone.
+- **Getting paid in crypto:** print the receiving network clearly; a payment on the wrong network can be unrecoverable. Use a fresh deposit address per invoice where the wallet or custodian supports it, so receipts match invoices automatically. The prototype only invoices into self-custody wallets with a known address, or into bank accounts.
+- **Tax:** a single tax rate per invoice is a placeholder. Real VAT/GST rules (reverse charge, multiple rates, tax IDs on the invoice) depend on the jurisdiction and should be confirmed with an accountant.
+
 ## 4. Security model
 
 - **Credential handling:** encrypt API secrets with envelope encryption (a KMS-managed key). Store them write-only, so they are never returned to the browser. Decrypt them only inside connector workers, and reject keys whose scopes include trading or withdrawals.
@@ -49,7 +63,7 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 - **Card:** use a PCI-DSS compliant processor's hosted fields or checkout, so card data never reaches TRNZND servers. Run it as a monthly USD 50 subscription.
 - **USDT/USDC:** issue a unique deposit address per invoice (or use a crypto payment processor). Watch the chain for the exact amount, then mark the invoice paid after N confirmations. Handle underpayment, overpayment and the wrong network explicitly.
-- **Seat cap:** enforce it server-side at invite time. The prototype enforces it in the reducer and UI.
+- **Plan limits:** enforce user and connection caps server-side, at invite or connect time and on downgrade. The prototype enforces them in the reducer and UI.
 
 ## 6. Compliance (needs legal advice; not settled here)
 

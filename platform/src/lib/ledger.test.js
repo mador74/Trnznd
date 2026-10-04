@@ -11,8 +11,10 @@ test('seed is deterministic', () => {
 });
 
 test('no connection ends with a negative balance', () => {
-  for (const [cid, bal] of Object.entries(balances(s)))
+  for (const [cid, bal] of Object.entries(balances(s))) {
+    if (cid === 'c-card') continue; // a credit card balance is money owed, so negative is normal
     for (const [a, q] of Object.entries(bal)) assert.ok(q >= 0, `${cid} ${a} = ${q}`);
+  }
 });
 
 test('aggregate equals the sum of individual connections', () => {
@@ -24,6 +26,15 @@ test('aggregate equals the sum of individual connections', () => {
 });
 
 test('internal transfers net to zero across connections', () => {
-  const net = s.transactions.filter((t) => t.internal).reduce((t, x) => t + x.amount * (x.asset === 'BTC' ? 1 : 0), 0);
-  assert.ok(Math.abs(net) < 1e-6);
+  for (const asset of ['BTC', 'USD']) {
+    const net = s.transactions.filter((t) => t.internal && t.asset === asset).reduce((t, x) => t + x.amount, 0);
+    assert.ok(Math.abs(net) < 1e-6, `${asset} ${net}`);
+  }
+});
+
+test('the paid demo invoice is matched to a ledger receipt of the same amount', () => {
+  const inv = s.invoices.find((i) => i.status === 'paid');
+  const tx = s.transactions.find((t) => t.id === inv.paidTxId);
+  assert.equal(tx.invoiceId, inv.id);
+  assert.equal(tx.amount, inv.lines[0].unitPrice);
 });

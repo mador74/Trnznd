@@ -91,6 +91,7 @@ h3 { font-size: 14px; }
 .nav a { color: #d1d5db; padding: 0 12px; display: flex; align-items: center; font-weight: 500; border-bottom: 3px solid transparent; white-space: nowrap; }
 .nav a:hover { color: #fff; text-decoration: none; }
 .nav a.active { color: #fff; border-bottom-color: var(--teal); }
+.nav .lock { margin-left: 4px; font-size: 11px; opacity: 0.7; }
 .nav .count { margin-left: 6px; background: var(--teal); color: var(--midnight); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 6px; }
 .topbar select { background: #1f2937; color: #f9fafb; border: 1px solid #374151; border-radius: 8px; padding: 6px 8px; font: inherit; font-size: 13px; }
 .icon-btn { background: transparent; border: 1px solid #374151; color: #d1d5db; border-radius: 8px; padding: 6px 9px; cursor: pointer; font: inherit; }
@@ -106,6 +107,11 @@ h3 { font-size: 14px; }
 .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .grid.dash { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+/* Menu moves to its own row when it can't share one with the brand and user switcher. */
+@media (max-width: 1500px) {
+  .topbar__inner { flex-wrap: wrap; height: auto; padding-top: 8px; row-gap: 0; }
+  .topbar .nav { order: 10; width: 100%; height: 44px; }
+}
 @media (max-width: 1000px) {
   .grid.cols-3, .grid.cols-4, .grid.dash { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .org { display: none; }
@@ -122,6 +128,7 @@ h3 { font-size: 14px; }
 }
 
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.card.plan, .card.feed { display: flex; flex-direction: column; }
 .card__head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
 .card__body { padding: 16px 18px; }
 .card__foot { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
@@ -206,6 +213,9 @@ dl.kv { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 8px 12p
 dl.kv dt { color: var(--muted); font-size: 12.5px; }
 dl.kv dd { margin: 0; overflow-wrap: anywhere; }
 
+.invoice-paper { border: 1px solid var(--border); border-radius: 8px; padding: 20px; background: var(--surface); display: flex; flex-direction: column; gap: 18px; }
+.invoice-paper__title { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; }
+.invoice-paper__pay { border-left: 3px solid var(--teal); padding-left: 12px; display: flex; flex-direction: column; gap: 2px; }
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 .legend { display: flex; flex-direction: column; gap: 8px; }
 .legend__row { display: flex; align-items: center; gap: 8px; font-size: 13px; }

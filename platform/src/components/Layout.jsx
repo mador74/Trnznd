@@ -4,6 +4,7 @@ import { useStore } from '../state/store.jsx';
 import { ROLES } from '../data/seed.js';
 import { deriveStatus, cannotSignReason } from '../lib/policy.js';
 import { ConfirmButton } from './ui.jsx';
+import { planOf } from '../lib/plans.js';
 
 function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -31,6 +32,7 @@ export default function Layout() {
     (r) => deriveStatus(r, state.policies, state.users) === 'pending' && !cannotSignReason(r, state.currentUserId, state.policies, state.users),
   ).length;
   const active = state.users.filter((u) => u.status === 'active');
+  const plan = planOf(state);
 
   return (
     <>
@@ -40,13 +42,14 @@ export default function Layout() {
             <span className="brand__mark" />
             trnznd <span className="brand__sub">Treasury</span>
           </Link>
-          <span className="org">{state.org.name}</span>
+          <span className="org">{state.org.name} · {plan.name}</span>
           <nav className="nav" aria-label="Main">
             <NavLink to="/" end>Dashboard</NavLink>
             <NavLink to="/connections">Connections</NavLink>
             <NavLink to="/transactions">Transactions</NavLink>
+            <NavLink to="/invoices">Invoices</NavLink>
             <NavLink to="/approvals">
-              Approvals{toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span>}
+              Approvals{plan.approvals ? toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span> : <span className="lock" title="Not included in Basic">🔒</span>}
             </NavLink>
             <NavLink to="/team">Team</NavLink>
             <NavLink to="/audit">Audit log</NavLink>

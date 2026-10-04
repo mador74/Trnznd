@@ -4,7 +4,9 @@ import { useStore } from '../state/store.jsx';
 import { balances, cashflow, connectionUsd, history, totalsByAsset, TX_TYPES, usdOf } from '../lib/ledger.js';
 import { deriveStatus } from '../lib/policy.js';
 import { amount, date, relative, usd, usdShort } from '../lib/format.js';
-import { CONNECTION_TYPES } from '../data/seed.js';
+import { CONNECTION_TYPES, isFiatConn } from '../data/seed.js';
+import { planOf } from '../lib/plans.js';
+import { invoiceTotal, invoiceStatus } from '../lib/invoice.js';
 import { ConnIcon, SERIES, Stat, StatusBadge } from '../components/ui.jsx';
 
 const axis = { fontSize: 11, fill: 'var(--muted)' };
@@ -15,7 +17,17 @@ export default function Dashboard() {
   const bal = balances(state);
   const total = state.connections.reduce((s, c) => s + connectionUsd(bal[c.id]), 0);
   const byAsset = totalsByAsset(state, bal);
+  const sumOf = (pred) => state.connections.filter(pred).reduce((s, c) => s + connectionUsd(bal[c.id]), 0);
+  const digital = sumOf((c) => !isFiatConn(c));
+  const bank = sumOf((c) => c.type === 'bank');
+  const cards = sumOf((c) => c.type === 'card');
   const stable = byAsset.filter((a) => a.kind === 'stablecoin').reduce((s, a) => s + a.usd, 0);
+  const positive = byAsset.filter((a) => a.usd > 0);
+  const positiveTotal = positive.reduce((s, a) => s + a.usd, 0);
+  const plan = planOf(state);
+  const unpaid = state.invoices.filter((i) => ['sent', 'overdue'].includes(invoiceStatus(i)));
+  const overdue = unpaid.filter((i) => invoiceStatus(i) === 'overdue');
+  const unpaidUsd = unpaid.reduce((s, i) => s + usdOf(i.currency, invoiceTotal(i)), 0);
   const hist = history(state, 90);
   const change30 = total - hist[hist.length - 31].usd;
   const flows = cashflow(state);
@@ -31,10 +43,16 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid cols-4">
-        <Stat label="Total treasury" value={usd(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {usdShort(Math.abs(change30))} in 30 days</span>} />
-        <Stat label="Stablecoins" value={usd(stable)} sub={`${((stable / total) * 100).toFixed(1)}% of treasury`} />
-        <Stat label="Awaiting approval" value={pending.length} sub={<Link to="/approvals">Review requests →</Link>} />
+      <div className="grid cols-3">
+        <Stat label="Net treasury" value={usd(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {usdShort(Math.abs(change30))} in 30 days</span>} />
+        <Stat label="Digital assets" value={usd(digital)} sub={`Stablecoins ${usd(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
+        <Stat label="Bank cash · card balances" value={usd(bank)} sub={<span>Credit cards owed <span className="neg">{usd(-cards)}</span></span>} />
+        <Stat label="Unpaid invoices" value={usd(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
+        {plan.approvals ? (
+          <Stat label="Awaiting approval" value={pending.length} sub={<Link to="/approvals">Review requests →</Link>} />
+        ) : (
+          <Stat label="Approvals" value="—" sub={<Link to="/settings">Available on Premium →</Link>} />
+        )}
         <Stat label="To reconcile" value={unrec.length} sub={<Link to="/transactions?status=unreconciled">Reconcile now →</Link>} />
       </div>
 
@@ -60,25 +78,25 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="card">
-          <div className="card__head"><h2>Allocation by asset</h2></div>
+          <div className="card__head"><h2>Holdings by asset</h2><span className="spacer" /><span className="muted small">USD includes bank, net of cards</span></div>
           <div className="card__body row" style={{ alignItems: 'center' }}>
             <div style={{ width: 150, height: 150, flex: 'none' }}>
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={byAsset} dataKey="usd" nameKey="asset" innerRadius={45} outerRadius={70} stroke="var(--surface)" strokeWidth={2}>
-                    {byAsset.map((a, i) => <Cell key={a.asset} fill={SERIES[i % SERIES.length]} />)}
+                  <Pie data={positive} dataKey="usd" nameKey="asset" innerRadius={45} outerRadius={70} stroke="var(--surface)" strokeWidth={2}>
+                    {positive.map((a, i) => <Cell key={a.asset} fill={SERIES[i % SERIES.length]} />)}
                   </Pie>
                   <Tooltip {...tip} formatter={(v) => usd(v)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="legend" style={{ flex: 1 }}>
-              {byAsset.map((a, i) => (
+              {positive.map((a, i) => (
                 <div className="legend__row" key={a.asset}>
                   <span className="dot" style={{ background: SERIES[i % SERIES.length] }} />
                   <strong>{a.asset}</strong>
                   <span className="spacer" />
-                  <span className="muted">{((a.usd / total) * 100).toFixed(1)}%</span>
+                  <span className="muted">{((a.usd / positiveTotal) * 100).toFixed(1)}%</span>
                 </div>
               ))}
             </div>
@@ -87,48 +105,16 @@ export default function Dashboard() {
       </div>
 
       <div className="row">
-        <h2>Connections</h2>
+        <h2>Digital asset accounts</h2>
         <span className="spacer" />
         <Link className="btn sm" to="/connections">Manage connections</Link>
       </div>
       <div className="grid cols-3">
-        {state.connections.map((c) => {
-          const v = connectionUsd(bal[c.id]);
-          const n = unrec.filter((t) => t.connectionId === c.id).length;
-          const top = Object.entries(bal[c.id] || {}).filter(([, q]) => q > 0).sort((a, b) => usdOf(b[0], b[1]) - usdOf(a[0], a[1]));
-          return (
-            <div className="card feed" key={c.id}>
-              <div className="feed__top">
-                <ConnIcon type={c.type} />
-                <div style={{ minWidth: 0 }}>
-                  <Link to={`/connections/${c.id}`} className="feed__name">{c.name}</Link>
-                  <div className="muted small">{CONNECTION_TYPES[c.type].label} · synced {relative(c.lastSync)}</div>
-                </div>
-              </div>
-              <div className="feed__bal">
-                <span className="muted">Balance</span>
-                <strong>{usd(v)}</strong>
-              </div>
-              <div className="feed__bal small">
-                <span className="muted">Share of treasury</span>
-                <span>{((v / total) * 100).toFixed(1)}%</span>
-              </div>
-              <div className="feed__assets">
-                {top.slice(0, 4).map(([a, q]) => <span className="badge" key={a}>{amount(q, a)}</span>)}
-              </div>
-              <span className="spacer" />
-              <div className="card__foot">
-                {n > 0 ? (
-                  <Link className="btn primary sm" to={`/transactions?connection=${c.id}&status=unreconciled`}>Reconcile {n} item{n > 1 ? 's' : ''}</Link>
-                ) : (
-                  <span className="badge pos">All reconciled</span>
-                )}
-                <span className="spacer" />
-                <Link className="small" to={`/connections/${c.id}`}>View account</Link>
-              </div>
-            </div>
-          );
-        })}
+        {state.connections.filter((c) => !isFiatConn(c)).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
+      </div>
+      <div className="row"><h3 className="muted">Bank accounts and cards</h3></div>
+      <div className="grid cols-3">
+        {state.connections.filter(isFiatConn).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
       </div>
 
       <div className="grid cols-2">
@@ -147,6 +133,19 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
         </div>
+        {!plan.approvals ? (
+          <div className="card">
+            <div className="card__head"><h2>Unpaid invoices</h2><span className="spacer" /><Link to="/invoices" className="small">All invoices</Link></div>
+            {unpaid.length === 0 && <div className="empty">No unpaid invoices.</div>}
+            {unpaid.slice(0, 4).map((i) => (
+              <div className="list-row" key={i.id}>
+                <div><div style={{ fontWeight: 600 }}>{i.number} · {amount(invoiceTotal(i), i.currency)}</div><div className="muted small">Due {date(i.dueDate)}</div></div>
+                <span className="spacer" />
+                <span className={`badge ${invoiceStatus(i) === 'overdue' ? 'neg' : 'warn'}`}>{invoiceStatus(i) === 'overdue' ? 'Overdue' : 'Awaiting payment'}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="card">
           <div className="card__head"><h2>Approval queue</h2><span className="spacer" /><Link to="/approvals" className="small">All requests</Link></div>
           {pending.length === 0 && <div className="empty">Nothing waiting for approval.</div>}
@@ -161,6 +160,7 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       <div className="card">
@@ -186,3 +186,42 @@ export default function Dashboard() {
     </div>
   );
 }
+
+function ConnCard({ c, bal, total, unrec }) {
+  const isCard = c.type === 'card';
+  const v = connectionUsd(bal[c.id]);
+  const n = unrec.filter((t) => t.connectionId === c.id).length;
+  const top = Object.entries(bal[c.id] || {}).filter(([, q]) => q > 0).sort((a, b) => usdOf(b[0], b[1]) - usdOf(a[0], a[1]));
+  return (
+    <div className="card feed">
+      <div className="feed__top">
+        <ConnIcon type={c.type} />
+        <div style={{ minWidth: 0 }}>
+          <Link to={`/connections/${c.id}`} className="feed__name">{c.name}</Link>
+          <div className="muted small">{CONNECTION_TYPES[c.type].label} · synced {relative(c.lastSync)}</div>
+        </div>
+      </div>
+      <div className="feed__bal">
+        <span className="muted">{isCard ? 'Balance owed' : 'Balance'}</span>
+        <strong className={isCard ? 'neg' : ''}>{usd(isCard ? -v : v)}</strong>
+      </div>
+      <div className="feed__bal small">
+        <span className="muted">{isCard ? 'Account' : 'Share of treasury'}</span>
+        <span>{isCard ? c.accountMask : `${((v / total) * 100).toFixed(1)}%`}</span>
+      </div>
+      <div className="feed__assets">
+        {isCard ? <span className="badge">{c.institution}</span> : top.slice(0, 4).map(([a, q]) => <span className="badge" key={a}>{amount(q, a)}</span>)}
+      </div>
+      <span className="spacer" />
+      <div className="card__foot">
+        {n > 0 ? (
+          <Link className="btn primary sm" to={`/transactions?connection=${c.id}&status=unreconciled`}>Reconcile {n} item{n > 1 ? 's' : ''}</Link>
+        ) : (
+          <span className="badge pos">All reconciled</span>
+        )}
+        <span className="spacer" />
+        <Link className="small" to={`/connections/${c.id}`}>View account</Link>
+      </div>
+    </div>
+  );
+        }

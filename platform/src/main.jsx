@@ -11,6 +11,7 @@ import Approvals from './pages/Approvals.jsx';
 import Team from './pages/Team.jsx';
 import Audit from './pages/Audit.jsx';
 import Settings from './pages/Settings.jsx';
+import Invoices from './pages/Invoices.jsx';
 import './styles.css';
 
 // HashRouter so the static build works on GitHub Pages without server rewrites.
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="connections" element={<Connections />} />
             <Route path="connections/:id" element={<ConnectionDetail />} />
             <Route path="transactions" element={<Transactions />} />
+            <Route path="invoices" element={<Invoices />} />
             <Route path="approvals" element={<Approvals />} />
             <Route path="team" element={<Team />} />
             <Route path="audit" element={<Audit />} />

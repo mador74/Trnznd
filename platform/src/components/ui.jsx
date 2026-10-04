@@ -23,6 +23,11 @@ export function Modal({ title, onClose, children, footer, wide, drawer }) {
 }
 
 const STATUS = {
+  draft: ['', 'Draft'],
+  sent: ['warn', 'Awaiting payment'],
+  overdue: ['neg', 'Overdue'],
+  paid: ['pos', 'Paid'],
+  void: ['', 'Void'],
   pending: ['warn', 'Awaiting approval'],
   approved: ['info', 'Approved — ready to execute'],
   executed: ['pos', 'Executed'],
@@ -46,7 +51,7 @@ export function Avatar({ user }) {
   return <span className="avatar" title={user?.name}>{initials}</span>;
 }
 
-const ICON = { exchange: ['EX', '#0088ff'], custodian: ['CU', '#6c3aed'], wallet: ['W', '#00a88a'], otc: ['OT', '#06b6d4'] };
+const ICON = { exchange: ['EX', '#0088ff'], custodian: ['CU', '#6c3aed'], wallet: ['W', '#00a88a'], otc: ['OT', '#06b6d4'], bank: ['BK', '#374151'], card: ['CC', '#b45309'] };
 export function ConnIcon({ type }) {
   const [t, bg] = ICON[type] || ['?', '#6b7280'];
   return <span className="feed__icon" style={{ background: bg }} aria-hidden="true">{t}</span>;

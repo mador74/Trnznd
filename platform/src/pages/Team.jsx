@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { subUserCount, useStore } from '../state/store.jsx';
-import { MAX_SUB_USERS, PERMISSIONS, ROLES, can } from '../data/seed.js';
+import { Link } from 'react-router-dom';
+import { useStore } from '../state/store.jsx';
+import { PERMISSIONS, ROLES, can } from '../data/seed.js';
+import { canAddUser, limitLabel, planOf, seatCount } from '../lib/plans.js';
 import { Avatar, ConfirmButton, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 const PERM_LABELS = {
@@ -16,7 +18,9 @@ const PERM_LABELS = {
 export default function Team() {
   const { state, dispatch, me } = useStore();
   const [inviting, setInviting] = useState(false);
-  const used = subUserCount(state.users);
+  const used = seatCount(state.users);
+  const plan = planOf(state);
+  const max = plan.maxUsers;
   const manage = can(me, 'manageTeam');
   const visible = state.users.filter((u) => u.status !== 'removed');
 
@@ -25,16 +29,20 @@ export default function Team() {
       <div className="page-head">
         <div>
           <h1>Team</h1>
-          <p>The business owner plus up to {MAX_SUB_USERS} sub-users on the Premium plan. Every change is written to the audit log.</p>
+          <p>Your {plan.name} plan includes {max == null ? 'unlimited users' : `${max} user${max > 1 ? 's' : ''} in total, including the owner`}. Every change is written to the audit log.</p>
         </div>
         <span className="spacer" />
-        {manage && <button className="btn primary" disabled={used >= MAX_SUB_USERS} onClick={() => setInviting(true)}>+ Invite user</button>}
+        {manage && <button className="btn primary" disabled={!canAddUser(state)} onClick={() => setInviting(true)}>+ Invite user</button>}
       </div>
 
       <div className="card card__body">
-        <div className="row small"><strong>Sub-user seats</strong><span className="spacer" />{used} of {MAX_SUB_USERS} used</div>
-        <div className="progress" style={{ marginTop: 8 }}><div style={{ width: `${(used / MAX_SUB_USERS) * 100}%` }} /></div>
-        {used >= MAX_SUB_USERS && <div className="notice warn small" style={{ marginTop: 10 }}>All seats are in use. Remove a user to free a seat.</div>}
+        <div className="row small"><strong>User seats</strong><span className="spacer" />{used} of {limitLabel(max)} used</div>
+        {max != null && <div className="progress" style={{ marginTop: 8 }}><div style={{ width: `${Math.min(100, (used / max) * 100)}%` }} /></div>}
+        {!canAddUser(state) && (
+          <div className="notice warn small" style={{ marginTop: 10 }}>
+            All seats on {plan.name} are in use. Remove a user, or <Link to="/settings">upgrade your plan</Link> to add more.
+          </div>
+        )}
       </div>
 
       <div className="card">

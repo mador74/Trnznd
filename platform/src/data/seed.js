@@ -2,13 +2,19 @@
 // Balances are derived from opening balances + the generated ledger so the numbers
 // on every screen reconcile with each other.
 
+
 export const ASSETS = {
   BTC: { name: 'Bitcoin', kind: 'crypto', price: 60000 },
   ETH: { name: 'Ether', kind: 'crypto', price: 3000 },
   SOL: { name: 'Solana', kind: 'crypto', price: 150 },
   USDT: { name: 'Tether USD', kind: 'stablecoin', price: 1 },
   USDC: { name: 'USD Coin', kind: 'stablecoin', price: 1 },
+  USD: { name: 'US Dollar', kind: 'fiat', price: 1 },
+  EUR: { name: 'Euro', kind: 'fiat', price: 1.08 },
+  GBP: { name: 'British Pound', kind: 'fiat', price: 1.27 },
 };
+export const FIAT = ['USD', 'EUR', 'GBP'];
+export const CRYPTO = ['BTC', 'ETH', 'SOL', 'USDT', 'USDC'];
 
 // Which networks each asset can be sent on (used to block mismatched payments).
 export const ASSET_NETWORKS = {
@@ -24,10 +30,10 @@ export const CONNECTION_TYPES = {
   custodian: { label: 'Custodian', auth: 'Read-only API key / service account' },
   wallet: { label: 'Self-custody wallet', auth: 'Public address or xpub (no private keys)' },
   otc: { label: 'OTC / broker account', auth: 'Read-only API key or statement import' },
+  bank: { label: 'Bank account', auth: 'Open-banking consent (read-only)', fiat: true },
+  card: { label: 'Credit card', auth: 'Open-banking consent (read-only)', fiat: true },
 };
-
-export const MAX_SUB_USERS = 5;
-export const PLAN = { name: 'Premium', priceUsd: 50, interval: 'month' };
+export const isFiatConn = (c) => !!CONNECTION_TYPES[c?.type]?.fiat;
 
 export const ROLES = {
   owner: { label: 'Owner', desc: 'The business account. Full control including billing.' },
@@ -45,6 +51,7 @@ export const PERMISSIONS = {
   createRequest: ['owner', 'admin', 'approver', 'accountant'],
   reconcile: ['owner', 'admin', 'accountant'],
   export: ['owner', 'admin', 'accountant', 'approver'],
+  invoices: ['owner', 'admin', 'accountant'],
 };
 
 export const can = (user, perm) => !!user && user.status === 'active' && PERMISSIONS[perm].includes(user.role);
@@ -52,6 +59,7 @@ export const can = (user, perm) => !!user && user.status === 'active' && PERMISS
 export const CATEGORIES = [
   'Uncategorised', 'Customer receipt', 'Supplier payment', 'Payroll', 'Internal transfer',
   'Exchange fee', 'Network fee', 'Conversion', 'Treasury rebalance', 'Other income',
+  'Card spend', 'Software & services', 'Travel', 'Card repayment',
 ];
 
 function rng(seed) {
@@ -61,7 +69,8 @@ function rng(seed) {
 
 const hex = (r, n) => Array.from({ length: n }, () => '0123456789abcdef'[Math.floor(r() * 16)]).join('');
 
-export function buildSeed(now = new Date()) {
+export function buildSeed(nowDate = new Date()) {
+  const now = +nowDate; // number, so `now + n` is arithmetic rather than string concatenation
   const r = rng(20261004);
   const DAY = 86400000;
   const iso = (t) => new Date(t).toISOString();
@@ -98,12 +107,13 @@ export function buildSeed(now = new Date()) {
     { id: 'k5', name: 'Atlas Payroll Services', kind: 'supplier' },
     { id: 'k6', name: 'Brightwater Consulting', kind: 'supplier' },
     { id: 'k7', name: 'Qadir Trading House', kind: 'customer' },
-  ].map((k) => ({ ...k, address: '0x' + hex(r, 40), network: 'Ethereum' }));
+  ].map((k) => ({ ...k, address: '0x' + hex(r, 40), network: 'Ethereum', email: `accounts@${k.name.split(' ')[0].toLowerCase()}.example` }));
 
   const whitelist = contacts.slice(0, 6).map((k, i) => ({
     id: 'w' + i, label: k.name, address: k.address, network: k.network, addedAt: iso(now - (150 - i * 9) * DAY),
   }));
 
+  const cryptoConns = connections.slice();
   const pick = (arr) => arr[Math.floor(r() * arr.length)];
   const transactions = [];
   let n = 0;
@@ -113,7 +123,7 @@ export function buildSeed(now = new Date()) {
     const perDay = 1 + Math.floor(r() * 3);
     for (let k = 0; k < perDay; k++) {
       const ts = now - d * DAY - Math.floor(r() * DAY * 0.9);
-      const conn = pick(connections);
+      const conn = pick(cryptoConns);
       const asset = pick(conn.assets);
       const price = ASSETS[asset].price;
       const roll = r();
@@ -133,7 +143,7 @@ export function buildSeed(now = new Date()) {
         push({ connectionId: conn.id, date: iso(ts + 1000), type: 'fee', asset, amount: -+(out * 0.0008).toFixed(6),
           counterparty: 'Network', txHash: hash, category: 'Network fee', reconciled });
       } else if (roll < 0.88) {
-        const to = pick(connections.filter((c) => c.id !== conn.id && c.assets.includes(asset)));
+        const to = pick(cryptoConns.filter((c) => c.id !== conn.id && c.assets.includes(asset)));
         if (!to) continue;
         const q = +(qty * 0.6).toFixed(6);
         push({ connectionId: conn.id, date: iso(ts), type: 'transfer_out', asset, amount: -q, counterparty: to.name,
@@ -153,6 +163,38 @@ export function buildSeed(now = new Date()) {
         push({ connectionId: conn.id, date: iso(ts), type: 'fee', asset: stable, amount: -+(sizeUsd * 0.001).toFixed(2),
           counterparty: 'Exchange', txHash: 'order-' + hex(r, 12), category: 'Exchange fee', reconciled });
       }
+    }
+  }
+  // ---- Fiat accounts via open banking (separate RNG so the crypto ledger above is unchanged) ----
+  const r2 = rng(777);
+  const pick2 = (arr) => arr[Math.floor(r2() * arr.length)];
+  const fiatConns = [
+    { id: 'c-bank', name: 'Business current account', type: 'bank', network: 'Demo Bank · USD', institution: 'Demo Bank', accountMask: '••••4821', assets: ['USD'] },
+    { id: 'c-card', name: 'Corporate credit card', type: 'card', network: 'Demo Bank · USD', institution: 'Demo Bank', accountMask: '••••9034', assets: ['USD'] },
+  ].map((c, i) => ({ ...c, status: 'connected', lastSync: iso(now - (i * 5 + 8) * 60000), connectedAt: iso(now - 150 * DAY), consentExpires: iso(now + (62 - i * 50) * DAY) }));
+  connections.push(...fiatConns);
+  opening['c-bank'] = { USD: 420000 };
+  opening['c-card'] = { USD: -3200 };
+  const merchants = [['Cloud hosting provider', 'Software & services'], ['Airline', 'Travel'], ['Hotel', 'Travel'], ['Office supplies', 'Card spend'], ['Data subscription', 'Software & services']];
+  for (let d = 120; d >= 0; d--) {
+    const ts = now - d * DAY - Math.floor(r2() * DAY * 0.8);
+    const rec = d > 10 ? r2() > 0.1 : r2() > 0.6;
+    if (r2() < 0.45) {
+      const [m, cat] = pick2(merchants);
+      push({ connectionId: 'c-card', date: iso(ts), type: 'card_spend', asset: 'USD', amount: -Math.round(80 + r2() * 2400), counterparty: m, txHash: 'card-' + hex(r2, 10), category: rec ? cat : 'Uncategorised', reconciled: rec });
+    }
+    if (r2() < 0.18) {
+      const k2 = pick2(contacts);
+      push({ connectionId: 'c-bank', date: iso(ts), type: 'deposit', asset: 'USD', amount: Math.round(5000 + r2() * 60000), counterparty: k2.name, txHash: 'bank-' + hex(r2, 10), category: rec ? 'Customer receipt' : 'Uncategorised', reconciled: rec });
+    }
+    if (r2() < 0.12) {
+      const k2 = pick2(contacts);
+      push({ connectionId: 'c-bank', date: iso(ts), type: 'withdrawal', asset: 'USD', amount: -Math.round(3000 + r2() * 40000), counterparty: k2.name, txHash: 'bank-' + hex(r2, 10), category: rec ? 'Supplier payment' : 'Uncategorised', reconciled: rec });
+    }
+    if (d % 30 === 5) {
+      const amt = 17000;
+      push({ connectionId: 'c-bank', date: iso(ts), type: 'transfer_out', asset: 'USD', amount: -amt, counterparty: 'Corporate credit card', txHash: 'bank-' + hex(r2, 10), category: 'Card repayment', reconciled: true, internal: true });
+      push({ connectionId: 'c-card', date: iso(ts + 3600000), type: 'transfer_in', asset: 'USD', amount: amt, counterparty: 'Business current account', txHash: 'card-' + hex(r2, 10), category: 'Card repayment', reconciled: true, internal: true });
     }
   }
   transactions.sort((a, b) => b.date.localeCompare(a.date));
@@ -192,16 +234,38 @@ export function buildSeed(now = new Date()) {
     { id: 'a1', at: iso(now - 1 * DAY), userId: 'u-owner', action: 'Approved request', detail: 'Whitelist Qadir Trading House' },
   ];
 
-  const invoices = [0, 1, 2, 3].map((i) => ({
-    id: 'INV-' + (1040 - i), date: iso(now - (i * 30 + 4) * DAY), amountUsd: 50, status: 'paid',
+  const subscriptionInvoices = [0, 1, 2, 3].map((i) => ({
+    id: 'SUB-' + (1040 - i), date: iso(now - (i * 30 + 4) * DAY), amountUsd: 100, status: 'paid',
     method: i % 2 ? 'USDC (Ethereum)' : 'Card •••• 4242',
   }));
 
+  // Sales invoices. The paid one is matched to a real receipt in the ledger above.
+  const receipt = transactions.find((t) => t.connectionId === 'c-eth' && t.asset === 'USDC' && t.type === 'deposit' && t.reconciled);
+  receipt.memo = 'INV-0001';
+  receipt.invoiceId = 'i1';
+  receipt.category = 'Customer receipt';
+  const day = (n) => iso(now + n * DAY).slice(0, 10);
+  const payer = contacts.find((c) => c.name === receipt.counterparty) || contacts[2];
+  const invoices = [
+    { id: 'i1', number: 'INV-0001', contactId: payer.id,
+      issueDate: receipt.date.slice(0, 10), dueDate: receipt.date.slice(0, 10), currency: 'USDC', payToConnectionId: 'c-eth', taxRate: 0,
+      lines: [{ desc: 'Goods supplied per order', qty: 1, unitPrice: receipt.amount }], notes: '', status: 'paid',
+      paidTxId: receipt.id, paidAt: receipt.date, sentLog: [{ at: receipt.date, to: [payer.email] }] },
+    { id: 'i2', number: 'INV-0002', contactId: 'k4', issueDate: day(-40), dueDate: day(-10), currency: 'USDT', payToConnectionId: 'c-trx', taxRate: 0,
+      lines: [{ desc: 'Cotton yarn, grade A (tonnes)', qty: 12, unitPrice: 2150 }, { desc: 'Freight and insurance', qty: 1, unitPrice: 1800 }],
+      notes: 'Please include the invoice number as the payment reference.', status: 'sent', sentLog: [{ at: iso(now - 40 * DAY), to: ['accounts@solano.example'] }] },
+    { id: 'i3', number: 'INV-0003', contactId: 'k7', issueDate: day(-6), dueDate: day(24), currency: 'USD', payToConnectionId: 'c-bank', taxRate: 0,
+      lines: [{ desc: 'Consulting — trade finance setup', qty: 3, unitPrice: 4500 }], notes: '', status: 'sent',
+      sentLog: [{ at: iso(now - 6 * DAY), to: ['accounts@qadir.example', 'alex@example.com'] }] },
+    { id: 'i4', number: 'INV-0004', contactId: 'k3', issueDate: day(0), dueDate: day(30), currency: 'USDC', payToConnectionId: 'c-eth', taxRate: 0,
+      lines: [{ desc: 'Dyed fabric rolls', qty: 40, unitPrice: 310 }], notes: '', status: 'draft', sentLog: [] },
+  ];
+
   return {
-    version: 1,
-    org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD' },
+    version: 2,
+    org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
-    users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices,
-    billing: { plan: PLAN, paymentMethod: { type: 'card', label: 'Visa •••• 4242' }, nextInvoice: iso(now + 26 * DAY) },
+    users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,
+    billing: { planId: 'institution', paymentMethod: { type: 'card', label: 'Visa •••• 4242' }, nextInvoice: iso(now + 26 * DAY) },
   };
 }

@@ -3,13 +3,24 @@ import { useStore } from '../state/store.jsx';
 import { ACTION_TYPES, cannotSignReason, deriveStatus, governingPolicies, progress, validatePolicy } from '../lib/policy.js';
 import { balances, priceOf } from '../lib/ledger.js';
 import { amount, dateTime, relative, shortAddr, usd } from '../lib/format.js';
-import { ASSET_NETWORKS, can } from '../data/seed.js';
+import { Link } from 'react-router-dom';
+import { ASSET_NETWORKS, can, isFiatConn } from '../data/seed.js';
+import { planOf } from '../lib/plans.js';
 import { Avatar, Empty, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 export default function Approvals() {
   const { state, me } = useStore();
   const [tab, setTab] = useState('mine');
   const [creating, setCreating] = useState(false);
+  if (!planOf(state).approvals)
+    return (
+      <div className="card card__body stack" style={{ maxWidth: 640 }}>
+        <h1>Approvals</h1>
+        <p className="muted">Approval rules (for example “2 of 3 people must sign off payments over $10k”), the address whitelist and the sign-off queue are part of the Premium and Institution plans.</p>
+        <p className="muted">Your Basic plan has one user, so there is nobody else to approve with.</p>
+        {can(me, 'manageBilling') ? <Link className="btn primary" to="/settings">Compare plans</Link> : <p className="small">Ask the account owner to upgrade.</p>}
+      </div>
+    );
   const withStatus = state.requests.map((r) => ({ ...r, status: deriveStatus(r, state.policies, state.users) }));
   const mine = withStatus.filter((r) => r.status === 'pending' && !cannotSignReason(r, me.id, state.policies, state.users));
   const ready = withStatus.filter((r) => r.status === 'approved');
@@ -134,7 +145,8 @@ function RequestCard({ r }) {
 function NewRequest({ onClose }) {
   const { state, dispatch, me } = useStore();
   const [type, setType] = useState('withdrawal');
-  const [connectionId, setConn] = useState(state.connections[0]?.id || '');
+  const sources = state.connections.filter((c) => !isFiatConn(c));
+  const [connectionId, setConn] = useState(sources[0]?.id || '');
   const conn = state.connections.find((c) => c.id === connectionId);
   const [asset, setAsset] = useState(conn?.assets[0] || 'USDT');
   const [qty, setQty] = useState('');
@@ -195,7 +207,7 @@ function NewRequest({ onClose }) {
           <div className="grid cols-2">
             <label className="field"><span>From connection</span>
               <select value={connectionId} onChange={(e) => { setConn(e.target.value); const c = state.connections.find((x) => x.id === e.target.value); setAsset(c?.assets[0]); }}>
-                {state.connections.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {sources.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </label>
             <label className="field"><span>Asset</span>
@@ -215,7 +227,7 @@ function NewRequest({ onClose }) {
             <label className="field"><span>To connection</span>
               <select value={toConn} onChange={(e) => setToConn(e.target.value)}>
                 <option value="">Choose…</option>
-                {state.connections.filter((c) => c.id !== connectionId && c.assets.includes(asset)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {sources.filter((c) => c.id !== connectionId && c.assets.includes(asset)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </label>
           )}

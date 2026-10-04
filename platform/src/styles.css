@@ -252,3 +252,7 @@ th.col-out { color: var(--neg); }
 .seg button { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
 .seg button.active { background: var(--teal); color: var(--midnight); }
 .seg button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+/* Failed subscription payment, shown on every page */
+.pay-banner { background: var(--neg-bg); color: var(--neg); text-align: center; padding: 8px 16px; font-size: 13px; font-weight: 600; }
+.pay-banner a { color: inherit; text-decoration: underline; margin-left: 4px; }

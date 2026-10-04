@@ -4,7 +4,7 @@ import { Avatar } from '../components/ui.jsx';
 
 export default function Audit() {
   const { state } = useStore();
-  const user = (id) => state.users.find((u) => u.id === id);
+  const user = (id) => (id === 'system' ? { name: 'TRNZIT (automatic)' } : state.users.find((u) => u.id === id));
   const exportCsv = () =>
     download('trnznd-audit-log.csv', toCsv([['Time (UTC)', 'User', 'Action', 'Detail'], ...state.audit.map((a) => [a.at, user(a.userId)?.name, a.action, a.detail])]));
   return (

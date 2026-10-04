@@ -3,7 +3,7 @@ import { buildSeed } from '../data/seed.js';
 import { setDisplayCurrency } from '../lib/format.js';
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
 import {
-  applyDueChanges, billingNow, canAddConnection, canAddFiatConnection, DEFAULT_INTERVAL, canAddUser, canCancelFree, chargesBetween, intervalBlocker, INTERVALS,
+  addDays, applyDueChanges, billingNow, canAddConnection, canAddFiatConnection, cancellationDate, DEFAULT_INTERVAL, GRACE_DAYS, nextCharge, renewalReminders, canAddUser, canCancelFree, chargesBetween, intervalBlocker, INTERVALS,
   paymentMethodBlocker, planBlockers, planChangeTiming, planOf, PLANS, subscriptionStatus,
 } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
@@ -31,6 +31,47 @@ function load() {
 
 const uid = (p) => p + Math.random().toString(36).slice(2, 9);
 const now = () => new Date().toISOString();
+
+/**
+ * Prototype only: moves the demo billing clock to just after `target`, takes the charges that fall due
+ * (the last one fails when `failLast`), logs the renewal reminders and notices sent on the way, and
+ * applies scheduled renewal changes.
+ */
+function advanceClock(state, target, failLast) {
+  const b0 = state.billing;
+  const from = billingNow(b0);
+  const to = new Date(+new Date(target) + 60000).toISOString();
+  const s0 = subscriptionStatus(b0, from);
+  let due = b0.paymentFailure ? [] : chargesBetween(b0, from, to);
+  const failing = failLast ? due[due.length - 1] : null;
+  const base = 1041 + state.subscriptionInvoices.length;
+  const invoices = due.map((c, i) => ({
+    id: 'SUB-' + (base + i), date: c.at, amountUsd: c.amountUsd, status: c === failing ? 'failed' : 'paid',
+    method: b0.paymentMethod.label, period: `${PLANS[c.planId].name}, ${c.interval === 'annual' ? '12 months in advance' : 'monthly'}`,
+  }));
+  const failedInv = failing ? invoices[invoices.length - 1] : null;
+  const events = [
+    ...renewalReminders(b0, from).filter((r) => !r.sent && +new Date(r.at) <= +new Date(to))
+      .map((r) => ({ at: r.at, action: `Renewal reminder sent (${r.label} before renewal)`, detail: `Emailed to the Owner: renews ${s0.renewsOn.slice(0, 10)}; notice to cancel needed by ${addDays(s0.renewsOn, -30).slice(0, 10)}` })),
+    ...invoices.filter((i) => i.status === 'paid').map((i) => ({ at: i.date, action: 'Subscription charged', detail: `${i.id} ${i.period}: $${i.amountUsd.toFixed(2)}` })),
+  ];
+  if (failedInv)
+    events.push({ at: failedInv.date, action: 'Card payment failed — Owner notified', detail: `${failedInv.id}: $${failedInv.amountUsd.toFixed(2)}. Email and in-app notice: fix within ${GRACE_DAYS} days or the subscription is cancelled automatically` });
+  let billing = applyDueChanges({ ...b0, clockOffsetMs: (b0.clockOffsetMs || 0) + (+new Date(to) - +new Date(from)) }, to);
+  if (failedInv) billing = { ...billing, paymentFailure: { at: failedInv.date, amountUsd: failedInv.amountUsd, invoiceId: failedInv.id } };
+  const s1 = subscriptionStatus(billing, to);
+  if (s1.phase === 'ended' && s0.phase !== 'ended')
+    events.push({ at: s1.endedAt || to, action: s1.reason === 'payment' ? 'Subscription cancelled automatically' : 'Subscription ended',
+      detail: s1.reason === 'payment' ? `Card payment not settled within ${GRACE_DAYS} days` : 'Cancellation took effect on the renewal date' });
+  const logged = events.sort((x, y) => +new Date(y.at) - +new Date(x.at))
+    .map((e) => ({ id: uid('a'), at: now(), userId: 'system', action: 'Demo clock: ' + e.action, detail: `${e.at.slice(0, 10)} · ${e.detail}` }));
+  return {
+    ...state,
+    billing,
+    subscriptionInvoices: [...invoices.reverse(), ...state.subscriptionInvoices],
+    audit: [...logged, ...state.audit].slice(0, 500),
+  };
+}
 
 function audit(state, action, detail) {
   return [{ id: uid('a'), at: now(), userId: state.currentUserId, action, detail }, ...state.audit].slice(0, 500);
@@ -477,35 +518,51 @@ function reducer(state, a) {
       if (subscriptionStatus(state.billing, billingNow(state.billing)).phase !== 'cancelled') return state;
       return { ...state, billing: { ...state.billing, cancelledAt: null }, audit: audit(state, 'Resumed free trial', 'Cancellation withdrawn before the trial ended') };
     case 'CANCEL_RENEWAL': {
-      const s = subscriptionStatus(state.billing, billingNow(state.billing));
+      const t = billingNow(state.billing);
+      const s = subscriptionStatus(state.billing, t);
       if (s.phase !== 'committed' || state.billing.cancelAt) return state;
-      return { ...state, billing: { ...state.billing, cancelAt: s.term.end }, audit: audit(state, 'Cancelled subscription', `Takes effect on the renewal date, ${s.term.end.slice(0, 10)}`) };
+      const c = cancellationDate(state.billing, t);
+      return {
+        ...state,
+        billing: { ...state.billing, cancelAt: c.effective },
+        audit: audit(state, 'Cancelled subscription', c.late
+          ? `Less than 30 days' notice before ${c.renewalDate.slice(0, 10)}: renews once more and ends ${c.effective.slice(0, 10)}`
+          : `Takes effect on the renewal date, ${c.effective.slice(0, 10)}`),
+      };
+    }
+    case 'RETRY_PAYMENT': {
+      // Demo: the retried charge always succeeds.
+      const f = state.billing.paymentFailure;
+      if (!f || subscriptionStatus(state.billing, billingNow(state.billing)).phase !== 'committed') return state;
+      return {
+        ...state,
+        billing: { ...state.billing, paymentFailure: null },
+        subscriptionInvoices: state.subscriptionInvoices.map((i) => (i.id === f.invoiceId ? { ...i, status: 'paid', method: state.billing.paymentMethod.label, paidAt: billingNow(state.billing) } : i)),
+        audit: audit(state, 'Subscription payment settled', `${f.invoiceId} retried with ${state.billing.paymentMethod.label}`),
+      };
+    }
+    case 'DEMO_FAIL_CHARGE': {
+      // Prototype only: move the clock to the next charge and make that card charge fail.
+      const b = state.billing;
+      const t = billingNow(b);
+      const ph = subscriptionStatus(b, t).phase;
+      const next = nextCharge(b, t);
+      if (!['trial', 'committed'].includes(ph) || b.paymentFailure || b.paymentMethod.type !== 'card' || !next) return state;
+      return advanceClock(state, next.at, true);
     }
     case 'UNDO_CANCEL_RENEWAL':
       if (subscriptionStatus(state.billing, billingNow(state.billing)).phase !== 'committed') return state;
       return { ...state, billing: { ...state.billing, cancelAt: null }, audit: audit(state, 'Withdrew cancellation', 'Subscription will renew automatically') };
     case 'DEMO_ADVANCE': {
-      // Prototype only: move the billing clock to just after the trial end or the next renewal date,
-      // taking every charge that falls due on the way and applying scheduled changes.
-      const from = billingNow(state.billing);
-      const s = subscriptionStatus(state.billing, from);
-      const target = a.to === 'trialEnd' ? s.trialEnds : s.term?.end;
-      if (!target || +new Date(target) <= +new Date(from)) return state;
-      const to = new Date(+new Date(target) + 60000).toISOString();
-      const due = chargesBetween(state.billing, from, to);
-      const invoices = due.map((c, i) => ({
-        id: 'SUB-' + (1041 + state.subscriptionInvoices.length + i), date: c.at, amountUsd: c.amountUsd, status: 'paid',
-        method: state.billing.paymentMethod.label, period: `${PLANS[c.planId].name}, ${c.interval === 'annual' ? '12 months in advance' : 'monthly'}`,
-      })).reverse();
-      const billing = applyDueChanges({ ...state.billing, clockOffsetMs: (state.billing.clockOffsetMs || 0) + (+new Date(to) - +new Date(from)) }, to);
-      const ended = subscriptionStatus(billing, to).phase === 'ended';
-      return {
-        ...state,
-        billing,
-        subscriptionInvoices: [...invoices, ...state.subscriptionInvoices],
-        audit: audit(state, a.to === 'trialEnd' ? 'Demo: trial ended' : 'Demo: renewal date reached',
-          ended ? 'Subscription ended, no charge' : `${due.length} charge${due.length === 1 ? '' : 's'} taken; ${PLANS[billing.planId].name}, ${INTERVALS[billing.interval || DEFAULT_INTERVAL].label.toLowerCase()}`),
-      };
+      // Prototype only: move the billing clock forward to show the trial ending, reminders, renewals and the grace period.
+      const t = billingNow(state.billing);
+      const s = subscriptionStatus(state.billing, t);
+      const target = a.to === 'trialEnd' ? s.trialEnds
+        : a.to === 'reminder' ? renewalReminders(state.billing, t).find((r) => !r.sent)?.at
+        : a.to === 'graceEnd' ? s.pastDue?.graceEnds
+        : s.term?.end;
+      if (!target || +new Date(target) <= +new Date(t)) return state;
+      return advanceClock(state, target, false);
     }
 
     default:

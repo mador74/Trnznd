@@ -4,9 +4,9 @@ import { useStore } from '../state/store.jsx';
 import { ROLES } from '../data/seed.js';
 import { deriveStatus, cannotSignReason } from '../lib/policy.js';
 import { ConfirmButton } from './ui.jsx';
-import { planOf } from '../lib/plans.js';
+import { billingNow, planOf, subscriptionStatus } from '../lib/plans.js';
 import { DISPLAY_CURRENCIES, REGIONS } from '../lib/fx.js';
-import { displayCurrency } from '../lib/format.js';
+import { date, displayCurrency, usd } from '../lib/format.js';
 
 function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -35,6 +35,7 @@ export default function Layout() {
   ).length;
   const active = state.users.filter((u) => u.status === 'active');
   const plan = planOf(state);
+  const sub = subscriptionStatus(state.billing, billingNow(state.billing));
   const ready = state.requests.filter((r) => !['address_whitelist', 'conversion'].includes(r.type) && deriveStatus(r, state.policies, state.users) === 'approved').length;
   const sections = [
     { label: 'Overview', items: [{ to: '/', end: true, text: 'Dashboard', hint: 'Balances and activity' }] },
@@ -101,6 +102,12 @@ export default function Layout() {
         Prototype with demo data only — no real accounts are connected, and prices and exchange rates are static.{' '}
         <ConfirmButton className="btn ghost sm" prompt="Click again to reset everything" onConfirm={() => dispatch({ type: 'RESET' })}>Reset demo</ConfirmButton>
       </div>
+      {sub.pastDue && (
+        <div className="pay-banner" role="alert">
+          Your subscription payment of {usd(sub.pastDue.amountUsd)} failed on {date(sub.pastDue.at)}. Update your card by {date(sub.pastDue.graceEnds)} or the
+          subscription will be cancelled automatically. <Link to="/settings">Fix payment</Link>
+        </div>
+      )}
       <main className="page">
         <Outlet />
       </main>

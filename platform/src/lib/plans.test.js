@@ -46,7 +46,7 @@ test('basic is crypto only: no bank or card connections', () => {
 
 import {
   addMonths, applyDueChanges, canCancelFree, chargesBetween, intervalBlocker, nextCharge, paymentMethodBlocker,
-  planChangeTiming, priceFor, subscriptionStatus, upgradeFee, yearCost,
+  planChangeTiming, priceFor, subscriptionStatus, upgradeFee, yearCost, cancellationDate, renewalReminders,
 } from './plans.js';
 
 const T0 = '2026-01-31T10:00:00.000Z';
@@ -140,5 +140,44 @@ test('interval can be set unless cancelled; the trial needs a card', () => {
   assert.equal(intervalBlocker(trial(), 'annual', at(30)), null);
   assert.match(intervalBlocker(trial({ cancelAt: addMonths(END, 12) }), 'annual', at(30)), /end at renewal/);
   assert.match(paymentMethodBlocker(trial(), 'stablecoin', at(3)), /authorised card/);
-  assert.equal(paymentMethodBlocker(trial(), 'stablecoin', at(30)), null);
+  assert.match(paymentMethodBlocker(trial(), 'stablecoin', at(30)), /annual billing/);
+  assert.equal(paymentMethodBlocker(trial({ interval: 'annual' }), 'stablecoin', at(30)), null);
+});
+
+test('stablecoin payers can only pay annually', () => {
+  const b = trial({ interval: 'annual', paymentMethod: { type: 'stablecoin' } });
+  assert.match(intervalBlocker(b, 'monthly', at(30)), /only pay annually/);
+});
+
+test('cancelling needs 30 days notice before the renewal date', () => {
+  const renewal = addMonths(END, 12);
+  const early = cancellationDate(trial(), addMonths(END, 6));
+  assert.equal(early.effective, renewal);
+  assert.equal(early.late, false);
+  assert.equal(early.deadline, new Date(+new Date(renewal) - 30 * 86400000).toISOString());
+  const late = cancellationDate(trial(), new Date(+new Date(renewal) - 29 * 86400000).toISOString());
+  assert.equal(late.late, true);
+  assert.equal(late.effective, addMonths(END, 24), 'renews once more, then ends');
+  const b = trial({ cancelAt: late.effective });
+  assert.equal(subscriptionStatus(b, addMonths(END, 11)).renewsOn, renewal);
+});
+
+test('renewal reminders go out 6 weeks and 14 days before renewal', () => {
+  const renewal = addMonths(END, 12);
+  const r = renewalReminders(trial(), at(30));
+  assert.deepEqual(r.map((x) => x.label), ['6 weeks', '14 days']);
+  assert.equal(r[0].at, new Date(+new Date(renewal) - 42 * 86400000).toISOString());
+  assert.equal(r[1].sent, false);
+  assert.deepEqual(renewalReminders(trial({ cancelAt: renewal }), at(30)), [], 'no reminders when it will not renew');
+});
+
+test('a failed card charge has 14 days to be fixed, then cancels automatically', () => {
+  const b = trial({ paymentFailure: { at: at(40), amountUsd: 50 } });
+  const s = subscriptionStatus(b, at(45));
+  assert.equal(s.phase, 'committed');
+  assert.equal(s.pastDue.daysLeft, 9);
+  const e = subscriptionStatus(b, at(54));
+  assert.equal(e.phase, 'ended');
+  assert.equal(e.reason, 'payment');
+  assert.equal(e.endedAt, at(54));
 });

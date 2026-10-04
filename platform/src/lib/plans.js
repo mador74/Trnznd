@@ -68,6 +68,12 @@ export function planBlockers(state, planId) {
 export const TRIAL_DAYS = 14;
 export const COMMITMENT_MONTHS = 12;
 export const ANNUAL_MULTIPLIER = 10;
+/** Days a customer has to fix a failed card charge before the subscription is cancelled automatically. */
+export const GRACE_DAYS = 14;
+/** Minimum notice, in days before a renewal date, for a cancellation to stop that renewal. */
+export const NOTICE_DAYS = 30;
+/** Renewal reminders, in days before the renewal date (6 weeks, then 14 days). */
+export const REMINDER_DAYS = [42, 14];
 const DAY = 86400000;
 const ms = (iso) => +new Date(iso);
 
@@ -145,11 +151,41 @@ export function subscriptionStatus(b, nowIso) {
     const daysLeft = Math.max(0, Math.ceil((ms(trialEnds) - ms(nowIso)) / DAY));
     return { phase: trialCancelled(b) ? 'cancelled' : 'trial', trialEnds, daysLeft };
   }
-  if (trialCancelled(b)) return { phase: 'ended', trialEnds, endedAt: trialEnds };
-  if (b.cancelAt && ms(nowIso) >= ms(b.cancelAt)) return { phase: 'ended', trialEnds, endedAt: b.cancelAt };
+  if (trialCancelled(b)) return { phase: 'ended', trialEnds, endedAt: trialEnds, reason: 'trial' };
+  const graceEnds = b.paymentFailure ? addDays(b.paymentFailure.at, GRACE_DAYS) : null;
+  if (graceEnds && ms(nowIso) >= ms(graceEnds) && !(b.cancelAt && ms(b.cancelAt) < ms(graceEnds)))
+    return { phase: 'ended', trialEnds, endedAt: graceEnds, reason: 'payment', failure: b.paymentFailure };
+  if (b.cancelAt && ms(nowIso) >= ms(b.cancelAt)) return { phase: 'ended', trialEnds, endedAt: b.cancelAt, reason: 'cancelled' };
   const term = termAt(b, nowIso);
   if (!term) return { phase: 'ended', trialEnds, endedAt: null };
-  return { phase: 'committed', trialEnds, term, renewsOn: b.cancelAt ? null : term.end, cancelAt: b.cancelAt || null };
+  const renews = !(b.cancelAt && ms(b.cancelAt) <= ms(term.end));
+  const pastDue = graceEnds
+    ? { ...b.paymentFailure, graceEnds, daysLeft: Math.max(0, Math.ceil((ms(graceEnds) - ms(nowIso)) / DAY)) }
+    : null;
+  return { phase: 'committed', trialEnds, term, renewsOn: renews ? term.end : null, cancelAt: b.cancelAt || null, pastDue };
+}
+
+/**
+ * When a cancellation given at `nowIso` takes effect. It needs NOTICE_DAYS before the renewal date;
+ * later notice lets the agreement renew once more and end at the following renewal date.
+ */
+export function cancellationDate(b, nowIso) {
+  const term = termAt(b, nowIso);
+  if (!term) return null;
+  const deadline = addDays(term.end, -NOTICE_DAYS);
+  const late = ms(nowIso) > ms(deadline);
+  const effective = late ? addMonths(anchorOf(b), COMMITMENT_MONTHS * (term.number + 1)) : term.end;
+  return { effective, deadline, late, renewalDate: term.end };
+}
+
+/** Renewal reminders for the current term (6 weeks and 14 days before), and whether each is due by `nowIso`. */
+export function renewalReminders(b, nowIso) {
+  const s = subscriptionStatus(b, nowIso);
+  if (s.phase !== 'committed' || !s.renewsOn) return [];
+  return REMINDER_DAYS.map((d) => {
+    const at = addDays(s.renewsOn, -d);
+    return { daysBefore: d, label: d % 7 === 0 && d > 14 ? `${d / 7} weeks` : `${d} days`, at, sent: ms(at) <= ms(nowIso) };
+  });
 }
 
 /** Cancelling is free only during the trial. */
@@ -227,6 +263,7 @@ export function intervalBlocker(b, to, nowIso) {
   const s = subscriptionStatus(b, nowIso);
   if (s.phase === 'cancelled' || s.phase === 'ended') return 'The subscription has been cancelled.';
   if (s.phase === 'committed' && b.cancelAt) return 'The agreement is set to end at renewal.';
+  if (to === 'monthly' && b.paymentMethod?.type === 'stablecoin') return 'Stablecoin payers can only pay annually. Switch the payment method to a card to pay monthly.';
   return null;
 }
 
@@ -234,6 +271,8 @@ export function intervalBlocker(b, to, nowIso) {
 export function paymentMethodBlocker(b, type, nowIso) {
   if (type !== 'card' && subscriptionStatus(b, nowIso).phase === 'trial')
     return 'The free trial needs an authorised card. You can switch to USDT or USDC once the trial has ended.';
+  if (type !== 'card' && (b.interval || DEFAULT_INTERVAL) !== 'annual')
+    return 'USDT and USDC can only be used with annual billing, paid in advance. Switch to annual billing first.';
   return null;
 }
 

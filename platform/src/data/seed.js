@@ -14,7 +14,7 @@ export const ASSETS = {
   USDT: { name: 'Tether USD', kind: 'stablecoin', price: 1 },
   USDC: { name: 'USD Coin', kind: 'stablecoin', price: 1 },
   // PLACEHOLDER valuation for the demo. ZEND's real value follows its multi-currency reserve basket.
-  ZEND: { name: 'ZEND (TRNZND)', kind: 'stablecoin', price: 1 },
+  ZEND: { name: 'ZEND (TRNZND S.A.)', kind: 'stablecoin', price: 1 },
   USD: { name: 'US Dollar', kind: 'fiat', price: 1 },
   EUR: { name: 'Euro', kind: 'fiat', price: DISPLAY_CURRENCIES.EUR.usdPer },
   GBP: { name: 'British Pound', kind: 'fiat', price: DISPLAY_CURRENCIES.GBP.usdPer },

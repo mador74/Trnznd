@@ -17,10 +17,10 @@ export const PARTNERS = {
     feeRate: 0.01, // PLACEHOLDER for the demo only; not the partner's pricing. Real fees are shown at the partner's checkout.
   },
   trnznd: {
-    name: 'TRNZND',
-    ref: 'TRNZND',
+    name: 'TRNZND S.A. (Panama)',
+    ref: 'TRNZND S.A.',
     role: 'ZEND minting & redemption',
-    blurb: 'Mint ZEND by sending fiat to TRNZND, or redeem ZEND back to fiat in your bank account. TRNZND is the issuer of ZEND.',
+    blurb: 'Mint ZEND by sending fiat to TRNZND S.A., or redeem ZEND back to fiat in your bank account. TRNZND S.A. (Panama) is the issuer of ZEND: a TRNZND group company and a separate legal entity from TRNZND UAE, which operates TRNZIT. Minting and redemption are under TRNZND S.A.’s own terms.',
     // ZEND networks confirmed: Ethereum, Solana, Tron. PLACEHOLDER: confirm accepted currencies, minimums and fees.
     fiat: ['USD', 'EUR', 'GBP'],
     networks: ['Ethereum', 'Solana', 'Tron'],
@@ -78,7 +78,7 @@ export function redeemQuote(zendAmount, fiat) {
   return { fee, fiat: gross - fee };
 }
 
-/** The TRNZND redemption address to use for ZEND held in `conn` (custodians default to Ethereum). */
+/** The TRNZND S.A. redemption address to use for ZEND held in `conn` (custodians default to Ethereum). */
 export function redemptionAddressFor(conn, whitelist, ids = []) {
   const network = PARTNERS.trnznd.networks.includes(conn?.network) ? conn.network : 'Ethereum';
   return whitelist.find((w) => ids.includes(w.id) && w.network === network);

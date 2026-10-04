@@ -58,14 +58,14 @@ function settle(state, r, txHash) {
   return r.zendRedeem ? payRedemption(settled, r) : settled;
 }
 
-/** After ZEND reaches TRNZND's redemption address, TRNZND pays fiat to the chosen bank account (demo: instantly). */
+/** After ZEND reaches TRNZND S.A.'s redemption address, TRNZND S.A. pays fiat to the chosen bank account (demo: instantly). */
 function payRedemption(state, r) {
   const { fiat, bankConnectionId } = r.zendRedeem;
   const q = redeemQuote(r.amount, fiat);
   const order = { id: uid('z'), kind: 'redeem', fiat, fiatAmount: q.fiat, zend: r.amount, connectionId: r.connectionId, bankConnectionId, status: 'paid', createdAt: r.createdAt, completedAt: now(), requestId: r.id };
   const credit = {
     id: uid('t'), connectionId: bankConnectionId, date: now(), type: 'deposit', asset: fiat, amount: +q.fiat.toFixed(2),
-    counterparty: 'TRNZND (ZEND redemption)', txHash: 'bank-' + order.id, category: 'Treasury rebalance', reconciled: true, memo: `Redeemed ${r.amount} ZEND`,
+    counterparty: 'TRNZND S.A. (ZEND redemption)', txHash: 'bank-' + order.id, category: 'Treasury rebalance', reconciled: true, memo: `Redeemed ${r.amount} ZEND`,
   };
   const bankKnown = state.connections.some((c) => c.id === bankConnectionId);
   return { ...state, zendOrders: [order, ...state.zendOrders], transactions: bankKnown ? [credit, ...state.transactions] : state.transactions };
@@ -88,7 +88,7 @@ function advanceOrders(state) {
   });
   const zendOrders = state.zendOrders.map((o) => {
     if (!due(o)) return o;
-    credit(o.connectionId, 'ZEND', o.zend, 'TRNZND (ZEND mint)', `Minted from ${o.fiatAmount} ${o.fiat}`);
+    credit(o.connectionId, 'ZEND', o.zend, 'TRNZND S.A. (ZEND mint)', `Minted from ${o.fiatAmount} ${o.fiat}`);
     return { ...o, status: 'delivered', completedAt: now() };
   });
   return { ...state, onrampOrders, zendOrders, transactions, connections };
@@ -264,16 +264,16 @@ function reducer(state, a) {
           audit: audit(state, 'Partner account opened', 'On-ramp partner. Custody account connected.'),
         };
       }
-      // One TRNZND redemption address per ZEND network, so a redemption always goes out on the right chain.
+      // One TRNZND S.A. redemption address per ZEND network, so a redemption always goes out on the right chain.
       const rand = (chars, n) => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
       const b58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
       const addr = { Ethereum: () => '0x' + rand('0123456789abcdef', 40), Solana: () => rand(b58, 44), Tron: () => 'T' + rand(b58, 33) };
-      const ws = PARTNERS.trnznd.networks.map((network) => ({ id: uid('w'), label: `TRNZND — ZEND redemption (${network})`, network, address: addr[network](), addedAt: now(), system: true }));
+      const ws = PARTNERS.trnznd.networks.map((network) => ({ id: uid('w'), label: `TRNZND S.A. — ZEND redemption (${network})`, network, address: addr[network](), addedAt: now(), system: true }));
       return {
         ...state,
         whitelist: [...ws, ...state.whitelist],
         partners: { ...state.partners, trnznd: { status: 'active', redemptionWhitelistIds: ws.map((w) => w.id), approvedAt: now() } },
-        audit: audit(state, 'Partner account opened', `TRNZND minting account. Redemption addresses whitelisted on ${PARTNERS.trnznd.networks.join(', ')}.`),
+        audit: audit(state, 'Partner account opened', `TRNZND S.A. minting account. Redemption addresses whitelisted on ${PARTNERS.trnznd.networks.join(', ')}.`),
       };
     }
     case 'ONRAMP_CREATE': {
@@ -301,8 +301,8 @@ function reducer(state, a) {
       return {
         ...state,
         zendOrders: state.zendOrders.map((x) => (x.id === a.id ? { ...x, status: 'processing', processingAt: now() } : x)),
-        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'TRNZND (ZEND mint deposit)') : state.transactions,
-        audit: audit(state, 'Fiat deposit sent to TRNZND', `${o.fiatAmount} ${o.fiat}`),
+        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'TRNZND S.A. (ZEND mint deposit)') : state.transactions,
+        audit: audit(state, 'Fiat deposit sent to TRNZND S.A.', `${o.fiatAmount} ${o.fiat}`),
       };
     }
     case 'CANCEL_ORDER': {

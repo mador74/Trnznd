@@ -10,7 +10,7 @@ import { Empty, Modal } from '../components/ui.jsx';
 
 const ORDER_STATUS = {
   awaiting_payment: ['warn', 'Waiting for your payment at the on-ramp partner'],
-  awaiting_deposit: ['warn', 'Waiting for your bank transfer to TRNZND'],
+  awaiting_deposit: ['warn', 'Waiting for your bank transfer to TRNZND S.A.'],
   processing: ['info', 'Processing'],
   delivered: ['pos', 'Delivered'],
   paid: ['pos', 'Fiat paid to your bank'],
@@ -25,12 +25,12 @@ export default function Fund() {
       <div className="page-head">
         <div>
           <h1>Buy & mint</h1>
-          <p>Get stablecoins without already holding any: buy them with fiat through our regulated on-ramp partner, or mint ZEND directly with TRNZND, its issuer. Fiat is paid at the partner, never through TRNZIT.</p>
+          <p>Get stablecoins without already holding any: buy them with fiat through our regulated on-ramp partner, or mint ZEND directly with TRNZND S.A., its issuer. Fiat is paid at the partner, never through TRNZIT.</p>
         </div>
       </div>
       <div className="tabs" role="tablist">
         <button role="tab" aria-selected={tab === 'buy'} className={tab === 'buy' ? 'active' : ''} onClick={() => setTab('buy')}>Buy stablecoins</button>
-        <button role="tab" aria-selected={tab === 'zend'} className={tab === 'zend' ? 'active' : ''} onClick={() => setTab('zend')}>Mint & redeem ZEND · TRNZND</button>
+        <button role="tab" aria-selected={tab === 'zend'} className={tab === 'zend' ? 'active' : ''} onClick={() => setTab('zend')}>Mint & redeem ZEND</button>
       </div>
       {tab === 'buy' ? <BuyStablecoins /> : <Zend />}
       <p className="small muted">Partner terms shown here (fees, currencies, minimums, the on-ramp partner’s supported assets, and ZEND’s valuation) are placeholders for the demo, not the partners’ actual terms. ZEND’s networks (Ethereum, Solana, Tron) are confirmed.</p>
@@ -178,7 +178,7 @@ function Zend() {
 
   return (
     <div className="stack">
-      <Onboarding partner="trnznd" extra={<div className="small muted">ZEND networks: {t.networks.join(', ')} · minimum {t.minimum.toLocaleString('en-US')} (placeholder) · fees to be confirmed by TRNZND.</div>} />
+      <Onboarding partner="trnznd" extra={<div className="small muted">ZEND networks: {t.networks.join(', ')} · minimum {t.minimum.toLocaleString('en-US')} (placeholder) · fees to be confirmed by TRNZND S.A..</div>} />
       {active && (
         <div className="grid cols-2">
           <div className="card">
@@ -204,9 +204,9 @@ function Zend() {
               </label>
               {q && !error && (
                 <div className="quote">
-                  <div className="row"><span className="muted">TRNZND fee</span><span className="spacer" /><span className="mono">To be confirmed</span></div>
+                  <div className="row"><span className="muted">TRNZND S.A. fee</span><span className="spacer" /><span className="mono">To be confirmed</span></div>
                   <div className="row"><strong>You receive about</strong><span className="spacer" /><strong className="mono">{amount(q.zend, 'ZEND')}</strong></div>
-                  <div className="small muted">Delivered on {state.connections.find((c) => c.id === destOk)?.network === 'Multi-chain' ? 'the network your custodian chooses' : state.connections.find((c) => c.id === destOk)?.network}. Demo valuation 1 ZEND = $1.00 (placeholder). TRNZND sets the actual mint rate.</div>
+                  <div className="small muted">Delivered on {state.connections.find((c) => c.id === destOk)?.network === 'Multi-chain' ? 'the network your custodian chooses' : state.connections.find((c) => c.id === destOk)?.network}. Demo valuation 1 ZEND = $1.00 (placeholder). TRNZND S.A. sets the actual mint rate.</div>
                 </div>
               )}
               {error && <div className="notice warn small">{error}</div>}
@@ -219,7 +219,7 @@ function Zend() {
           <div className="card">
             <div className="card__head"><h2>Redeem ZEND</h2></div>
             <div className="card__body stack">
-              <p className="small" style={{ margin: 0 }}>Send ZEND back to TRNZND and receive fiat in your bank account. Redemption moves funds out of your wallet, so it follows your approval rules and needs an authorised releaser, like any payment.</p>
+              <p className="small" style={{ margin: 0 }}>Send ZEND back to TRNZND S.A. and receive fiat in your bank account. Redemption moves funds out of your wallet, so it follows your approval rules and needs an authorised releaser, like any payment.</p>
               <div className="small muted">ZEND held: {holders.length ? holders.map((c) => `${c.name}: ${amount(balances(state)[c.id].ZEND, 'ZEND')}`).join(' · ') : 'none yet. Mint some first.'}</div>
               <button className="btn" disabled={!holders.length || !allowed} onClick={() => setRedeeming(true)}>Redeem ZEND</button>
             </div>
@@ -256,7 +256,7 @@ function Zend() {
           </div>
         )}
         {state.zendOrders.some((o) => o.status === 'awaiting_deposit') && (
-          <div className="card__foot small muted">TRNZND gives you its bank details and a unique payment reference for each mint. Those details are not shown in this demo.</div>
+          <div className="card__foot small muted">TRNZND S.A. gives you its bank details and a unique payment reference for each mint. Those details are not shown in this demo.</div>
         )}
       </div>
       {redeeming && <Redeem onClose={() => setRedeeming(false)} />}
@@ -279,7 +279,7 @@ function Redeem({ onClose }) {
   const w = redemptionAddressFor(conn, state.whitelist, state.partners.trnznd?.redemptionWhitelistIds);
   const q = n > 0 ? redeemQuote(n, fiat) : null;
   const error = !(n > 0) ? 'Enter an amount.' : n > available ? `More than ${conn?.name} holds (${amount(available, 'ZEND')}).`
-    : !conn?.sendEnabled ? `Sending is not switched on for ${conn?.name}.` : !bank ? 'Connect the bank account to be paid into.' : !w ? 'TRNZND redemption address missing.' : '';
+    : !conn?.sendEnabled ? `Sending is not switched on for ${conn?.name}.` : !bank ? 'Connect the bank account to be paid into.' : !w ? 'TRNZND S.A. redemption address missing.' : '';
   return (
     <Modal title="Redeem ZEND" onClose={onClose} footer={<>
       <button className="btn" onClick={onClose}>Cancel</button>
@@ -304,7 +304,7 @@ function Redeem({ onClose }) {
         </label>
       </div>
       {error && qty !== '' ? <div className="notice warn small">{error}</div> : q && (
-        <div className="notice small">Sent on {w?.network} to TRNZND’s redemption address. You receive about <strong>{amount(q.fiat, fiat)}</strong> (placeholder rate, fees to be confirmed). It then goes through your approval rules and an authorised releaser on the <Link to="/send">Send</Link> page.</div>
+        <div className="notice small">Sent on {w?.network} to TRNZND S.A.’s redemption address. You receive about <strong>{amount(q.fiat, fiat)}</strong> (placeholder rate, fees to be confirmed). It then goes through your approval rules and an authorised releaser on the <Link to="/send">Send</Link> page.</div>
       )}
     </Modal>
   );

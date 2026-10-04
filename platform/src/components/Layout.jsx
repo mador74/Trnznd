@@ -93,14 +93,15 @@ export default function Layout() {
         <div className="footer__inner">
           <div className="footer__brand"><strong>TRNZIT</strong> Treasury Management, by TRNZND · <em>Purpose Beyond Payment</em></div>
           <p>
-            TRNZIT is not a custodial platform. We never hold your funds or private keys, and we never receive payments from you
-            except your monthly subscription.
+            TRNZIT is software built and operated by TRNZND UAE, part of the TRNZND group. It is non-custodial: TRNZIT never holds
+            your funds or private keys, and the only payment it receives from you is your subscription.
           </p>
           <p>
-            Services such as fiat on-ramps, custody, exchange, conversion, open banking and ZEND minting are provided by
-            third-party providers that are fully compliant in their respective jurisdictions.
+            Custody, exchange, conversion, on-ramp and open-banking services are provided by independent third-party providers,
+            licensed or registered as required in their own jurisdictions, under their own terms. ZEND is issued by
+            TRNZND S.A. (Panama), a separate TRNZND group company, under its own terms.
           </p>
-          <div className="footer__links"><Link to="/terms">Terms and conditions</Link><span>© {new Date().getFullYear()} TRNZND</span></div>
+          <div className="footer__links"><Link to="/terms">Terms and conditions</Link><span>© {new Date().getFullYear()} TRNZND UAE</span></div>
         </div>
       </footer>
     </>

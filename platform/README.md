@@ -39,7 +39,7 @@ Use **"Signed in as"** in the top bar to switch between demo users. That lets yo
 
 ## Footer and terms
 
-Every page has a footer stating that TRNZIT is not custodial, never holds funds or keys, only receives the monthly subscription, and uses third-party providers that are compliant in their own jurisdictions. It links to a **draft** Terms and conditions page (`/terms`) with the key points, marked for counsel review. Third-party providers are not named in the product.
+Every page has a footer stating that TRNZIT is built and operated by TRNZND UAE (TRNZND group), is non-custodial, never holds funds or keys, and only receives the subscription; that third-party providers are licensed or registered as required in their own jurisdictions; and that ZEND is issued by TRNZND S.A. (Panama), a separate group company. It links to a **draft** Terms and conditions page (`/terms`) with the key points, marked for counsel review. Third-party providers are not named in the product.
 
 ## Menu
 

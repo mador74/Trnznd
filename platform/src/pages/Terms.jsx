@@ -3,7 +3,7 @@
 
 const SECTIONS = [
   ['1. Who we are', [
-    'TRNZIT Treasury Management is a software platform operated by TRNZND [legal entity name, registration number and registered address to be inserted].',
+    'TRNZIT Treasury Management is software built and operated by TRNZND UAE [full legal name, licence or registration number and registered address to be inserted], part of the TRNZND group of companies.',
   ]],
   ['2. TRNZIT is not a custodial platform', [
     'TRNZIT never holds, controls or takes custody of your funds, digital assets or private keys.',
@@ -11,12 +11,12 @@ const SECTIONS = [
     'When an authorised user of your business releases a payment or conversion, TRNZIT passes that instruction to the provider holding the assets. That provider executes it. For your own wallets, you sign in your own wallet app.',
   ]],
   ['3. Third-party providers', [
-    'Services such as fiat on-ramps, custody, exchange, conversion, open banking and ZEND minting and redemption are provided by third-party providers that are fully compliant in their respective jurisdictions.',
+    'Services such as fiat on-ramps, custody, exchange, conversion and open banking are provided by independent third-party providers, licensed or registered as required in their own jurisdictions.',
     'Each provider contracts with you directly under its own terms, and is responsible for its own checks, licences and execution.',
-    'ZEND minting and redemption are provided by TRNZND in its role as issuer of ZEND, under separate terms. [Counsel to confirm the entity structure and wording.]',
+    'ZEND is issued by TRNZND S.A., a company incorporated in Panama and a separate legal entity from TRNZND UAE. Minting and redemption are agreements between your business and TRNZND S.A., under TRNZND S.A.’s own terms. Funds for minting are paid to TRNZND S.A., never to TRNZND UAE or through TRNZIT.',
   ]],
   ['4. Payments to TRNZIT', [
-    'TRNZIT never receives payments from you, except your monthly subscription for the plan you choose (Basic, Premium or Institution).',
+    'TRNZND UAE never receives payments from you through TRNZIT, except your monthly subscription for the plan you choose (Basic, Premium or Institution).',
     'Subscriptions can be paid by card, or in USDT or USDC.',
   ]],
   ['5. Your responsibilities', [

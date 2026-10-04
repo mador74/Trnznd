@@ -291,7 +291,7 @@ export function buildSeed(nowDate = new Date()) {
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,
-    partners: { moonpay: { status: 'none' }, trnznd: { status: 'none' } },
+    partners: { onramp: { status: 'none' }, trnznd: { status: 'none' } },
     onrampOrders: [],
     zendOrders: [],
     billing: { planId: 'institution', paymentMethod: { type: 'card', label: 'Visa •••• 4242' }, nextInvoice: iso(now + 26 * DAY) },

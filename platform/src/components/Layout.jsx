@@ -48,7 +48,7 @@ export default function Layout() {
           <span className="org">{state.org.name} · {plan.name}</span>
           <nav className="nav" aria-label="Main">
             <NavLink to="/" end><span className="lbl-long">Dashboard</span><span className="lbl-short">Home</span></NavLink>
-            <NavMenu label="Accounts" items={[['/connections', 'Connections', 'Exchanges, custodians, wallets, banks'], ['/fund', 'Buy & mint', 'MoonPay on-ramp and ZEND']]} />
+            <NavMenu label="Accounts" items={[['/connections', 'Connections', 'Exchanges, custodians, wallets, banks'], ['/fund', 'Buy & mint', 'Stablecoin on-ramp and ZEND']]} />
             <NavMenu
               label="Payments"
               badge={(plan.approvals ? toSign : 0) + ready}
@@ -89,6 +89,20 @@ export default function Layout() {
       <main className="page">
         <Outlet />
       </main>
+      <footer className="footer">
+        <div className="footer__inner">
+          <div className="footer__brand"><strong>TRNZIT</strong> Treasury Management, by TRNZND · <em>Purpose Beyond Payment</em></div>
+          <p>
+            TRNZIT is not a custodial platform. We never hold your funds or private keys, and we never receive payments from you
+            except your monthly subscription.
+          </p>
+          <p>
+            Services such as fiat on-ramps, custody, exchange, conversion, open banking and ZEND minting are provided by
+            third-party providers that are fully compliant in their respective jurisdictions.
+          </p>
+          <div className="footer__links"><Link to="/terms">Terms and conditions</Link><span>© {new Date().getFullYear()} TRNZND</span></div>
+        </div>
+      </footer>
     </>
   );
 }

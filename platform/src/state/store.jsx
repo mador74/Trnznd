@@ -83,7 +83,7 @@ function advanceOrders(state) {
   };
   const onrampOrders = state.onrampOrders.map((o) => {
     if (!due(o)) return o;
-    credit(o.connectionId, o.asset, o.receive, 'MoonPay (purchase)', `Bought with ${o.fiatAmount} ${o.fiat}`);
+    credit(o.connectionId, o.asset, o.receive, 'On-ramp partner (purchase)', `Bought with ${o.fiatAmount} ${o.fiat}`);
     return { ...o, status: 'delivered', completedAt: now() };
   });
   const zendOrders = state.zendOrders.map((o) => {
@@ -250,18 +250,18 @@ function reducer(state, a) {
     case 'PARTNER_APPROVE': {
       // Demo stand-in for the partner finishing its business checks (KYB).
       if (state.partners[a.partner]?.status !== 'pending') return state;
-      if (a.partner === 'moonpay') {
+      if (a.partner === 'onramp') {
         if (!canAddConnection(state)) return state;
         const c = {
-          id: uid('c-'), name: 'MoonPay custody account', type: 'custodian', provider: 'MoonPay', network: 'MoonPay custody', assets: [...PARTNERS.moonpay.assets],
+          id: uid('c-'), name: 'On-ramp custody account', type: 'custodian', provider: 'On-ramp partner', network: 'Partner custody', assets: [...PARTNERS.onramp.assets],
           status: 'connected', lastSync: now(), connectedAt: now(), sendEnabled: false, convertKinds: [], convertEnabled: false,
         };
         return {
           ...state,
           connections: [...state.connections, c],
           opening: { ...state.opening, [c.id]: {} },
-          partners: { ...state.partners, moonpay: { status: 'active', connectionId: c.id, approvedAt: now() } },
-          audit: audit(state, 'Partner account opened', 'MoonPay. Custody account connected.'),
+          partners: { ...state.partners, onramp: { status: 'active', connectionId: c.id, approvedAt: now() } },
+          audit: audit(state, 'Partner account opened', 'On-ramp partner. Custody account connected.'),
         };
       }
       // One TRNZND redemption address per ZEND network, so a redemption always goes out on the right chain.
@@ -278,7 +278,7 @@ function reducer(state, a) {
     }
     case 'ONRAMP_CREATE': {
       const o = { ...a.order, id: uid('o'), status: 'awaiting_payment', createdAt: now(), createdBy: state.currentUserId };
-      return { ...state, onrampOrders: [o, ...state.onrampOrders], audit: audit(state, 'Started stablecoin purchase', `${o.fiatAmount} ${o.fiat} → ${o.asset} via MoonPay`) };
+      return { ...state, onrampOrders: [o, ...state.onrampOrders], audit: audit(state, 'Started stablecoin purchase', `${o.fiatAmount} ${o.fiat} → ${o.asset} via on-ramp partner`) };
     }
     case 'ONRAMP_PAID': {
       const o = state.onrampOrders.find((x) => x.id === a.id);
@@ -286,8 +286,8 @@ function reducer(state, a) {
       return {
         ...state,
         onrampOrders: state.onrampOrders.map((x) => (x.id === a.id ? { ...x, status: 'processing', processingAt: now() } : x)),
-        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'MoonPay') : state.transactions,
-        audit: audit(state, 'Paid at MoonPay checkout', `${o.fiatAmount} ${o.fiat}`),
+        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'On-ramp partner') : state.transactions,
+        audit: audit(state, 'Paid at on-ramp partner checkout', `${o.fiatAmount} ${o.fiat}`),
       };
     }
     case 'ZEND_MINT_CREATE': {

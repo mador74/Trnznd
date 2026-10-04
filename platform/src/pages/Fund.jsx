@@ -9,7 +9,7 @@ import { mintQuote, onrampQuote, PARTNERS, redeemQuote, redemptionAddressFor } f
 import { Empty, Modal } from '../components/ui.jsx';
 
 const ORDER_STATUS = {
-  awaiting_payment: ['warn', 'Waiting for your payment at MoonPay'],
+  awaiting_payment: ['warn', 'Waiting for your payment at the on-ramp partner'],
   awaiting_deposit: ['warn', 'Waiting for your bank transfer to TRNZND'],
   processing: ['info', 'Processing'],
   delivered: ['pos', 'Delivered'],
@@ -25,15 +25,15 @@ export default function Fund() {
       <div className="page-head">
         <div>
           <h1>Buy & mint</h1>
-          <p>Get stablecoins without already holding any: buy them with fiat through MoonPay, or mint ZEND directly with TRNZND, its issuer. Fiat is paid at the partner, never through TRNZIT.</p>
+          <p>Get stablecoins without already holding any: buy them with fiat through our regulated on-ramp partner, or mint ZEND directly with TRNZND, its issuer. Fiat is paid at the partner, never through TRNZIT.</p>
         </div>
       </div>
       <div className="tabs" role="tablist">
-        <button role="tab" aria-selected={tab === 'buy'} className={tab === 'buy' ? 'active' : ''} onClick={() => setTab('buy')}>Buy stablecoins · MoonPay</button>
+        <button role="tab" aria-selected={tab === 'buy'} className={tab === 'buy' ? 'active' : ''} onClick={() => setTab('buy')}>Buy stablecoins</button>
         <button role="tab" aria-selected={tab === 'zend'} className={tab === 'zend' ? 'active' : ''} onClick={() => setTab('zend')}>Mint & redeem ZEND · TRNZND</button>
       </div>
       {tab === 'buy' ? <BuyStablecoins /> : <Zend />}
-      <p className="small muted">Partner terms shown here (fees, currencies, minimums, MoonPay’s supported assets, and ZEND’s valuation) are placeholders for the demo, not the partners’ actual terms. ZEND’s networks (Ethereum, Solana, Tron) are confirmed.</p>
+      <p className="small muted">Partner terms shown here (fees, currencies, minimums, the on-ramp partner’s supported assets, and ZEND’s valuation) are placeholders for the demo, not the partners’ actual terms. ZEND’s networks (Ethereum, Solana, Tron) are confirmed.</p>
     </div>
   );
 }
@@ -44,7 +44,7 @@ function Onboarding({ partner, extra }) {
   const p = PARTNERS[partner];
   const st = state.partners[partner]?.status || 'none';
   const owner = can(me, 'manageConnections');
-  const full = partner === 'moonpay' && !canAddConnection(state);
+  const full = partner === 'onramp' && !canAddConnection(state);
   return (
     <div className="card">
       <div className="card__head"><h2>{p.name}</h2><span className="muted small">{p.role}</span><span className="spacer" />
@@ -56,15 +56,15 @@ function Onboarding({ partner, extra }) {
         {st === 'none' && (
           owner ? (
             <div className="row wrap">
-              <button className="btn primary" disabled={full} onClick={() => dispatch({ type: 'PARTNER_APPLY', partner })}>Open an account with {p.name}</button>
-              <span className="small muted">You’ll complete {p.name}’s own business checks on their site. TRNZIT only passes your company details if you choose to pre-fill them.</span>
+              <button className="btn primary" disabled={full} onClick={() => dispatch({ type: 'PARTNER_APPLY', partner })}>Open an account with {p.ref}</button>
+              <span className="small muted">You’ll complete {p.ref}’s own business checks on their site. TRNZIT only passes your company details if you choose to pre-fill them.</span>
             </div>
           ) : <div className="small muted">Ask an Owner or Admin to open the account.</div>
         )}
-        {full && st === 'none' && <div className="notice warn small">Your plan’s connection limit is reached, and the MoonPay custody account needs a connection slot. <Link to="/settings">Upgrade</Link> or disconnect an account first.</div>}
+        {full && st === 'none' && <div className="notice warn small">Your plan’s connection limit is reached, and the on-ramp custody account needs a connection slot. <Link to="/settings">Upgrade</Link> or disconnect an account first.</div>}
         {st === 'pending' && (
           <div className="row wrap">
-            <span className="small">Waiting for {p.name} to finish its checks. This normally happens on {p.name}’s side and can take time.</span>
+            <span className="small">Waiting for {p.ref} to finish its checks. This happens on the partner’s side and can take time.</span>
             <span className="spacer" />
             {owner && <button className="btn sm" onClick={() => dispatch({ type: 'PARTNER_APPROVE', partner })}>Simulate approval (demo)</button>}
           </div>
@@ -76,7 +76,7 @@ function Onboarding({ partner, extra }) {
 
 function BuyStablecoins() {
   const { state, dispatch, me } = useStore();
-  const mp = state.partners.moonpay;
+  const mp = state.partners.onramp;
   const custody = state.connections.find((c) => c.id === mp?.connectionId);
   const [fiat, setFiat] = useState('USD');
   const [fiatAmount, setFiatAmount] = useState('');
@@ -90,18 +90,18 @@ function BuyStablecoins() {
 
   return (
     <div className="stack">
-      <Onboarding partner="moonpay" extra={custody && <div className="small">Coins are delivered to <Link to={`/connections/${custody.id}`}>{custody.name}</Link>, held by MoonPay in your business’s name.</div>} />
+      <Onboarding partner="onramp" extra={custody && <div className="small">Coins are delivered to <Link to={`/connections/${custody.id}`}>{custody.name}</Link>, held by the on-ramp partner in your business’s name.</div>} />
       {mp?.status === 'active' && custody && (
         <div className="card">
           <div className="card__head"><h2>Buy stablecoins</h2></div>
           <div className="card__body stack">
             <div className="grid cols-3">
               <label className="field"><span>You pay</span>
-                <select id="on-fiat" value={fiat} onChange={(e) => { setFiat(e.target.value); setPayFrom(''); }}>{PARTNERS.moonpay.fiat.map((f) => <option key={f}>{f}</option>)}</select>
+                <select id="on-fiat" value={fiat} onChange={(e) => { setFiat(e.target.value); setPayFrom(''); }}>{PARTNERS.onramp.fiat.map((f) => <option key={f}>{f}</option>)}</select>
               </label>
               <label className="field"><span>Amount</span><input id="on-amount" type="number" min="0" step="any" value={fiatAmount} onChange={(e) => setFiatAmount(e.target.value)} /></label>
               <label className="field"><span>You buy</span>
-                <select id="on-asset" value={asset} onChange={(e) => setAsset(e.target.value)}>{PARTNERS.moonpay.assets.map((a) => <option key={a}>{a}</option>)}</select>
+                <select id="on-asset" value={asset} onChange={(e) => setAsset(e.target.value)}>{PARTNERS.onramp.assets.map((a) => <option key={a}>{a}</option>)}</select>
               </label>
             </div>
             <label className="field"><span>Paying from (for your records)</span>
@@ -112,17 +112,17 @@ function BuyStablecoins() {
             </label>
             {q && (
               <div className="quote">
-                <div className="row"><span className="muted">MoonPay fee (placeholder {(PARTNERS.moonpay.feeRate * 100).toFixed(1)}%)</span><span className="spacer" /><span className="mono">{amount(q.fee, fiat)}</span></div>
+                <div className="row"><span className="muted">Partner fee (placeholder {(PARTNERS.onramp.feeRate * 100).toFixed(1)}%)</span><span className="spacer" /><span className="mono">{amount(q.fee, fiat)}</span></div>
                 <div className="row"><strong>You receive about</strong><span className="spacer" /><strong className="mono">{amount(q.receive, asset)}</strong></div>
-                <div className="small muted">MoonPay shows the binding price and fees at its checkout.</div>
+                <div className="small muted">The partner shows the binding price and fees at its checkout.</div>
               </div>
             )}
             <div className="row wrap">
-              <span className="small muted" style={{ flex: 1, minWidth: 220 }}>You’ll pay on MoonPay’s own checkout page. TRNZIT never handles your card or bank details.</span>
+              <span className="small muted" style={{ flex: 1, minWidth: 220 }}>You’ll pay on the partner’s own checkout page. TRNZIT never handles your card or bank details.</span>
               <button className="btn primary" disabled={!q || !allowed} onClick={() => {
                 dispatch({ type: 'ONRAMP_CREATE', order: { fiat, fiatAmount: n, asset, receive: q.receive, fee: q.fee, connectionId: custody.id, payFromConnectionId: payFrom || null } });
                 setFiatAmount('');
-              }}>Continue to MoonPay checkout</button>
+              }}>Continue to partner checkout</button>
             </div>
           </div>
         </div>
@@ -144,7 +144,7 @@ function BuyStablecoins() {
                       {o.status === 'awaiting_payment' && (
                         <div className="row" style={{ justifyContent: 'flex-end' }}>
                           <button className="btn sm ghost" onClick={() => dispatch({ type: 'CANCEL_ORDER', kind: 'onramp', id: o.id })}>Cancel</button>
-                          <button className="btn sm primary" onClick={() => dispatch({ type: 'ONRAMP_PAID', id: o.id })}>Simulate paying at MoonPay (demo)</button>
+                          <button className="btn sm primary" onClick={() => dispatch({ type: 'ONRAMP_PAID', id: o.id })}>Simulate paying at the partner (demo)</button>
                         </div>
                       )}
                     </td>

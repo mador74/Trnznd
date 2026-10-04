@@ -6,17 +6,19 @@
 import { ASSETS } from '../data/seed.js';
 
 export const PARTNERS = {
-  moonpay: {
-    name: 'MoonPay',
+  onramp: {
+    name: 'On-ramp partner',
+    ref: 'our on-ramp partner',
     role: 'Fiat on-ramp',
-    blurb: 'Buy stablecoins with fiat. MoonPay runs identity checks and checkout, and holds the coins in a custody account in your business’s name.',
-    // PLACEHOLDER: confirm with MoonPay which business accounts, currencies, assets and custody options are offered.
+    blurb: 'Buy stablecoins with fiat through our regulated on-ramp partner. The partner runs identity checks and checkout, and holds the coins in a custody account in your business’s name.',
+    // PLACEHOLDER: confirm with the on-ramp partner which business accounts, currencies, assets and custody options are offered.
     fiat: ['USD', 'EUR', 'GBP'],
     assets: ['USDC', 'USDT'],
-    feeRate: 0.01, // PLACEHOLDER for the demo only; not MoonPay's pricing. Real fees are shown at MoonPay checkout.
+    feeRate: 0.01, // PLACEHOLDER for the demo only; not the partner's pricing. Real fees are shown at the partner's checkout.
   },
   trnznd: {
     name: 'TRNZND',
+    ref: 'TRNZND',
     role: 'ZEND minting & redemption',
     blurb: 'Mint ZEND by sending fiat to TRNZND, or redeem ZEND back to fiat in your bank account. TRNZND is the issuer of ZEND.',
     // ZEND networks confirmed: Ethereum, Solana, Tron. PLACEHOLDER: confirm accepted currencies, minimums and fees.
@@ -57,7 +59,7 @@ export function validateMultisig({ name, owners, threshold }) {
 
 /** Fiat → stablecoin purchase estimate. The provider's checkout shows the binding price. */
 export function onrampQuote(fiat, fiatAmount, asset) {
-  const fee = fiatAmount * PARTNERS.moonpay.feeRate;
+  const fee = fiatAmount * PARTNERS.onramp.feeRate;
   const receive = ((fiatAmount - fee) * ASSETS[fiat].price) / ASSETS[asset].price;
   return { fee, receive };
 }

@@ -251,6 +251,12 @@ th.col-in { color: var(--pos); }
 th.col-out { color: var(--neg); }
 .journal { width: 100%; }
 .journal td { padding: 4px 6px; }
+.footer { border-top: 1px solid var(--border); background: var(--surface); margin-top: 32px; }
+.footer__inner { max-width: 1400px; margin: 0 auto; padding: 20px 24px 28px; font-size: 12.5px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+.footer__inner p { margin: 0; max-width: 90ch; }
+.footer__brand { color: var(--text); }
+.footer__links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+@media (max-width: 680px) { .footer__inner { padding: 16px; } }
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 .legend { display: flex; flex-direction: column; gap: 8px; }
 .legend__row { display: flex; align-items: center; gap: 8px; font-size: 13px; }

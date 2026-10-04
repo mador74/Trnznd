@@ -45,19 +45,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid cols-3">
-        <Stat label="Net treasury" value={money(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {moneyShort(Math.abs(change30))} in 30 days</span>} />
-        <Stat label="Exchanges, custodians & wallets" value={money(digital)} sub={`Stablecoins ${money(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
-        <Stat label="Bank cash · card balances" value={money(bank)} sub={<span>Credit cards owed <span className="neg">{money(-cards)}</span></span>} />
-        <Stat label="Unpaid invoices" value={money(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
-        {plan.approvals ? (
-          <Stat label="Awaiting approval" value={pending.length} sub={<Link to="/approvals">Review requests →</Link>} />
-        ) : (
-          <Stat label="Approvals" value="—" sub={<Link to="/settings">Available on Premium →</Link>} />
-        )}
-        <Stat label="To reconcile" value={unrec.length} sub={<Link to="/transactions?status=unreconciled">Reconcile now →</Link>} />
-      </div>
-
       <div className="grid dash">
         <div className="card">
           <div className="card__head"><h2>Total treasury value — 90 days</h2><span className="spacer" /><span className="muted small">In {displayCurrency()}, at demo prices</span></div>
@@ -117,6 +104,19 @@ export default function Dashboard() {
       <div className="row"><h3 className="muted">Bank accounts and cards</h3></div>
       <div className="grid cols-3">
         {state.connections.filter(isFiatConn).map((c) => <ConnCard key={c.id} c={c} bal={bal} total={total} unrec={unrec} />)}
+      </div>
+
+      <div className="grid cols-3">
+        <Stat label="Net treasury" value={money(total)} sub={<span className={change30 >= 0 ? 'pos' : 'neg'}>{change30 >= 0 ? '▲' : '▼'} {moneyShort(Math.abs(change30))} in 30 days</span>} />
+        <Stat label="Exchanges, custodians & wallets" value={money(digital)} sub={`Stablecoins ${money(stable)} (${((stable / (digital || 1)) * 100).toFixed(0)}%)`} />
+        <Stat label="Bank cash · card balances" value={money(bank)} sub={<span>Credit cards owed <span className="neg">{money(-cards)}</span></span>} />
+        <Stat label="Unpaid invoices" value={money(unpaidUsd)} sub={<Link to="/invoices">{unpaid.length} open{overdue.length ? `, ${overdue.length} overdue` : ''} →</Link>} />
+        {plan.approvals ? (
+          <Stat label="Awaiting approval" value={pending.length} sub={<Link to="/approvals">Review requests →</Link>} />
+        ) : (
+          <Stat label="Approvals" value="—" sub={<Link to="/settings">Available on Premium →</Link>} />
+        )}
+        <Stat label="To reconcile" value={unrec.length} sub={<Link to="/transactions?status=unreconciled">Reconcile now →</Link>} />
       </div>
 
       <div className="grid cols-2">

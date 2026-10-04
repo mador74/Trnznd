@@ -4,6 +4,7 @@
 
 import { DISPLAY_CURRENCIES } from '../lib/fx.js';
 import { defaultConvertKinds } from '../lib/convert.js';
+import { priceAt } from '../lib/prices.js';
 
 
 export const ASSETS = {
@@ -147,7 +148,8 @@ export function buildSeed(nowDate = new Date()) {
       const roll = r();
       const sizeUsd = asset === 'USDT' || asset === 'USDC' ? 2000 + r() * 90000 : 1000 + r() * 40000;
       const qty = +(sizeUsd / price).toFixed(asset === 'BTC' ? 5 : asset === 'ETH' ? 4 : 2);
-      const reconciled = d > 10 ? r() > 0.08 : r() > 0.7;
+      // Older months are fully reconciled (ready to close); recent weeks still have open items.
+      const reconciled = d > 45 ? r() >= 0 : d > 10 ? r() > 0.08 : r() > 0.7;
       const hash = '0x' + hex(r, 64);
       const contact = pick(contacts);
 
@@ -176,7 +178,9 @@ export function buildSeed(nowDate = new Date()) {
         const sell = r() > 0.5;
         push({ connectionId: conn.id, date: iso(ts), type: 'conversion', asset: crypto, amount: sell ? -cq : cq,
           counterparty: 'Exchange order book', txHash: 'order-' + hex(r, 12), category: 'Conversion', reconciled });
-        push({ connectionId: conn.id, date: iso(ts), type: 'conversion', asset: stable, amount: +(sell ? cq * ASSETS[crypto].price : -cq * ASSETS[crypto].price).toFixed(2),
+        // Stablecoin leg at the crypto's price on that day, so both legs carry the same fair value.
+        const px = priceAt(crypto, iso(ts), iso(now));
+        push({ connectionId: conn.id, date: iso(ts), type: 'conversion', asset: stable, amount: +(sell ? cq * px : -cq * px).toFixed(2),
           counterparty: 'Exchange order book', txHash: 'order-' + hex(r, 12), category: 'Conversion', reconciled });
         push({ connectionId: conn.id, date: iso(ts), type: 'fee', asset: stable, amount: -+(sizeUsd * 0.001).toFixed(2),
           counterparty: 'Exchange', txHash: 'order-' + hex(r, 12), category: 'Exchange fee', reconciled });
@@ -196,7 +200,7 @@ export function buildSeed(nowDate = new Date()) {
   const merchants = [['Cloud hosting provider', 'Software & services'], ['Airline', 'Travel'], ['Hotel', 'Travel'], ['Office supplies', 'Card spend'], ['Data subscription', 'Software & services']];
   for (let d = 120; d >= 0; d--) {
     const ts = now - d * DAY - Math.floor(r2() * DAY * 0.8);
-    const rec = d > 10 ? r2() > 0.1 : r2() > 0.6;
+    const rec = d > 45 ? r2() >= 0 : d > 10 ? r2() > 0.1 : r2() > 0.6;
     if (r2() < 0.45) {
       const [m, cat] = pick2(merchants);
       push({ connectionId: 'c-card', date: iso(ts), type: 'card_spend', asset: 'USD', amount: -Math.round(80 + r2() * 2400), counterparty: m, txHash: 'card-' + hex(r2, 10), category: rec ? cat : 'Uncategorised', reconciled: rec });
@@ -280,7 +284,10 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 6,
+    version: 7,
+    priceAnchor: iso(now),
+    openingDate: iso(now - 121 * DAY),
+    accounting: { framework: 'US GAAP', costMethod: 'FIFO', lockDate: null },
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,

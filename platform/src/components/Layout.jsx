@@ -50,6 +50,7 @@ export default function Layout() {
             <NavLink to="/" end>Dashboard</NavLink>
             <NavLink to="/connections">Connections</NavLink>
             <NavLink to="/transactions">Transactions</NavLink>
+            <NavLink to="/accounting">Accounting</NavLink>
             <NavLink to="/send">Send{ready > 0 && <span className="count" title="Approved payments ready to send">{ready}</span>}</NavLink>
             <NavLink to="/convert">Convert</NavLink>
             <NavLink to="/fund">Buy & mint</NavLink>
@@ -58,7 +59,7 @@ export default function Layout() {
               Approvals{plan.approvals ? toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span> : <span className="lock" title="Not included in Basic">🔒</span>}
             </NavLink>
             <NavLink to="/team">Team</NavLink>
-            <NavLink to="/audit">Audit log</NavLink>
+            <NavLink to="/audit">Audit</NavLink>
             <NavLink to="/settings">Billing</NavLink>
           </nav>
           <div className="topbar__tools">

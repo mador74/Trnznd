@@ -1,4 +1,5 @@
 import { ASSETS } from '../data/seed.js';
+import { valueAt } from './prices.js';
 
 export const priceOf = (asset) => ASSETS[asset]?.price ?? 0;
 export const usdOf = (asset, qty) => qty * priceOf(asset);
@@ -58,7 +59,7 @@ export function cashflow(state, months = 6, now = new Date()) {
     if (t.internal || t.type === 'conversion') continue;
     const b = byKey[t.date.slice(0, 7)];
     if (!b) continue;
-    const v = usdOf(t.asset, t.amount);
+    const v = valueAt(t, state.priceAnchor); // at the transaction date
     if (v >= 0) b.in += v;
     else b.out += -v;
   }

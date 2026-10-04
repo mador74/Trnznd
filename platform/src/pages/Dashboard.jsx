@@ -6,6 +6,7 @@ import { deriveStatus } from '../lib/policy.js';
 import { amount, date, displayCurrency, relative, money, moneyShort } from '../lib/format.js';
 import { CONNECTION_TYPES, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
+import { valueAt } from '../lib/prices.js';
 import { connectionConvertBlock } from '../lib/convert.js';
 import { invoiceTotal, invoiceStatus } from '../lib/invoice.js';
 import { ConnIcon, SERIES, Stat, StatusBadge } from '../components/ui.jsx';
@@ -168,7 +169,7 @@ export default function Dashboard() {
         <div className="card__head"><h2>Recent activity</h2><span className="spacer" /><Link to="/transactions" className="small">Full ledger</Link></div>
         <div className="table-wrap">
           <table>
-            <thead><tr><th>Date</th><th>Connection</th><th>Type</th><th>Counterparty</th><th className="num">Amount</th><th className="num">{displayCurrency()}</th></tr></thead>
+            <thead><tr><th>Date</th><th>Connection</th><th>Type</th><th>Counterparty</th><th className="num col-in">In</th><th className="num col-out">Out</th></tr></thead>
             <tbody>
               {state.transactions.slice(0, 8).map((t) => (
                 <tr key={t.id}>
@@ -176,8 +177,8 @@ export default function Dashboard() {
                   <td>{state.connections.find((c) => c.id === t.connectionId)?.name || <span className="muted">Removed</span>}</td>
                   <td>{TX_TYPES[t.type]}</td>
                   <td>{t.counterparty}</td>
-                  <td className={`num ${t.amount < 0 ? 'neg' : 'pos'}`}>{amount(t.amount, t.asset)}</td>
-                  <td className="num">{money(usdOf(t.asset, t.amount))}</td>
+                  <td className="num col-in">{t.amount > 0 && <><div className="pos">{amount(t.amount, t.asset)}</div><div className="small muted">{money(valueAt(t, state.priceAnchor))}</div></>}</td>
+                  <td className="num col-out">{t.amount < 0 && <><div className="neg">{amount(-t.amount, t.asset)}</div><div className="small muted">{money(-valueAt(t, state.priceAnchor))}</div></>}</td>
                 </tr>
               ))}
             </tbody>

@@ -28,7 +28,8 @@ npm run build      # static build in platform/dist (relative base, hash routing)
 | **Open banking** | Bank accounts and credit cards connect with read-only consent and appear alongside crypto. Card balances show as money owed, and each bank's consent-renewal date is shown |
 | **Invoices** | Bill customers in USDC/USDT/BTC/ETH or USD/EUR/GBP. Each invoice has line items and tax, and is paid into your wallet (with a network warning) or bank account. You can download the PDF, or send it as a PDF to the customer, with an optional copy to yourself (in the demo, sending is simulated). Mark an invoice paid by matching it to a receipt in the ledger. Overdue invoices are flagged automatically |
 | **Connections** | Every exchange, custodian and wallet, shown individually and as an aggregated total. "Add connection" asks for a read-only API key or a public address/xpub, never a private key. Each connection has its own detail page with holdings, its balance history and its own ledger |
-| **Transactions** | One ledger across all connections recording what, when, how much and who (counterparty plus address), with the tx hash. Filters, search, bulk reconcile, categories, memos and CSV export |
+| **Transactions** | One ledger across all connections recording what, when, how much and who (counterparty plus address), with the tx hash. Money coming in and going out has separate **In** and **Out** columns (green and red), each with its value at the transaction date, and totals for in, out and net. You can filter by direction. Click a row to see its journal entry, cost basis and realised gain. Filters, search, bulk reconcile, categories, memos and CSV export |
+| **Accounting** | A general ledger designed to support **US GAAP**. Every transaction becomes a balanced double-entry journal at fair value on its date. FIFO cost basis tracks realised gains and losses. Digital assets are remeasured to fair value at the reporting date (ASC 350-60 / ASU 2023-08), and invoices are booked on an accrual basis. Reports: trial balance, income statement, digital asset rollforward, general journal and chart of accounts, all exportable to CSV. Period close locks past transactions and needs everything up to that date to be reconciled and categorised first. Accounting policies still need your accountant's sign-off |
 | **Approvals** | M-of-N policies (e.g. *2 of 3 for payments ≥ $10k*) that can stack (e.g. *Owner co-sign ≥ $250k*), an address whitelist, and a request → sign → execute → record-hash flow. Requesters can't approve their own request, and one rejection rejects |
 | **Team** | Seats follow the plan, with roles (Admin, Approver, Accountant, Viewer), a permissions matrix and suspend/remove. Removing a user also removes them from approver lists |
 | **Billing** | Compare and switch plans; pay by card or USDT/USDC (network selectable); subscription invoice history |
@@ -46,6 +47,8 @@ src/
 ├─ lib/invoice.js     invoice totals, status, payment matching (pure, unit-tested)
 ├─ lib/pdf.js         invoice PDF (jsPDF)
 ├─ lib/send.js        payment pre-flight checks and signing methods (unit-tested)
+├─ lib/accounting.js  general ledger, FIFO cost basis, fair-value remeasurement, reports (unit-tested)
+├─ lib/prices.js     demo price history (fair value at a date)
 ├─ lib/fx.js          display currencies and demo exchange rates (unit-tested)
 ├─ data/seed.js       deterministic demo data, roles, permissions, plan limits
 ├─ state/store.jsx    reducer + localStorage persistence (stand-in for the API)

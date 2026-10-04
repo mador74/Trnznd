@@ -8,17 +8,18 @@ import { balances, usdOf } from '../lib/ledger.js';
 import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
 import { convertBlockReason, defaultConvertKinds, quote } from '../lib/convert.js';
 import { PARTNERS, redeemQuote } from '../lib/partners.js';
+import { computeBooks } from '../lib/accounting.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v6';
+const KEY = 'trnznd-treasury-v7';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 6) return s;
+      if (s.version === 7) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -155,12 +156,23 @@ function reducer(state, a) {
       };
     }
 
-    case 'UPDATE_TX':
+    case 'UPDATE_TX': {
+      // Closed periods are locked: corrections go in as new entries in an open period, not edits.
+      const lock = state.accounting?.lockDate;
+      if (lock && state.transactions.some((t) => a.ids.includes(t.id) && t.date.slice(0, 10) <= lock)) return state;
       return {
         ...state,
         transactions: state.transactions.map((t) => (a.ids.includes(t.id) ? { ...t, ...a.patch } : t)),
         audit: a.silent ? state.audit : audit(state, 'Updated transactions', `${a.ids.length} item(s): ${Object.keys(a.patch).join(', ')}`),
       };
+    }
+    case 'CLOSE_PERIOD': {
+      const open = state.transactions.filter((t) => t.date.slice(0, 10) <= a.date && (!t.reconciled || t.category === 'Uncategorised'));
+      if (open.length || (state.accounting.lockDate && a.date <= state.accounting.lockDate)) return state;
+      return { ...state, accounting: { ...state.accounting, lockDate: a.date }, audit: audit(state, 'Closed accounting period', `Locked up to and including ${a.date}`) };
+    }
+    case 'REOPEN_PERIOD':
+      return { ...state, accounting: { ...state.accounting, lockDate: null }, audit: audit(state, 'Reopened accounting periods', `Lock removed (was ${state.accounting.lockDate})`) };
 
     case 'CREATE_REQUEST': {
       const single = !planOf(state).approvals;
@@ -459,7 +471,8 @@ export function StoreProvider({ children }) {
     const t = setInterval(() => dispatch({ type: 'CONFIRM_BROADCASTS' }), 1000);
     return () => clearInterval(t);
   }, [broadcasting]);
-  return <Ctx.Provider value={{ state, dispatch, me }}>{children}</Ctx.Provider>;
+  const books = useMemo(() => computeBooks(state), [state.transactions, state.invoices, state.connections, state.opening, state.priceAnchor]);
+  return <Ctx.Provider value={{ state, dispatch, me, books }}>{children}</Ctx.Provider>;
 }
 
 export const useStore = () => useContext(Ctx);

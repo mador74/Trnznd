@@ -43,7 +43,9 @@ Every page has a footer stating that TRNZIT is built and operated by TRNZND UAE 
 
 ## Menu
 
-The header has two rows: the logo and user controls on top, and the menu below, starting under the logo. The menu is five items with dropdowns: **Dashboard · Accounts ▾** (Connections, Buy & mint) **· Payments ▾** (Send, Convert, Approvals) **· Books ▾** (Transactions, Invoices, Accounting) **· Company ▾** (Team, Plan & billing, Audit log). It fits on one line from small phones ("Dashboard" shows as "Home") to wide screens.
+Two ways to move around:
+- **Left sidebar.** Every page is visible, grouped under Overview, Accounts, Payments, Books and Company, with icons and counters. The « button collapses it to an icon rail (hover shows the page name), and the choice is remembered. On phones and small tablets it becomes a drawer opened with the ☰ button.
+- **Top menu.** The same pages as five dropdowns (Dashboard · Accounts · Payments · Books · Company), on its own row under the logo.
 
 ## Code map
 

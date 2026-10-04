@@ -81,7 +81,7 @@ h3 { font-size: 14px; }
   border-bottom: 1px solid #1f2937;
 }
 /* Two rows at every width: logo, organisation and user controls on top; the menu always below, starting under the logo. */
-.topbar__inner { display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 0; padding: 8px 24px 0; max-width: 1400px; margin: 0 auto; }
+.topbar__inner { display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 0; padding: 8px 24px 0; }
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 18px; letter-spacing: 0.02em; }
 .brand:hover { text-decoration: none; }
 .brand__mark { width: 22px; height: 22px; border-radius: 50%; border: 3px solid transparent;
@@ -264,4 +264,43 @@ th.col-out { color: var(--neg); }
 @media (max-width: 370px) {
   .navmenu__btn, .topbar .nav > a { padding: 0 4px; font-size: 12.5px; }
   .topbar .nav { margin-left: -4px; }
+}
+
+/* ---------- Left sidebar: every page visible, collapsible to an icon rail ---------- */
+.shell { display: flex; align-items: flex-start; }
+.shell__main { flex: 1; min-width: 0; }
+.sidebar { position: sticky; top: var(--hdr, 90px); height: calc(100vh - var(--hdr, 90px)); width: 232px; flex: none; overflow-y: auto; background: var(--surface); border-right: 1px solid var(--border); padding: 10px 10px 20px; display: flex; flex-direction: column; gap: 4px; transition: width 0.15s ease; z-index: 15; }
+.sidebar.collapsed { width: 64px; }
+.sidebar__toggle { display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 12.5px; cursor: pointer; margin-bottom: 4px; }
+.sidebar__toggle:hover { color: var(--text); }
+.sidebar__section { display: flex; flex-direction: column; gap: 2px; padding-top: 10px; }
+.sidebar__heading { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 10px 4px; }
+.sidebar__link { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: var(--text); font-weight: 500; font-size: 14px; white-space: nowrap; position: relative; }
+.sidebar__link:hover { background: var(--surface-2); text-decoration: none; }
+.sidebar__link.active { background: color-mix(in srgb, var(--teal) 14%, transparent); color: var(--text); box-shadow: inset 3px 0 0 var(--teal); }
+.sidebar__link .icon { flex: none; color: var(--muted); }
+.sidebar__link.active .icon { color: var(--teal-ink); }
+.sidebar__link .lock { font-size: 11px; opacity: 0.7; }
+.sidebar__count { margin-left: auto; background: var(--teal); color: var(--midnight); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 7px; }
+.sidebar.collapsed .sidebar__label, .sidebar.collapsed .sidebar__heading { display: none; }
+.sidebar.collapsed .sidebar__section { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; }
+.sidebar.collapsed .sidebar__section:first-of-type { border-top: 0; }
+.sidebar.collapsed .sidebar__link, .sidebar.collapsed .sidebar__toggle { justify-content: center; padding-left: 0; padding-right: 0; }
+.sidebar.collapsed .sidebar__count { position: absolute; top: 2px; right: 4px; padding: 0 5px; font-size: 10px; }
+.sidebar__link:focus-visible, .sidebar__toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+.menu-btn { display: none; }
+.sidebar__scrim { display: none; }
+@media (prefers-reduced-motion: reduce) { .sidebar { transition: none; } }
+/* Phones and small tablets: the sidebar becomes a drawer opened from the ☰ button. */
+@media (max-width: 900px) {
+  .menu-btn { display: inline-flex; order: -1; }
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 0; height: 100%; width: 270px; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 60; box-shadow: 0 0 40px rgba(10, 15, 30, 0.35); padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+  .sidebar.open { transform: none; }
+  .sidebar.collapsed { width: 270px; }
+  .sidebar.collapsed .sidebar__label, .sidebar.collapsed .sidebar__heading { display: initial; }
+  .sidebar.collapsed .sidebar__heading { display: block; }
+  .sidebar.collapsed .sidebar__link { justify-content: flex-start; padding: 8px 10px; }
+  .sidebar.collapsed .sidebar__count { position: static; margin-left: auto; }
+  .sidebar__toggle { display: none; }
+  .sidebar__scrim { display: block; position: fixed; inset: 0; background: rgba(10, 15, 30, 0.5); z-index: 55; }
 }

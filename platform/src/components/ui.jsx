@@ -30,7 +30,7 @@ const STATUS = {
   void: ['', 'Void'],
   pending: ['warn', 'Awaiting approval'],
   approved: ['info', 'Approved — ready to send'],
-  broadcast: ['info', 'Sent — confirming'],
+  broadcast: ['info', 'Released — provider executing'],
   executed: ['pos', 'Completed'],
   rejected: ['neg', 'Rejected'],
   cancelled: ['', 'Cancelled'],

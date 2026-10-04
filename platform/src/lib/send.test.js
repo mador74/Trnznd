@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkPayment, sourceBlockReason } from './send.js';
+import { cannotReleaseReason, checkPayment, sourceBlockReason } from './send.js';
 import { deriveStatus } from './policy.js';
 
 const ethWallet = { id: 'w', name: 'Ops wallet', type: 'wallet', network: 'Ethereum', assets: ['USDC', 'USDT', 'ETH'], sendEnabled: true };
@@ -28,4 +28,12 @@ test('sent and single-user payments keep their status', () => {
   const base = { type: 'withdrawal', approvals: [], rejections: [], usdValue: 10, connectionId: 'w', requestedBy: 'u' };
   assert.equal(deriveStatus({ ...base, status: 'broadcast' }, [], []), 'broadcast');
   assert.equal(deriveStatus({ ...base, status: 'pending', policyExempt: true }, [], []), 'approved');
+});
+
+test('only authorised, active, non-viewer users can release', () => {
+  const u = { status: 'active', role: 'approver', canRelease: true };
+  assert.equal(cannotReleaseReason(u), null);
+  assert.match(cannotReleaseReason({ ...u, canRelease: false }), /authorised payment releasers/);
+  assert.match(cannotReleaseReason({ ...u, role: 'viewer' }), /Viewers/);
+  assert.match(cannotReleaseReason({ ...u, status: 'suspended' }), /active/);
 });

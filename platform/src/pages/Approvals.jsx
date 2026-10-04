@@ -6,7 +6,7 @@ import { amount, dateTime, relative, shortAddr, money, usd } from '../lib/format
 import { Link } from 'react-router-dom';
 import { can, isFiatConn } from '../data/seed.js';
 import { planOf } from '../lib/plans.js';
-import { checkPayment, NETWORK_FEE_USD, SEND_METHODS, sourceBlockReason } from '../lib/send.js';
+import { cannotReleaseReason, checkPayment, NETWORK_FEE_USD, SEND_METHODS, sourceBlockReason } from '../lib/send.js';
 import { Avatar, Empty, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 export default function Approvals() {
@@ -134,8 +134,8 @@ export function RequestCard({ r }) {
       {r.status === 'approved' && r.type !== 'address_whitelist' && <SendFooter r={r} conn={conn} />}
       {r.status === 'broadcast' && (
         <div className="card__foot row wrap">
-          <span className="badge info">Sent — waiting for network confirmations</span>
-          <span className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.executedTxHash}</span>
+          <span className="badge info">Released by {state.users.find((u) => u.id === r.sentBy)?.name}</span>
+          <span className="small muted">Instruction passed to {conn?.name}. Waiting for the provider to execute and report the transaction.</span>
         </div>
       )}
     </div>
@@ -247,7 +247,7 @@ export function NewRequest({ onClose, initialType = 'withdrawal', types = Object
       {error ? <div className="notice warn small">{error}</div> : isPayment && (
         <div className="notice small">
           <div><strong>{money(usdValue)}</strong> at demo price{fee != null && <> · network fee about {money(fee)} (estimate, paid by the sending account)</>}.</div>
-          <div>Sent by: {SEND_METHODS[conn?.type]?.label}.</div>
+          <div>How it is paid: {SEND_METHODS[conn?.type]?.label}.</div>
           {single ? <div>You will confirm with your 2-step code when you send.</div> : <div>Needs: {gov.map((p) => `${p.name} (${p.required} of ${p.approverIds.length})`).join(' + ')}</div>}
         </div>
       )}
@@ -376,6 +376,8 @@ function SendFooter({ r, conn }) {
   const available = (balances(state)[r.connectionId] || {})[r.asset] || 0;
   const short = r.amount > available;
   const allowed = can(me, 'createRequest');
+  const releaseBlock = cannotReleaseReason(me);
+  const releasers = state.users.filter((u) => !cannotReleaseReason(u)).map((u) => u.name);
   const method = conn && SEND_METHODS[conn.type];
   return (
     <div className="card__foot stack" style={{ display: 'block' }}>
@@ -383,15 +385,13 @@ function SendFooter({ r, conn }) {
         <div style={{ minWidth: 0 }}>
           <strong className="small">{method ? method.label : 'Ready to send'}</strong>
           <div className="muted small">{block || (short ? `Not enough ${r.asset} available (${amount(available, r.asset)}).` : method?.detail)}</div>
+          <div className="muted small">Final release by: {releasers.join(', ') || 'nobody yet. An Owner or Admin can authorise releasers on the Team page.'}</div>
         </div>
         <span className="spacer" />
-        {allowed && (
-          <>
-            <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZND?</button>
-            <button className="btn primary" disabled={!!block || short} onClick={() => setStepUp(true)}>Sign & send</button>
-          </>
-        )}
+        {allowed && <button className="btn sm ghost" onClick={() => setManual((m) => !m)}>Paid outside TRNZND?</button>}
+        <button className="btn primary" disabled={!!block || short || !!releaseBlock} title={releaseBlock || ''} onClick={() => setStepUp(true)}>Release payment</button>
       </div>
+      {releaseBlock && <div className="small" style={{ color: 'var(--warn)' }}>{releaseBlock}</div>}
       {manual && (
         <div className="row wrap">
           <input className="mono" style={{ maxWidth: 360 }} placeholder="Transaction hash" value={hash} onChange={(e) => setHash(e.target.value)} />
@@ -400,7 +400,8 @@ function SendFooter({ r, conn }) {
       )}
       {stepUp && (
         <StepUp
-          title={`Send ${amount(r.amount, r.asset)}`}
+          title={`Release ${amount(r.amount, r.asset)}`}
+          provider={conn?.name}
           summary={<>From <strong>{conn?.name}</strong> to <strong>{r.to}</strong>{r.network && <> on <strong>{r.network}</strong></>}<div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{r.toAddress}</div></>}
           onClose={() => setStepUp(false)}
           onConfirm={() => { dispatch({ type: 'SEND_REQUEST', id: r.id }); setStepUp(false); }}
@@ -411,15 +412,19 @@ function SendFooter({ r, conn }) {
 }
 
 /** Second-factor confirmation before money moves. Demo accepts any 6 digits. */
-export function StepUp({ title, summary, onClose, onConfirm }) {
+export function StepUp({ title, summary, provider, onClose, onConfirm }) {
   const [code, setCode] = useState('');
   const valid = /^\d{6}$/.test(code);
   return (
     <Modal title={title} onClose={onClose} footer={<>
       <button className="btn" onClick={onClose}>Cancel</button>
-      <button className="btn primary" disabled={!valid} onClick={onConfirm}>Confirm and send</button>
+      <button className="btn primary" disabled={!valid} onClick={onConfirm}>Release to {provider || 'provider'}</button>
     </>}>
       <div>{summary}</div>
+      <div className="small">
+        This is your personal authorisation. TRNZND passes the instruction to <strong>{provider}</strong> by API; {provider} holds the
+        assets and makes the payment. TRNZND never holds private keys or your funds.
+      </div>
       <div className="notice warn small">Crypto payments cannot be reversed once confirmed. Check the address and network.</div>
       <label className="field">
         <span>6-digit code from your authenticator app</span>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { PERMISSIONS, ROLES, can } from '../data/seed.js';
 import { canAddUser, limitLabel, planOf, seatCount } from '../lib/plans.js';
+import { cannotReleaseReason } from '../lib/send.js';
 import { Avatar, ConfirmButton, Modal, RoleBadge, StatusBadge } from '../components/ui.jsx';
 
 const PERM_LABELS = {
@@ -48,7 +49,7 @@ export default function Team() {
       <div className="card">
         <div className="table-wrap">
           <table>
-            <thead><tr><th>User</th><th>Role</th><th>2FA</th><th>Status</th><th /></tr></thead>
+            <thead><tr><th>User</th><th>Role</th><th title="Can give the final release that passes a payment instruction to the provider">Releases payments</th><th>2FA</th><th>Status</th><th /></tr></thead>
             <tbody>
               {visible.map((u) => (
                 <tr key={u.id}>
@@ -59,6 +60,12 @@ export default function Team() {
                         {Object.entries(ROLES).filter(([k]) => k !== 'owner' && (me.role === 'owner' || k !== 'admin')).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                       </select>
                     ) : <RoleBadge role={u.role} />}
+                  </td>
+                  <td>
+                    {u.role === 'owner' ? <span className="badge pos">Always</span>
+                      : manage && u.role !== 'viewer' && u.status === 'active' ? (
+                        <label className="row small"><input type="checkbox" checked={!!u.canRelease} onChange={(e) => dispatch({ type: 'SET_RELEASER', id: u.id, enabled: e.target.checked })} />{u.canRelease ? 'Yes' : 'No'}</label>
+                      ) : !cannotReleaseReason(u) ? <span className="badge pos">Yes</span> : <span className="muted small">No</span>}
                   </td>
                   <td>{u.mfa ? <span className="badge pos">On</span> : <span className="badge warn">Not set up</span>}</td>
                   <td><StatusBadge status={u.status} /></td>
@@ -89,6 +96,7 @@ export default function Team() {
                 <tr key={k}><td>{PERM_LABELS[k]}</td>{Object.keys(ROLES).map((r) => <td key={r} style={{ textAlign: 'center' }}>{roles.includes(r) ? <span className="pos">✓</span> : <span className="muted">—</span>}</td>)}</tr>
               ))}
               <tr><td>Sign approval requests</td><td colSpan={5} className="muted small">Owner, Admin or Approver — only when named on the matching policy</td></tr>
+              <tr><td>Give the final release on a payment</td><td colSpan={5} className="muted small">The Owner always; Admins, Approvers and Accountants only when ticked above. Viewers never</td></tr>
               <tr><td>View balances & ledger</td>{Object.keys(ROLES).map((r) => <td key={r} style={{ textAlign: 'center' }}><span className="pos">✓</span></td>)}</tr>
             </tbody>
           </table>

@@ -18,7 +18,7 @@ export default function Connections() {
       <div className="page-head">
         <div>
           <h1>Connections</h1>
-          <p>Exchanges, custodians, wallets, bank accounts and credit cards. Balances and history are read-only. Sending crypto is a separate permission you switch on per connection, and wallet payments are always signed on your own device.</p>
+          <p>Exchanges, custodians, wallets, bank accounts and credit cards. TRNZND never holds private keys or your funds. Balances and history are read by API; payments are instructions passed to the provider that holds the assets, and you switch that on per connection.</p>
         </div>
         <span className="spacer" />
         <span className="small muted">{state.connections.length} of {limitLabel(planOf(state).maxConnections)} connections used</span>

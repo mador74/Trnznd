@@ -3,25 +3,34 @@
 
 import { ASSET_NETWORKS, isFiatConn } from '../data/seed.js';
 
-/** How a payment from each kind of connection is signed and broadcast in production. */
+// TRNZND is non-custodial: it never holds private keys or customer funds. A released payment is an
+// instruction passed through, by API, to the provider that holds the assets; the provider executes it.
 export const SEND_METHODS = {
   wallet: {
-    label: 'Sign in your own wallet',
-    detail: 'The payment is signed by your wallet app or hardware wallet. TRNZND never holds the private key.',
+    label: 'Passed to your wallet to sign',
+    detail: 'TRNZND prepares the payment and hands it to your own wallet app or hardware wallet. You sign it there; your keys never leave your device.',
   },
   custodian: {
-    label: 'Submit to custodian',
-    detail: 'TRNZND submits the payment through the custodian’s API. The custodian’s own policy engine may require its own sign-off as well.',
+    label: 'Instruction passed to your custodian',
+    detail: 'TRNZND passes your authorised instruction to the custodian by API. The custodian holds the assets and executes the payment, and its own controls still apply.',
   },
   exchange: {
-    label: 'Withdraw via exchange API',
-    detail: 'Needs a separate withdrawal-only API key, IP-restricted, with the destination also whitelisted at the exchange.',
+    label: 'Instruction passed to your exchange',
+    detail: 'TRNZND passes your authorised withdrawal instruction to the exchange by API. The exchange holds the assets and executes the payment, and its own controls still apply.',
   },
   otc: {
-    label: 'Withdraw via broker API',
-    detail: 'Needs a separate withdrawal-only API key with the destination whitelisted at the broker.',
+    label: 'Instruction passed to your broker',
+    detail: 'TRNZND passes your authorised instruction to the broker by API. The broker holds the assets and executes the payment.',
   },
 };
+
+/** Why `user` can't give the final release for a payment, or null if they can. */
+export function cannotReleaseReason(user) {
+  if (!user || user.status !== 'active') return 'Only active users can release payments.';
+  if (user.role === 'viewer') return 'Viewers cannot release payments.';
+  if (!user.canRelease) return 'Only authorised payment releasers can give the final release.';
+  return null;
+}
 
 /** Demo network-fee estimates in USD. Real fees move with network demand. */
 export const NETWORK_FEE_USD = { Ethereum: 2.5, Tron: 1.5, Solana: 0.01, Bitcoin: 3, Polygon: 0.02, Arbitrum: 0.1, Base: 0.05 };

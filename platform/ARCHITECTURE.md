@@ -4,18 +4,14 @@ This document covers what it takes to turn the prototype into a real service. St
 
 ## 1. Open product decisions (need an answer before build)
 
-1. **What do the approvals actually control?** The platform uses read-only access, so it *cannot* stop anyone from moving funds at the provider. There are three options:
-   - **A. Governance record (what the prototype does).** Requests are approved in TRNZND, a person executes them at the provider, and the tx hash is recorded and matched in the ledger. This is cheap and low-risk, but enforcement is procedural, not technical.
-   - **B. Enforced at the asset layer.** Use the provider's own policy engine (many MPC custodians support approval quorums) or an on-chain multisig wallet. TRNZND proposes the transaction, and each signer signs with their *own* key. Signature thresholds are then cryptographically enforced. Each integration is more work.
-   - **C. TRNZND holds withdrawal-enabled keys and executes the transfer.** This is not recommended. It contradicts the read-only security model, makes TRNZND a high-value target, and likely changes the regulatory position (see §6).
-   - *Recommendation:* launch with A, add B for the custodians and multisig wallets your customers use most, and avoid C.
-   - **Now built into the prototype (Send page):** approved payments can be signed and sent from inside TRNZND, with crypto only. How it works depends on the account:
-     - **Self-custody wallets** sign on the user's own device: a browser or mobile wallet, or a hardware wallet, connected via a wallet-connection protocol. This is option B, and TRNZND never holds the key.
-     - **Custodians** receive the payment through their API, and their own policy engine adds its sign-off. This is also option B.
-     - **Exchanges** need a separate withdrawal-only API key, IP-restricted, with an exchange-side whitelist. This is the narrow, opt-in form of option C, off by default.
-     - **Every send** re-checks approval status, balance, address whitelist and network match, and requires a 2-step code. Confirmation is tracked on-chain before the ledger entry is final.
-     - **Not simulated:** fee estimates in the demo are fixed numbers. Production needs live fee quotes, and handling for stuck or replaced transactions (for example on Ethereum) and for failed broadcasts.
-     - **Regulation:** sending changes the compliance picture (see §6). Some jurisdictions apply "travel rule" requirements to transfers between service providers, so check with counsel before launch.
+1. **Non-custodial principle (decided).** TRNZND never holds private keys and never has custody of customer funds. Payments work like this:
+   - **Instructions, not custody.** A released payment is an *instruction* that TRNZND passes, by API, to the provider that already holds the assets: the customer's custodian, exchange or broker. The provider executes it under its own controls. For a self-custody wallet, TRNZND prepares the transaction and hands it to the customer's own wallet to sign; the key never leaves their device.
+   - **Final release by an authorised person.** After the approval rules are met (e.g. 2 of 3), the final step must be done by a user the business has authorised to release payments, confirmed with their own second factor. The Owner is always a releaser. Other users are authorised individually on the Team page, and Viewers never can.
+   - **Credentials TRNZND does keep.** These are API credentials only, never wallet keys: a read-only key for data, plus, only where the customer switches sending on, a credential that can *submit* withdrawal instructions. The server only uses the second credential after the approval rules and the releaser's confirmation. Prefer providers that also require approval on their side for API-submitted payments (many institutional custodians support approval workflows), and require the customer to whitelist destinations at the provider as well.
+   - **Every release re-checks:** releaser authorisation, approval status, balance, whitelist and network match. The ledger entry is written only when the provider reports the on-chain transaction.
+   - **Verify with each provider:** whether its API supports submitting withdrawals, whether API-submitted payments can require approval in the provider's own app, and what its terms say about third-party platforms submitting instructions. This varies by provider, and I have not checked specific providers.
+   - **Not simulated in the demo:** fee estimates are fixed numbers. Production needs live fee quotes, plus handling for provider rejections, stuck transactions and partial failures.
+   - **Regulation:** passing payment instructions without custody is generally treated differently from holding funds, but that is not guaranteed everywhere, and "travel rule" requirements may still apply to the providers involved. Confirm with counsel per market (see §6).
 2. **Plan limits.** Basic is $15 for 1 user and 5 connections, with no approval rules. Premium is $50 for 5 users in total (including the owner) and 5 connections. Institution is $100 with no limits. The prototype assumes that bank and card connections count toward the connection limit, and that invoices and open banking are on every plan. Confirm both.
 3. **Reporting currency and pricing source.** The prototype stores values in USD and converts them for display into each user's chosen currency, using static demo rates. Production needs live FX and crypto prices for the dashboard, from a named data provider with timestamps shown. It also needs historical prices at transaction time for accounting. Decide whether the organisation's *reporting* currency (used for books and exports) is separate from each user's *display* currency; the prototype treats them as different things.
 4. **Accounting export.** Should the ledger sync to accounting software (journals per connection, with gain/loss on disposals), or is CSV enough for v1?
@@ -59,8 +55,8 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 ## 4. Security model
 
-- **Credential handling:** encrypt API secrets with envelope encryption (a KMS-managed key). Store them write-only, so they are never returned to the browser. Decrypt them only inside connector workers, and reject keys whose scopes include trading or withdrawals.
-- **Authentication:** require 2FA for every user, and require a fresh 2FA step-up for each approval signature. Support SSO for larger customers.
+- **Credential handling:** encrypt API secrets with envelope encryption (a KMS-managed key). Store them write-only, so they are never returned to the browser. Decrypt them only inside connector workers. Reject data keys whose scopes include trading or withdrawals, and keep any withdrawal-instruction credential separate, used only by the payment service after release.
+- **Authentication:** require 2FA for every user, and require a fresh step-up (preferably a passkey) for each approval and for every payment release. Support SSO for larger customers.
 - **Authorisation:** enforce role checks server-side; the prototype's `PERMISSIONS` table is the starting matrix. Re-run the approval engine (`lib/policy.js`) on the server for every signature. Never trust the client's status.
 - **Policy edits are sensitive.** Consider requiring approval to change approval policies or the whitelist itself. Whitelisting already goes through the flow in the prototype. Add a time-lock on new addresses.
 - **Audit log:** append-only (no UPDATE/DELETE grants), with each row optionally hash-chained so tampering is detectable.
@@ -74,7 +70,7 @@ API service ── Postgres (tenants, users, roles, policies, requests, ledger, 
 
 ## 6. Compliance (needs legal advice; not settled here)
 
-I am not able to give a definitive regulatory answer. A read-only aggregation and record-keeping service is generally treated differently from a service that holds or moves customer assets, but this varies by jurisdiction. The relevant frameworks may include FATF virtual-asset guidance, the EU's MiCA regime, and local VASP registration rules. Accepting stablecoins for your own subscription fees, and anything resembling option C in §1, should be reviewed by counsel in each market you sell into. Data protection (e.g. GDPR) applies to user and counterparty data either way.
+I am not able to give a definitive regulatory answer. A read-only aggregation and record-keeping service is generally treated differently from a service that holds or moves customer assets, but this varies by jurisdiction. The relevant frameworks may include FATF virtual-asset guidance, the EU's MiCA regime, and local VASP registration rules. Accepting stablecoins for your own subscription fees, and the payment-instruction feature in §1, should be reviewed by counsel in each market you sell into. The non-custodial design (no keys, no customer funds) is the main fact counsel will need. Data protection (e.g. GDPR) applies to user and counterparty data either way.
 
 ## 7. Suggested build order
 

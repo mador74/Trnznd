@@ -5,18 +5,18 @@ import { DISPLAY_CURRENCIES } from '../lib/fx.js';
 import { canAddConnection, canAddUser, planBlockers, planOf, PLANS } from '../lib/plans.js';
 import { deriveStatus } from '../lib/policy.js';
 import { balances, usdOf } from '../lib/ledger.js';
-import { sourceBlockReason } from '../lib/send.js';
+import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v3';
+const KEY = 'trnznd-treasury-v4';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 3) return s;
+      if (s.version === 4) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -131,26 +131,38 @@ function reducer(state, a) {
       return { ...settle(state, r, a.txHash), audit: audit(state, 'Recorded execution', `${describe(r)} · ${a.txHash}`) };
     }
     case 'SEND_REQUEST': {
-      // Sign & broadcast an approved payment. Re-checks approval, source and balance at the moment of sending.
+      // Final release by an authorised user. TRNZND only forwards the instruction to the provider holding the
+      // assets; it never signs with or holds private keys. Re-checks releaser, approval, source and balance.
       const r = state.requests.find((x) => x.id === a.id);
       const conn = state.connections.find((c) => c.id === r?.connectionId);
-      if (!r || deriveStatus(r, state.policies, state.users) !== 'approved' || sourceBlockReason(conn)) return state;
+      const releaser = state.users.find((u) => u.id === state.currentUserId);
+      if (!r || cannotReleaseReason(releaser) || deriveStatus(r, state.policies, state.users) !== 'approved' || sourceBlockReason(conn)) return state;
       const available = (balances(state)[conn.id] || {})[r.asset] || 0;
       if (r.amount > available) return state;
-      const txHash = '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
       return {
         ...state,
-        requests: state.requests.map((x) => (x.id === a.id ? { ...x, status: 'broadcast', broadcastAt: now(), sentBy: state.currentUserId, executedTxHash: txHash } : x)),
-        audit: audit(state, 'Signed and sent payment', `${describe(r)} · ${txHash.slice(0, 12)}…`),
+        requests: state.requests.map((x) => (x.id === a.id ? { ...x, status: 'broadcast', broadcastAt: now(), sentBy: state.currentUserId } : x)),
+        audit: audit(state, 'Released payment instruction', `${describe(r)} → passed to ${conn.name}`),
       };
     }
     case 'CONFIRM_BROADCASTS': {
-      // Demo stand-in for watching the chain: a broadcast payment confirms a few seconds later.
+      // Demo stand-in for the provider: it executes the instruction a few seconds later and reports the
+      // on-chain hash back, which TRNZND then records in the ledger.
       const due = state.requests.filter((r) => r.status === 'broadcast' && Date.now() - new Date(r.broadcastAt).getTime() > 4000);
       if (!due.length) return state;
       let next = state;
-      for (const r of due) next = settle(next, r, r.executedTxHash);
-      return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: 'Payment confirmed on-chain', detail: describe(r) }, ...log], next.audit) };
+      for (const r of due) next = settle(next, r, '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join(''));
+      return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: 'Provider executed payment', detail: describe(r) }, ...log], next.audit) };
+    }
+    case 'SET_RELEASER': {
+      const u = state.users.find((x) => x.id === a.id);
+      // The Owner is always a releaser, so a business can never lock itself out of its own payments.
+      if (!u || (u.role === 'owner' && !a.enabled) || (a.enabled && cannotReleaseReason({ ...u, canRelease: true }))) return state;
+      return {
+        ...state,
+        users: state.users.map((x) => (x.id === a.id ? { ...x, canRelease: a.enabled } : x)),
+        audit: audit(state, a.enabled ? 'Authorised payment releaser' : 'Removed payment releaser', u.name),
+      };
     }
     case 'SET_SEND_ENABLED': {
       const c = state.connections.find((x) => x.id === a.id);
@@ -189,7 +201,7 @@ function reducer(state, a) {
       const u = state.users.find((x) => x.id === a.id);
       return {
         ...state,
-        users: state.users.map((x) => (x.id === a.id ? { ...x, ...a.patch } : x)),
+        users: state.users.map((x) => (x.id === a.id ? { ...x, ...a.patch, ...(a.patch.role === 'viewer' ? { canRelease: false } : {}) } : x)),
         audit: audit(state, 'Updated user', `${u?.name}: ${Object.entries(a.patch).map(([k, v]) => `${k} → ${v}`).join(', ')}`),
       };
     }

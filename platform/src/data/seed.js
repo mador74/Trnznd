@@ -78,8 +78,8 @@ export function buildSeed(nowDate = new Date()) {
   const iso = (t) => new Date(t).toISOString();
 
   const users = [
-    { id: 'u-owner', name: 'Alex Morgan', email: 'alex@example.com', role: 'owner', status: 'active', mfa: true },
-    { id: 'u-cfo', name: 'Priya Shah', email: 'priya@example.com', role: 'admin', status: 'active', mfa: true },
+    { id: 'u-owner', name: 'Alex Morgan', email: 'alex@example.com', role: 'owner', status: 'active', mfa: true, canRelease: true },
+    { id: 'u-cfo', name: 'Priya Shah', email: 'priya@example.com', role: 'admin', status: 'active', mfa: true, canRelease: true },
     { id: 'u-tm', name: 'Daniel Okafor', email: 'daniel@example.com', role: 'approver', status: 'active', mfa: true },
     { id: 'u-ops', name: 'Sofia Lindqvist', email: 'sofia@example.com', role: 'approver', status: 'active', mfa: true },
     { id: 'u-acc', name: 'Tom Becker', email: 'tom@example.com', role: 'accountant', status: 'active', mfa: false },
@@ -268,7 +268,7 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 3,
+    version: 4,
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,

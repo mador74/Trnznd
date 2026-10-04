@@ -35,8 +35,8 @@ export default function Send() {
         <div>
           <h1>Send</h1>
           <p>
-            Pay stablecoins or other crypto from your own accounts to a counterparty’s whitelisted address.
-            {plan.approvals ? ' Each payment follows your approval rules before it can be signed and sent.' : ' On Basic you authorise each payment yourself with your 2-step code.'}
+            Instruct your own custodian, exchange or wallet to pay stablecoins or other crypto to a counterparty’s whitelisted address. TRNZND never holds keys or funds.
+            {plan.approvals ? ' Each payment follows your approval rules, then an authorised releaser gives the final release.' : ' On Basic you release each payment yourself with your 2-step code.'}
           </p>
         </div>
         <span className="spacer" />
@@ -58,7 +58,7 @@ export default function Send() {
           {[
             ['ready', `Ready to send (${lists.ready.length})`],
             ['pending', `Awaiting approval (${lists.pending.length})`],
-            ['sending', `Confirming (${lists.sending.length})`],
+            ['sending', `With provider (${lists.sending.length})`],
             ['done', 'Completed'],
             ['addresses', `Whitelisted addresses (${state.whitelist.length})`],
           ].map(([k, l]) => (

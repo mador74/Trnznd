@@ -13,8 +13,7 @@ let compact = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD
 export function setDisplayCurrency(code) {
   if (code === display) return;
   display = code;
-  const digits = code === 'JPY' ? 0 : 2;
-  fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: code, minimumFractionDigits: digits, maximumFractionDigits: digits });
+  fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: code }); // minor units per ISO 4217 (e.g. JPY, VND, CLP: none)
   compact = new Intl.NumberFormat('en-US', { style: 'currency', currency: code, notation: 'compact', maximumFractionDigits: 1 });
 }
 export const displayCurrency = () => display;

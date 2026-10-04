@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { can } from '../data/seed.js';
-import { ACCOUNTS, incomeStatement, trialBalance } from '../lib/accounting.js';
+import { ACCOUNTS, FRAMEWORKS, incomeStatement, trialBalance } from '../lib/accounting.js';
 import { amount, date, download, toCsv, usd } from '../lib/format.js';
 import { ConfirmButton } from '../components/ui.jsx';
 
@@ -24,7 +24,7 @@ export default function Accounting() {
       <div className="page-head">
         <div>
           <h1>Accounting</h1>
-          <p>Every transaction is posted as a balanced double-entry journal, valued at fair value on its own date. Reports are in USD, your reporting currency.</p>
+          <p>Every transaction is posted as a balanced double-entry journal, recorded at its value on the day it happened. Policy: <strong>{books.policy.label}</strong>. Reports are in USD.</p>
         </div>
         <span className="spacer" />
         <span className={`badge ${tb.balanced ? 'pos' : 'neg'}`}>{tb.balanced ? 'Books balance: debits = credits' : 'Out of balance'}</span>
@@ -53,7 +53,25 @@ function Overview() {
       <div className="card">
         <div className="card__head"><h2>How TRNZIT keeps the books</h2></div>
         <div className="card__body stack small">
-          <div><strong>Framework:</strong> {state.accounting.framework}. Digital assets in scope of ASC 350-60 (as amended by ASU 2023-08) are remeasured to fair value at each reporting date, with gains and losses in net income.</div>
+          <label className="field"><span>Accounting framework and measurement policy</span>
+            <select id="acct-policy" value={state.accounting.policy} disabled={!allowed || !!lock} onChange={(e) => dispatch({ type: 'SET_ACCOUNTING_POLICY', patch: { policy: e.target.value } })}>
+              {Object.entries(FRAMEWORKS).map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
+            </select>
+          </label>
+          <label className="field"><span>Stablecoins and ZEND are treated as</span>
+            <select id="acct-stable" value={state.accounting.stablecoinPolicy} disabled={!allowed || !!lock} onChange={(e) => dispatch({ type: 'SET_ACCOUNTING_POLICY', patch: { stablecoinPolicy: e.target.value } })}>
+              <option value="financial-asset">Financial assets at fair value (where they give a right to redeem from the issuer)</option>
+              <option value="intangible">Same as other crypto (intangible assets)</option>
+            </select>
+          </label>
+          {lock && <div className="muted">Policies are fixed while periods are closed. A change of accounting policy applies to all periods, so reopen first (Owner only).</div>}
+          <div>
+            <strong>What this means:</strong>{' '}
+            {books.policy.model === 'cost' && 'IFRS, IAS 38 cost model (common for businesses holding crypto in IFRS countries). Crypto is carried at cost; if its value falls below cost at the reporting date, an impairment loss goes to profit or loss. Rises above cost are not recognised until you sell.'}
+            {books.policy.model === 'revaluation' && 'IFRS, IAS 38 revaluation model (allowed where there is an active market, as for major crypto). Crypto is carried at fair value. Gains above cost go to a revaluation surplus in other comprehensive income (OCI), not profit; falls below cost go to profit or loss.'}
+            {books.policy.model === 'fair-value' && 'US GAAP: digital assets in scope of ASC 350-60 (ASU 2023-08) are carried at fair value, with all changes in net income.'}
+          </div>
+          <div className="muted">Most countries in Latin America, Africa and South-East Asia require or allow IFRS (sometimes with local adaptations). Check the rules where each customer files.</div>
           <div><strong>Double entry:</strong> every inflow, outflow, fee, transfer and conversion becomes a journal entry whose debits equal its credits.</div>
           <div><strong>Measurement:</strong> each entry uses the asset’s fair value on the transaction date. Today’s balances are remeasured to today’s fair value.</div>
           <div><strong>Cost basis:</strong> {state.accounting.costMethod} lots per asset across the whole business. Payments, fees and conversions out are disposals: cost comes off the books and the difference to fair value is a realised gain or loss.</div>
@@ -62,12 +80,14 @@ function Overview() {
           <div className="notice warn">
             Policy decisions your accountant must confirm include:
             <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
-              <li>Whether stablecoins and ZEND are in scope of ASU 2023-08, or treated as financial assets or cash equivalents. They are tracked separately here.</li>
+              <li>The measurement model.</li>
+              <li>How stablecoins and ZEND are classified.</li>
+              <li>Whether the business is a broker-trader. If so, IFRS uses IAS 2 inventory at fair value less costs to sell, which is not built yet.</li>
               <li>The cost-basis method.</li>
-              <li>Presentation and disclosures.</li>
-              <li>Tax treatment.</li>
+              <li>Functional currency (IAS 21).</li>
+              <li>Disclosures.</li>
+              <li>Local tax rules.</li>
             </ul>
-            If you report under IFRS instead, crypto is generally measured differently (cost or revaluation under IAS 38, or IAS 2 for traders). That option is not built yet.
           </div>
         </div>
       </div>
@@ -141,27 +161,35 @@ function IncomeStatement() {
             {section('income').map((l) => <tr key={l.acct}><td>{l.acct} · {l.name}</td><td className={`num ${l.amount < 0 ? 'neg' : ''}`}>{usd(l.amount)}</td></tr>)}
             <tr><th colSpan={2}>Expenses</th></tr>
             {section('expense').map((l) => <tr key={l.acct}><td>{l.acct} · {l.name}</td><td className="num">{usd(-l.amount)}</td></tr>)}
-            <tr><td><strong>Net income</strong></td><td className={`num ${pl.net < 0 ? 'neg' : 'pos'}`}><strong>{usd(pl.net)}</strong></td></tr>
+            <tr><td><strong>Profit / net income</strong></td><td className={`num ${pl.net < 0 ? 'neg' : 'pos'}`}><strong>{usd(pl.net)}</strong></td></tr>
+            {pl.oci !== 0 && (
+              <>
+                <tr><th colSpan={2}>Other comprehensive income</th></tr>
+                <tr><td>3100 · Revaluation surplus on digital assets (IAS 38)</td><td className="num">{usd(pl.oci)}</td></tr>
+                <tr><td><strong>Total comprehensive income</strong></td><td className="num"><strong>{usd(pl.total)}</strong></td></tr>
+              </>
+            )}
           </tbody>
         </table>
       </div>
-      <div className="card__foot small muted">Unrealised gains and losses come from remeasuring digital assets to fair value (ASU 2023-08). Uncategorised items sit in Suspense on the balance sheet, not in this statement, until they are classified.</div>
+      <div className="card__foot small muted">How changes in crypto values reach this statement depends on the policy chosen in Overview. Uncategorised items sit in Suspense on the balance sheet, not in this statement, until they are classified.</div>
     </div>
   );
 }
 
 function Rollforward() {
   const { books } = useStore();
+  const adjLabel = books.policy.model === 'cost' ? 'Impairment' : books.policy.model === 'revaluation' ? 'Revaluation' : 'Fair-value change';
   const exportCsv = () => download('trnzit-digital-asset-rollforward.csv', toCsv([
-    ['Asset', 'Opening units', 'Opening cost (USD)', 'Acquired units', 'Acquired cost (USD)', 'Disposed units', 'Disposed cost (USD)', 'Realised gain/(loss)', 'Closing units', 'Closing cost (USD)', 'Fair value (USD)', 'Unrealised gain/(loss)'],
-    ...books.rollforward.map((r) => [r.asset, r.openQty, r.openValue.toFixed(2), r.inQty, r.inValue.toFixed(2), r.outQty, r.outCost.toFixed(2), r.realised.toFixed(2), r.closeQty, r.closeCost.toFixed(2), r.fairValue.toFixed(2), r.unrealised.toFixed(2)]),
+    ['Asset', 'Opening units', 'Opening cost (USD)', 'Acquired units', 'Acquired cost (USD)', 'Disposed units', 'Disposed cost (USD)', 'Realised gain/(loss)', 'Closing units', 'Closing cost (USD)', 'Fair value (USD)', `${adjLabel} (USD)`, 'Carrying amount (USD)', 'Policy'],
+    ...books.rollforward.map((r) => [r.asset, r.openQty, r.openValue.toFixed(2), r.inQty, r.inValue.toFixed(2), r.outQty, r.outCost.toFixed(2), r.realised.toFixed(2), r.closeQty, r.closeCost.toFixed(2), r.fairValue.toFixed(2), r.adjustment.toFixed(2), r.carrying.toFixed(2), books.policy.label]),
   ]));
   return (
     <div className="card">
       <div className="card__head"><h2>Digital asset rollforward</h2><span className="spacer" /><button className="btn sm" onClick={exportCsv}>Export CSV</button></div>
       <div className="table-wrap">
         <table>
-          <thead><tr><th>Asset</th><th className="num">Opening</th><th className="num col-in">Acquired</th><th className="num col-out">Disposed (at cost)</th><th className="num">Realised</th><th className="num">Closing units</th><th className="num">Cost</th><th className="num">Fair value</th><th className="num">Unrealised</th></tr></thead>
+          <thead><tr><th>Asset</th><th className="num">Opening</th><th className="num col-in">Acquired</th><th className="num col-out">Disposed (at cost)</th><th className="num">Realised</th><th className="num">Closing units</th><th className="num">Cost</th><th className="num">Fair value</th><th className="num">{adjLabel}</th><th className="num">Carrying amount</th></tr></thead>
           <tbody>
             {books.rollforward.map((r) => (
               <tr key={r.asset}>
@@ -173,13 +201,14 @@ function Rollforward() {
                 <td className="num mono">{amount(r.closeQty, '')}</td>
                 <td className="num">{usd(r.closeCost)}</td>
                 <td className="num">{usd(r.fairValue)}</td>
-                <td className={`num ${r.unrealised < 0 ? 'neg' : ''}`}>{usd(r.unrealised)}</td>
+                <td className={`num ${r.adjustment < 0 ? 'neg' : ''}`}>{usd(r.adjustment)}</td>
+                <td className="num"><strong>{usd(r.carrying)}</strong></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="card__foot small muted">Units across all connections. Internal transfers between your own accounts move units without changing cost. This table supports the rollforward disclosure ASU 2023-08 asks for; your accountant decides the final disclosure.</div>
+      <div className="card__foot small muted">Units across all connections. Internal transfers between your own accounts move units without changing cost. This table supports the reconciliation of carrying amounts that IAS 38 (and ASU 2023-08 under US GAAP) asks for; your accountant decides the final disclosure.</div>
     </div>
   );
 }

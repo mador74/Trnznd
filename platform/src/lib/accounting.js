@@ -1,4 +1,5 @@
-// General ledger built from the transaction feed, designed to support US GAAP.
+// General ledger built from the transaction feed, designed to support IFRS (default, for the target
+// markets in Latin America, Africa and South-East Asia) or US GAAP, chosen in Accounting settings.
 //
 // What it implements:
 //  - Double-entry: every ledger transaction becomes a balanced journal entry (debits = credits).
@@ -20,18 +21,22 @@ export const ACCOUNTS = {
   1010: { name: 'Cash held at exchanges & custodians', type: 'asset' },
   1100: { name: 'Accounts receivable', type: 'asset' },
   1200: { name: 'Digital assets: crypto (cost)', type: 'asset' },
-  1205: { name: 'Digital assets: crypto fair-value adjustment', type: 'asset' },
+  1205: { name: 'Digital assets: crypto fair-value / revaluation adjustment', type: 'asset' },
+  1206: { name: 'Digital assets: accumulated impairment', type: 'asset' },
   1210: { name: 'Digital assets: stablecoins (cost)', type: 'asset' },
-  1215: { name: 'Digital assets: stablecoins fair-value adjustment', type: 'asset' },
+  1215: { name: 'Digital assets: stablecoins fair-value / revaluation adjustment', type: 'asset' },
+  1216: { name: 'Digital assets: stablecoins accumulated impairment', type: 'asset' },
   1900: { name: 'Transfers in transit (clearing)', type: 'asset' },
   1910: { name: 'Conversion clearing', type: 'asset' },
   2000: { name: 'Credit card payable', type: 'liability' },
   2900: { name: 'Suspense: uncategorised', type: 'liability' },
   3000: { name: 'Opening balance equity', type: 'equity' },
+  3100: { name: 'Revaluation surplus (other comprehensive income)', type: 'equity' },
   4000: { name: 'Sales revenue', type: 'income' },
   4100: { name: 'Other income', type: 'income' },
   4900: { name: 'Realised gain/(loss) on digital assets', type: 'income' },
   4910: { name: 'Unrealised gain/(loss) on digital assets', type: 'income' },
+  4920: { name: 'Impairment of digital assets', type: 'expense' },
   5000: { name: 'Purchases & supplier costs', type: 'expense' },
   5100: { name: 'Payroll', type: 'expense' },
   5200: { name: 'Software & services', type: 'expense' },
@@ -155,17 +160,39 @@ export function computeBooks(state, asOf = new Date().toISOString()) {
     byTx[t.id] = { entry, value, cost, gain };
   }
 
-  // Fair-value remeasurement at the reporting date (digital assets): adjust carrying amount to fair value.
+  // Measurement at the reporting date, per the chosen framework:
+  //  - US GAAP (ASU 2023-08): carrying amount = fair value; changes go to net income.
+  //  - IFRS, IAS 38 cost model: carrying amount = cost less impairment (per asset, the lower of cost and
+  //    fair value at this date); impairment goes to profit or loss.
+  //  - IFRS, IAS 38 revaluation model: carrying amount = fair value; increases above cost go to
+  //    revaluation surplus in OCI, decreases below cost go to profit or loss.
+  const policy = measurementPolicy(state);
   const holdings = {};
   for (const [a, q] of Object.entries(lots)) holdings[a] = q.reduce((s, l) => s + l.qty, 0);
   const sumBy = (acct) => entries.reduce((s, e) => s + e.lines.filter((l) => l.acct === acct).reduce((x, l) => x + l.dr - l.cr, 0), 0);
   const remeasure = [];
-  for (const [costAcct, adjAcct, kind] of [[1200, 1205, 'crypto'], [1210, 1215, 'stablecoin']]) {
-    const fv = round(Object.entries(holdings).filter(([a]) => ASSETS[a].kind === kind).reduce((s, [a, q]) => s + q * priceAt(a, asOf, anchor), 0));
-    const adj = round(fv - sumBy(costAcct));
-    if (adj) remeasure.push(adj > 0 ? { acct: adjAcct, dr: adj, cr: 0 } : { acct: adjAcct, dr: 0, cr: -adj }, adj > 0 ? { acct: 4910, dr: 0, cr: adj } : { acct: 4910, dr: -adj, cr: 0 });
+  const post = (dr, cr, amt) => amt > 0 && remeasure.push({ acct: dr, dr: round(amt), cr: 0 }, { acct: cr, dr: 0, cr: round(amt) });
+  const perAsset = {};
+  for (const [costAcct, kind] of [[1200, 'crypto'], [1210, 'stablecoin']]) {
+    const adjAcct = costAcct + 5;
+    const impAcct = costAcct + 6;
+    const assets = Object.keys(holdings).filter((a) => ASSETS[a].kind === kind);
+    // Book cost in the GL can differ from lot cost by cents (same-day transfers); true it up to lot cost first.
+    const lotCost = assets.reduce((s, a) => s + (lots[a] || []).reduce((x, l) => x + l.qty * l.unit, 0), 0);
+    const drift = round(lotCost - sumBy(costAcct));
+    if (drift > 0) post(costAcct, 4900, drift); else post(4900, costAcct, -drift);
+    for (const a of assets) {
+      const cost = (lots[a] || []).reduce((x, l) => x + l.qty * l.unit, 0);
+      const fv = holdings[a] * priceAt(a, asOf, anchor);
+      const diff = fv - cost;
+      let carrying = fv;
+      if (policy.model === 'fair-value') { if (diff > 0) post(adjAcct, 4910, diff); else post(4910, adjAcct, -diff); }
+      else if (policy.model === 'cost') { carrying = Math.min(cost, fv); post(4920, impAcct, cost - carrying); }
+      else { if (diff > 0) post(adjAcct, 3100, diff); else post(4910, adjAcct, -diff); }
+      perAsset[a] = { cost: round(cost), fv: round(fv), carrying: round(carrying), adjustment: round(carrying - cost) };
+    }
   }
-  if (remeasure.length) entries.push({ id: 'remeasure', date: asOf, source: 'Remeasurement', memo: 'Remeasure digital assets to fair value (ASU 2023-08)', lines: remeasure });
+  if (remeasure.length) entries.push({ id: 'remeasure', date: asOf, source: 'Remeasurement', memo: policy.memo, lines: remeasure });
 
   // Balances and rollforward.
   const balancesByAcct = {};
@@ -174,7 +201,8 @@ export function computeBooks(state, asOf = new Date().toISOString()) {
     const closeQty = holdings[r.asset] || 0;
     const closeCost = (lots[r.asset] || []).reduce((s, l) => s + l.qty * l.unit, 0);
     const fv = closeQty * priceAt(r.asset, asOf, anchor);
-    return { ...r, closeQty, closeCost: round(closeCost), fairValue: round(fv), unrealised: round(fv - closeCost) };
+    const pa = perAsset[r.asset] || { carrying: round(fv), adjustment: round(fv - closeCost) };
+    return { ...r, closeQty, closeCost: round(closeCost), fairValue: round(fv), carrying: pa.carrying, adjustment: pa.adjustment, unrealised: round(fv - closeCost) };
   });
 
   const uncategorised = state.transactions.filter((t) => t.category === 'Uncategorised').length;
@@ -184,7 +212,17 @@ export function computeBooks(state, asOf = new Date().toISOString()) {
   const clearing = round((balancesByAcct[1900] || 0) + (balancesByAcct[1910] || 0));
   if (Math.abs(clearing) >= 1) warnings.push(`Clearing accounts hold ${clearing.toLocaleString('en-US')} USD. These are transfers still in transit, partner fees, or flows from accounts not connected to TRNZIT. Review before closing.`);
 
-  return { entries, balances: balancesByAcct, byTx, rollforward, warnings };
+  return { entries, balances: balancesByAcct, byTx, rollforward, warnings, policy };
+}
+
+export const FRAMEWORKS = {
+  'IFRS-cost': { framework: 'IFRS', model: 'cost', label: 'IFRS: IAS 38 cost model', memo: 'IAS 38 cost model: impair digital assets to the lower of cost and fair value' },
+  'IFRS-revaluation': { framework: 'IFRS', model: 'revaluation', label: 'IFRS: IAS 38 revaluation model', memo: 'IAS 38 revaluation: increases to OCI revaluation surplus, decreases to profit or loss' },
+  'US-GAAP': { framework: 'US GAAP', model: 'fair-value', label: 'US GAAP: ASC 350-60 fair value (ASU 2023-08)', memo: 'Remeasure digital assets to fair value (ASU 2023-08)' },
+};
+
+export function measurementPolicy(state) {
+  return FRAMEWORKS[state.accounting?.policy] || FRAMEWORKS['IFRS-cost'];
 }
 
 /** Trial balance rows plus totals (debits must equal credits). */
@@ -204,5 +242,7 @@ export function incomeStatement(books) {
     .filter(([acct]) => ['income', 'expense'].includes(ACCOUNTS[acct]?.type))
     .map(([acct, b]) => ({ acct: Number(acct), name: ACCOUNTS[acct].name, type: ACCOUNTS[acct].type, amount: round(-b) }))
     .sort((a, b) => a.acct - b.acct);
-  return { lines, net: round(lines.reduce((s, l) => s + l.amount, 0)) };
+  const net = round(lines.reduce((s, l) => s + l.amount, 0));
+  const oci = round(-(books.balances[3100] || 0)); // IFRS revaluation surplus for the period
+  return { lines, net, oci, total: round(net + oci) };
 }

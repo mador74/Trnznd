@@ -2,12 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildSeed } from '../data/seed.js';
 import { balances } from './ledger.js';
-import { computeBooks, trialBalance } from './accounting.js';
+import { computeBooks, incomeStatement, trialBalance } from './accounting.js';
 import { priceAt } from './prices.js';
 
 const now = new Date('2026-10-04T12:00:00Z');
 const s = buildSeed(now);
-const books = computeBooks(s, now.toISOString());
+const books = computeBooks({ ...s, accounting: { ...s.accounting, policy: 'US-GAAP' } }, now.toISOString());
 
 test('every journal entry balances', () => {
   for (const e of books.entries) {
@@ -44,4 +44,28 @@ test('prices equal today’s price from the anchor onwards and move before it', 
   assert.equal(priceAt('BTC', now.toISOString(), s.priceAnchor), 60000);
   assert.notEqual(priceAt('BTC', '2026-07-01T00:00:00Z', s.priceAnchor), 60000);
   assert.equal(priceAt('USDC', '2026-07-01T00:00:00Z', s.priceAnchor), 1);
+});
+
+for (const policy of ['IFRS-cost', 'IFRS-revaluation', 'US-GAAP']) {
+  test(`${policy}: trial balance balances`, () => {
+    const b = computeBooks({ ...s, accounting: { ...s.accounting, policy } }, now.toISOString());
+    assert.ok(trialBalance(b).balanced);
+  });
+}
+
+test('IFRS cost model carries each asset at the lower of cost and fair value', () => {
+  const b = computeBooks({ ...s, accounting: { ...s.accounting, policy: 'IFRS-cost' } }, now.toISOString());
+  for (const r of b.rollforward) assert.ok(Math.abs(r.carrying - Math.min(r.closeCost, r.fairValue)) < 0.02, r.asset);
+  const carried = (b.balances[1200] || 0) + (b.balances[1206] || 0);
+  const expected = b.rollforward.filter((r) => ['BTC', 'ETH', 'SOL'].includes(r.asset)).reduce((t, r) => t + r.carrying, 0);
+  assert.ok(Math.abs(carried - expected) < 1);
+  assert.equal(b.balances[3100] || 0, 0);
+});
+
+test('IFRS revaluation model: gains above cost go to OCI, not profit', () => {
+  const b = computeBooks({ ...s, accounting: { ...s.accounting, policy: 'IFRS-revaluation' } }, now.toISOString());
+  const gains = b.rollforward.reduce((t, r) => t + Math.max(0, r.fairValue - r.closeCost), 0);
+  assert.ok(Math.abs(-(b.balances[3100] || 0) - gains) < 1);
+  const pl = incomeStatement(b);
+  assert.ok(Math.abs(pl.oci - gains) < 1);
 });

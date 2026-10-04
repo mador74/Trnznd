@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useStore } from '../state/store.jsx';
 import { ROLES } from '../data/seed.js';
 import { deriveStatus, cannotSignReason } from '../lib/policy.js';
 import { ConfirmButton } from './ui.jsx';
 import { planOf } from '../lib/plans.js';
-import { DISPLAY_CURRENCIES } from '../lib/fx.js';
+import { DISPLAY_CURRENCIES, REGIONS } from '../lib/fx.js';
 import { displayCurrency } from '../lib/format.js';
 
 function useTheme() {
@@ -47,20 +47,19 @@ export default function Layout() {
           </Link>
           <span className="org">{state.org.name} · {plan.name}</span>
           <nav className="nav" aria-label="Main">
-            <NavLink to="/" end>Dashboard</NavLink>
-            <NavLink to="/connections">Connections</NavLink>
-            <NavLink to="/transactions">Transactions</NavLink>
-            <NavLink to="/accounting">Accounting</NavLink>
-            <NavLink to="/send">Send{ready > 0 && <span className="count" title="Approved payments ready to send">{ready}</span>}</NavLink>
-            <NavLink to="/convert">Convert</NavLink>
-            <NavLink to="/fund">Buy & mint</NavLink>
-            <NavLink to="/invoices">Invoices</NavLink>
-            <NavLink to="/approvals">
-              Approvals{plan.approvals ? toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span> : <span className="lock" title="Not included in Basic">🔒</span>}
-            </NavLink>
-            <NavLink to="/team">Team</NavLink>
-            <NavLink to="/audit">Audit</NavLink>
-            <NavLink to="/settings">Billing</NavLink>
+            <NavLink to="/" end><span className="lbl-long">Dashboard</span><span className="lbl-short">Home</span></NavLink>
+            <NavMenu label="Accounts" items={[['/connections', 'Connections', 'Exchanges, custodians, wallets, banks'], ['/fund', 'Buy & mint', 'MoonPay on-ramp and ZEND']]} />
+            <NavMenu
+              label="Payments"
+              badge={(plan.approvals ? toSign : 0) + ready}
+              items={[
+                ['/send', 'Send', 'Pay a whitelisted counterparty', ready],
+                ['/convert', 'Convert', 'Fiat, stablecoins and crypto'],
+                ['/approvals', plan.approvals ? 'Approvals' : 'Approvals 🔒', plan.approvals ? 'Sign-off rules and queue' : 'Premium and Institution', plan.approvals ? toSign : 0],
+              ]}
+            />
+            <NavMenu label="Books" items={[['/transactions', 'Transactions', 'Every movement, in and out'], ['/invoices', 'Invoices', 'Bill customers, get paid'], ['/accounting', 'Accounting', 'Journals, reports, period close']]} />
+            <NavMenu label="Company" items={[['/team', 'Team', 'Users, roles and releasers'], ['/settings', 'Plan & billing', 'Basic, Premium, Institution'], ['/audit', 'Audit log', 'Who did what, and when']]} />
           </nav>
           <div className="topbar__tools">
           <label className="row small" title="Prototype only: switch user to simulate multi-party approvals">
@@ -73,7 +72,11 @@ export default function Layout() {
           </label>
           <select className="ccy" aria-label="Display currency" title="Show all totals in this currency (demo exchange rates)"
             value={displayCurrency()} onChange={(e) => dispatch({ type: 'SET_DISPLAY_CURRENCY', code: e.target.value })}>
-            {Object.entries(DISPLAY_CURRENCIES).map(([code, c]) => <option key={code} value={code} title={c.name}>{code}</option>)}
+            {REGIONS.map((r) => (
+              <optgroup key={r} label={r}>
+                {Object.entries(DISPLAY_CURRENCIES).filter(([, c]) => c.region === r).map(([code, c]) => <option key={code} value={code} title={c.name}>{code} · {c.name}</option>)}
+              </optgroup>
+            ))}
           </select>
           <button className="icon-btn" onClick={toggle} aria-label="Toggle dark mode">{theme === 'dark' ? '☀' : '☾'}</button>
           </div>
@@ -87,5 +90,39 @@ export default function Layout() {
         <Outlet />
       </main>
     </>
+  );
+}
+
+/** Menu group: a button that opens a short list of pages. Highlighted when one of its pages is open. */
+function NavMenu({ label, items, badge = 0 }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const { pathname } = useLocation();
+  const active = items.some(([to]) => pathname === to || pathname.startsWith(to + '/'));
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (e) => ref.current && !ref.current.contains(e.target) && setOpen(false);
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+  return (
+    <div className="navmenu" ref={ref}>
+      <button type="button" className={`navmenu__btn${active ? ' active' : ''}`} aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+        {label}{badge > 0 && <span className="count">{badge}</span>}<span className="navmenu__caret" aria-hidden="true">▾</span>
+      </button>
+      {open && (
+        <div className="navmenu__list" role="menu">
+          {items.map(([to, text, hint, count]) => (
+            <NavLink key={to} to={to} role="menuitem" className="navmenu__item">
+              <span className="row" style={{ gap: 6 }}>{text}{count > 0 && <span className="count">{count}</span>}</span>
+              {hint && <span className="navmenu__hint">{hint}</span>}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

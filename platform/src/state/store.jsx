@@ -12,14 +12,14 @@ import { computeBooks } from '../lib/accounting.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v7';
+const KEY = 'trnznd-treasury-v8';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 7) return s;
+      if (s.version === 8) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -171,6 +171,8 @@ function reducer(state, a) {
       if (open.length || (state.accounting.lockDate && a.date <= state.accounting.lockDate)) return state;
       return { ...state, accounting: { ...state.accounting, lockDate: a.date }, audit: audit(state, 'Closed accounting period', `Locked up to and including ${a.date}`) };
     }
+    case 'SET_ACCOUNTING_POLICY':
+      return { ...state, accounting: { ...state.accounting, ...a.patch }, audit: audit(state, 'Changed accounting policy', Object.entries(a.patch).map(([k, v]) => `${k} → ${v}`).join(', ')) };
     case 'REOPEN_PERIOD':
       return { ...state, accounting: { ...state.accounting, lockDate: null }, audit: audit(state, 'Reopened accounting periods', `Lock removed (was ${state.accounting.lockDate})`) };
 
@@ -471,7 +473,7 @@ export function StoreProvider({ children }) {
     const t = setInterval(() => dispatch({ type: 'CONFIRM_BROADCASTS' }), 1000);
     return () => clearInterval(t);
   }, [broadcasting]);
-  const books = useMemo(() => computeBooks(state), [state.transactions, state.invoices, state.connections, state.opening, state.priceAnchor]);
+  const books = useMemo(() => computeBooks(state), [state.transactions, state.invoices, state.connections, state.opening, state.priceAnchor, state.accounting]);
   return <Ctx.Provider value={{ state, dispatch, me, books }}>{children}</Ctx.Provider>;
 }
 

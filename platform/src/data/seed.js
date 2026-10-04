@@ -284,10 +284,10 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 7,
+    version: 8,
     priceAnchor: iso(now),
     openingDate: iso(now - 121 * DAY),
-    accounting: { framework: 'US GAAP', costMethod: 'FIFO', lockDate: null },
+    accounting: { policy: 'IFRS-cost', costMethod: 'FIFO', stablecoinPolicy: 'financial-asset', lockDate: null },
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,

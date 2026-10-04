@@ -1,7 +1,7 @@
 // Outgoing crypto payments: who can send, how each source signs, and pre-flight checks.
 // Pure functions, unit tested in send.test.js.
 
-import { ASSETS, ASSET_NETWORKS, isFiatConn } from '../data/seed.js';
+import { ASSETS, ASSET_NETWORKS, isFiatConn, isSelfCustody } from '../data/seed.js';
 
 // TRNZIT is non-custodial: it never holds private keys or customer funds. A released payment is an
 // instruction passed through, by API, to the provider that holds the assets; the provider executes it.
@@ -9,6 +9,10 @@ export const SEND_METHODS = {
   wallet: {
     label: 'Passed to your wallet to sign',
     detail: 'TRNZIT prepares the payment and hands it to your own wallet app or hardware wallet. You sign it there; your keys never leave your device.',
+  },
+  multisig: {
+    label: 'Proposed to your multisig',
+    detail: 'TRNZIT proposes the payment to your multisig. The owners sign in their own wallets, and it executes on-chain only when enough of them have signed. Nobody else can move the funds.',
   },
   custodian: {
     label: 'Instruction passed to your custodian',
@@ -57,7 +61,7 @@ export function checkPayment({ conn, asset, amount, available, dest }) {
   if (!dest) return 'Payments can only go to a whitelisted address.';
   if (!(ASSET_NETWORKS[asset] || []).includes(dest.network))
     return `${asset} cannot be sent to a ${dest.network} address. Whitelist a ${(ASSET_NETWORKS[asset] || []).join(' / ')} address first.`;
-  if (conn.type === 'wallet' && conn.network !== dest.network)
+  if (isSelfCustody(conn) && conn.network !== dest.network)
     return `${conn.name} is on ${conn.network}, but this address is on ${dest.network}. Pay from a ${dest.network} account.`;
   return null;
 }

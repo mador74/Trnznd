@@ -3,7 +3,7 @@
 // user, to the provider holding the assets, and only for pairs that provider's API allows.
 // Pure functions, unit tested in convert.test.js.
 
-import { ASSETS, isFiatConn } from '../data/seed.js';
+import { ASSETS, isFiatConn, isSelfCustody } from '../data/seed.js';
 
 /** Demo provider fee (spread), as a fraction. Real fees and quotes come from the provider. */
 export const CONVERT_FEE = 0.001;
@@ -31,7 +31,7 @@ export function defaultConvertKinds(type) {
 export function connectionConvertBlock(conn) {
   if (!conn) return 'Choose an account.';
   if (isFiatConn(conn)) return 'Bank and card accounts are connected read-only through open banking, so they cannot convert.';
-  if (conn.type === 'wallet') return 'Self-custody wallets cannot convert inside TRNZIT. That would need an on-chain swap, which is not supported.';
+  if (isSelfCustody(conn)) return 'Self-custody wallets cannot convert inside TRNZIT. That would need an on-chain swap, which is not supported.';
   if (!(conn.convertKinds || []).length) return `${conn.name}’s API does not offer conversions.`;
   if (!conn.convertEnabled) return 'Conversions are not switched on for this connection.';
   return null;

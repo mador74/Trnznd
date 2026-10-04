@@ -12,12 +12,14 @@ export const ASSETS = {
   SOL: { name: 'Solana', kind: 'crypto', price: 150 },
   USDT: { name: 'Tether USD', kind: 'stablecoin', price: 1 },
   USDC: { name: 'USD Coin', kind: 'stablecoin', price: 1 },
+  // PLACEHOLDER valuation for the demo. ZEND's real value follows its multi-currency reserve basket.
+  ZEND: { name: 'ZEND (TRNZND)', kind: 'stablecoin', price: 1 },
   USD: { name: 'US Dollar', kind: 'fiat', price: 1 },
   EUR: { name: 'Euro', kind: 'fiat', price: DISPLAY_CURRENCIES.EUR.usdPer },
   GBP: { name: 'British Pound', kind: 'fiat', price: DISPLAY_CURRENCIES.GBP.usdPer },
 };
 export const FIAT = ['USD', 'EUR', 'GBP'];
-export const CRYPTO = ['BTC', 'ETH', 'SOL', 'USDT', 'USDC'];
+export const CRYPTO = ['BTC', 'ETH', 'SOL', 'USDT', 'USDC', 'ZEND'];
 
 // Which networks each asset can be sent on (used to block mismatched payments).
 export const ASSET_NETWORKS = {
@@ -26,17 +28,21 @@ export const ASSET_NETWORKS = {
   SOL: ['Solana'],
   USDT: ['Ethereum', 'Tron', 'Solana'],
   USDC: ['Ethereum', 'Solana', 'Base', 'Polygon', 'Arbitrum'],
+  ZEND: ['Ethereum', 'Solana', 'Tron'],
 };
 
 export const CONNECTION_TYPES = {
   exchange: { label: 'Exchange', auth: 'Read-only API key + secret' },
   custodian: { label: 'Custodian', auth: 'Read-only API key / service account' },
   wallet: { label: 'Self-custody wallet', auth: 'Public address or xpub (no private keys)' },
+  multisig: { label: 'Multisig wallet (self-custody)', auth: 'Public address; owners sign in their own wallets' },
   otc: { label: 'OTC / broker account', auth: 'Read-only API key or statement import' },
   bank: { label: 'Bank account', auth: 'Open-banking consent (read-only)', fiat: true },
   card: { label: 'Credit card', auth: 'Open-banking consent (read-only)', fiat: true },
 };
 export const isFiatConn = (c) => !!CONNECTION_TYPES[c?.type]?.fiat;
+/** Wallets whose keys the customer holds themselves (single-signer or multisig). */
+export const isSelfCustody = (c) => c?.type === 'wallet' || c?.type === 'multisig';
 
 export const ROLES = {
   owner: { label: 'Owner', desc: 'The business account. Full control including billing.' },
@@ -274,10 +280,13 @@ export function buildSeed(nowDate = new Date()) {
   ];
 
   return {
-    version: 5,
+    version: 6,
     org: { name: 'Demo Trading Co. Ltd', baseCurrency: 'USD', address: '1 Example Street, Example City', email: 'finance@example.com', regNo: 'Company no. 00000000 (demo)' },
     currentUserId: 'u-owner',
     users, connections, opening, contacts, whitelist, transactions, policies, requests, audit, invoices, subscriptionInvoices,
+    partners: { moonpay: { status: 'none' }, trnznd: { status: 'none' } },
+    onrampOrders: [],
+    zendOrders: [],
     billing: { planId: 'institution', paymentMethod: { type: 'card', label: 'Visa •••• 4242' }, nextInvoice: iso(now + 26 * DAY) },
   };
 }

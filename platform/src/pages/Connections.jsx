@@ -5,11 +5,13 @@ import { balances, connectionUsd } from '../lib/ledger.js';
 import { relative, shortAddr, money } from '../lib/format.js';
 import { CONNECTION_TYPES, CRYPTO, FIAT, can, isFiatConn } from '../data/seed.js';
 import { canAddConnection, limitLabel, planOf } from '../lib/plans.js';
+import MultisigWizard from '../components/Multisig.jsx';
 import { ConnIcon, Modal, StatusBadge } from '../components/ui.jsx';
 
 export default function Connections() {
   const { state, me } = useStore();
   const [adding, setAdding] = useState(false);
+  const [multisig, setMultisig] = useState(false);
   const bal = balances(state);
   const total = state.connections.reduce((s, c) => s + connectionUsd(bal[c.id]), 0);
 
@@ -22,6 +24,7 @@ export default function Connections() {
         </div>
         <span className="spacer" />
         <span className="small muted">{state.connections.length} of {limitLabel(planOf(state).maxConnections)} connections used</span>
+        {can(me, 'manageConnections') && <button className="btn" disabled={!canAddConnection(state)} onClick={() => setMultisig(true)}>+ Safe / Squads multisig</button>}
         {can(me, 'manageConnections') && <button className="btn primary" disabled={!canAddConnection(state)} onClick={() => setAdding(true)}>+ Add connection</button>}
       </div>
       {!canAddConnection(state) && (
@@ -44,7 +47,7 @@ export default function Connections() {
                         <ConnIcon type={c.type} />
                         <div>
                           <Link to={`/connections/${c.id}`} style={{ fontWeight: 600 }}>{c.name}</Link>
-                          <div className="muted small">{c.network}{c.address && <> · <span className="mono">{shortAddr(c.address)}</span></>}{c.accountMask && <> · {c.accountMask}</>}</div>
+                          <div className="muted small">{c.network}{c.address && <> · <span className="mono">{shortAddr(c.address)}</span></>}{c.accountMask && <> · {c.accountMask}</>}{c.threshold && <> · {c.provider} {c.threshold} of {c.owners.length}</>}</div>
                         </div>
                       </div>
                     </td>
@@ -70,6 +73,7 @@ export default function Connections() {
         </div>
       </div>
       {adding && <AddConnection onClose={() => setAdding(false)} />}
+      {multisig && <MultisigWizard onClose={() => setMultisig(false)} />}
     </div>
   );
 }

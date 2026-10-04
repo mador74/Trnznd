@@ -7,17 +7,18 @@ import { deriveStatus } from '../lib/policy.js';
 import { balances, usdOf } from '../lib/ledger.js';
 import { cannotReleaseReason, sourceBlockReason } from '../lib/send.js';
 import { convertBlockReason, defaultConvertKinds, quote } from '../lib/convert.js';
+import { PARTNERS, redeemQuote } from '../lib/partners.js';
 
 // Prototype persistence: browser storage only. A production build replaces this with
 // the API described in platform/ARCHITECTURE.md.
-const KEY = 'trnznd-treasury-v5';
+const KEY = 'trnznd-treasury-v6';
 
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      if (s.version === 5) return s;
+      if (s.version === 6) return s;
     }
   } catch {
     /* storage unavailable — fall through to seed */
@@ -45,14 +46,58 @@ function settle(state, r, txHash) {
   const tx = {
     id: uid('t'), connectionId: r.connectionId, date: now(), type: r.type === 'internal_transfer' ? 'transfer_out' : 'withdrawal',
     asset: r.asset, amount: -r.amount, counterparty: r.to, counterpartyAddress: r.toAddress, txHash,
-    category: r.type === 'internal_transfer' ? 'Internal transfer' : 'Supplier payment', reconciled: true,
+    category: r.type === 'internal_transfer' ? 'Internal transfer' : r.zendRedeem ? 'Treasury rebalance' : 'Supplier payment', reconciled: true,
     memo: r.reference, requestId: r.id, internal: r.type === 'internal_transfer',
   };
-  return {
+  const settled = {
     ...state,
     requests: state.requests.map((x) => (x.id === r.id ? { ...x, status: 'executed', executedAt: now(), executedTxHash: txHash } : x)),
     transactions: [tx, ...state.transactions],
   };
+  return r.zendRedeem ? payRedemption(settled, r) : settled;
+}
+
+/** After ZEND reaches TRNZND's redemption address, TRNZND pays fiat to the chosen bank account (demo: instantly). */
+function payRedemption(state, r) {
+  const { fiat, bankConnectionId } = r.zendRedeem;
+  const q = redeemQuote(r.amount, fiat);
+  const order = { id: uid('z'), kind: 'redeem', fiat, fiatAmount: q.fiat, zend: r.amount, connectionId: r.connectionId, bankConnectionId, status: 'paid', createdAt: r.createdAt, completedAt: now(), requestId: r.id };
+  const credit = {
+    id: uid('t'), connectionId: bankConnectionId, date: now(), type: 'deposit', asset: fiat, amount: +q.fiat.toFixed(2),
+    counterparty: 'TRNZND (ZEND redemption)', txHash: 'bank-' + order.id, category: 'Treasury rebalance', reconciled: true, memo: `Redeemed ${r.amount} ZEND`,
+  };
+  const bankKnown = state.connections.some((c) => c.id === bankConnectionId);
+  return { ...state, zendOrders: [order, ...state.zendOrders], transactions: bankKnown ? [credit, ...state.transactions] : state.transactions };
+}
+
+/** Moves on-ramp and mint orders from "processing" to "delivered" and credits the destination (demo timing). */
+function advanceOrders(state) {
+  const due = (o) => o.status === 'processing' && Date.now() - new Date(o.processingAt).getTime() > 4000;
+  if (!state.onrampOrders.some(due) && !state.zendOrders.some(due)) return state;
+  let transactions = state.transactions;
+  let connections = state.connections;
+  const credit = (connectionId, asset, amount, counterparty, memo) => {
+    transactions = [{ id: uid('t'), connectionId, date: now(), type: 'deposit', asset, amount: +amount.toFixed(6), counterparty, txHash: '0x' + Math.random().toString(16).slice(2).padEnd(16, '0'), category: 'Treasury rebalance', reconciled: true, memo }, ...transactions];
+    connections = connections.map((c) => (c.id === connectionId && !c.assets.includes(asset) ? { ...c, assets: [...c.assets, asset] } : c));
+  };
+  const onrampOrders = state.onrampOrders.map((o) => {
+    if (!due(o)) return o;
+    credit(o.connectionId, o.asset, o.receive, 'MoonPay (purchase)', `Bought with ${o.fiatAmount} ${o.fiat}`);
+    return { ...o, status: 'delivered', completedAt: now() };
+  });
+  const zendOrders = state.zendOrders.map((o) => {
+    if (!due(o)) return o;
+    credit(o.connectionId, 'ZEND', o.zend, 'TRNZND (ZEND mint)', `Minted from ${o.fiatAmount} ${o.fiat}`);
+    return { ...o, status: 'delivered', completedAt: now() };
+  });
+  return { ...state, onrampOrders, zendOrders, transactions, connections };
+}
+
+/** Outflow from a connected bank or card when the user pays a partner from it (shown by the open-banking feed). */
+function payFrom(state, connectionId, fiat, amount, counterparty) {
+  if (!state.connections.some((c) => c.id === connectionId)) return state.transactions;
+  const type = state.connections.find((c) => c.id === connectionId).type === 'card' ? 'card_spend' : 'withdrawal';
+  return [{ id: uid('t'), connectionId, date: now(), type, asset: fiat, amount: -amount, counterparty, txHash: 'bank-' + uid(''), category: 'Treasury rebalance', reconciled: true, memo: '' }, ...state.transactions];
 }
 
 /** Records an executed conversion as three ledger lines: amount out, gross amount in, provider fee. */
@@ -186,12 +231,86 @@ function reducer(state, a) {
         audit: audit(state, a.enabled ? 'Enabled conversions' : 'Disabled conversions', c?.name),
       };
     }
+    case 'PARTNER_APPLY':
+      return { ...state, partners: { ...state.partners, [a.partner]: { status: 'pending', appliedAt: now() } }, audit: audit(state, 'Started partner onboarding', PARTNERS[a.partner].name) };
+    case 'PARTNER_APPROVE': {
+      // Demo stand-in for the partner finishing its business checks (KYB).
+      if (state.partners[a.partner]?.status !== 'pending') return state;
+      if (a.partner === 'moonpay') {
+        if (!canAddConnection(state)) return state;
+        const c = {
+          id: uid('c-'), name: 'MoonPay custody account', type: 'custodian', provider: 'MoonPay', network: 'MoonPay custody', assets: [...PARTNERS.moonpay.assets],
+          status: 'connected', lastSync: now(), connectedAt: now(), sendEnabled: false, convertKinds: [], convertEnabled: false,
+        };
+        return {
+          ...state,
+          connections: [...state.connections, c],
+          opening: { ...state.opening, [c.id]: {} },
+          partners: { ...state.partners, moonpay: { status: 'active', connectionId: c.id, approvedAt: now() } },
+          audit: audit(state, 'Partner account opened', 'MoonPay. Custody account connected.'),
+        };
+      }
+      // One TRNZND redemption address per ZEND network, so a redemption always goes out on the right chain.
+      const rand = (chars, n) => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      const b58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      const addr = { Ethereum: () => '0x' + rand('0123456789abcdef', 40), Solana: () => rand(b58, 44), Tron: () => 'T' + rand(b58, 33) };
+      const ws = PARTNERS.trnznd.networks.map((network) => ({ id: uid('w'), label: `TRNZND — ZEND redemption (${network})`, network, address: addr[network](), addedAt: now(), system: true }));
+      return {
+        ...state,
+        whitelist: [...ws, ...state.whitelist],
+        partners: { ...state.partners, trnznd: { status: 'active', redemptionWhitelistIds: ws.map((w) => w.id), approvedAt: now() } },
+        audit: audit(state, 'Partner account opened', `TRNZND minting account. Redemption addresses whitelisted on ${PARTNERS.trnznd.networks.join(', ')}.`),
+      };
+    }
+    case 'ONRAMP_CREATE': {
+      const o = { ...a.order, id: uid('o'), status: 'awaiting_payment', createdAt: now(), createdBy: state.currentUserId };
+      return { ...state, onrampOrders: [o, ...state.onrampOrders], audit: audit(state, 'Started stablecoin purchase', `${o.fiatAmount} ${o.fiat} → ${o.asset} via MoonPay`) };
+    }
+    case 'ONRAMP_PAID': {
+      const o = state.onrampOrders.find((x) => x.id === a.id);
+      if (!o || o.status !== 'awaiting_payment') return state;
+      return {
+        ...state,
+        onrampOrders: state.onrampOrders.map((x) => (x.id === a.id ? { ...x, status: 'processing', processingAt: now() } : x)),
+        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'MoonPay') : state.transactions,
+        audit: audit(state, 'Paid at MoonPay checkout', `${o.fiatAmount} ${o.fiat}`),
+      };
+    }
+    case 'ZEND_MINT_CREATE': {
+      if (state.partners.trnznd?.status !== 'active') return state;
+      const o = { ...a.order, id: uid('z'), kind: 'mint', status: 'awaiting_deposit', createdAt: now(), createdBy: state.currentUserId };
+      return { ...state, zendOrders: [o, ...state.zendOrders], audit: audit(state, 'Requested ZEND mint', `${o.fiatAmount} ${o.fiat} → ${o.zend.toFixed(2)} ZEND`) };
+    }
+    case 'ZEND_DEPOSIT_SENT': {
+      const o = state.zendOrders.find((x) => x.id === a.id);
+      if (!o || o.status !== 'awaiting_deposit') return state;
+      return {
+        ...state,
+        zendOrders: state.zendOrders.map((x) => (x.id === a.id ? { ...x, status: 'processing', processingAt: now() } : x)),
+        transactions: o.payFromConnectionId ? payFrom(state, o.payFromConnectionId, o.fiat, o.fiatAmount, 'TRNZND (ZEND mint deposit)') : state.transactions,
+        audit: audit(state, 'Fiat deposit sent to TRNZND', `${o.fiatAmount} ${o.fiat}`),
+      };
+    }
+    case 'CANCEL_ORDER': {
+      const key = a.kind === 'onramp' ? 'onrampOrders' : 'zendOrders';
+      return { ...state, [key]: state[key].map((x) => (x.id === a.id && ['awaiting_payment', 'awaiting_deposit'].includes(x.status) ? { ...x, status: 'cancelled' } : x)) };
+    }
+    case 'CREATE_MULTISIG': {
+      if (!canAddConnection(state)) return state;
+      const c = { ...a.connection, id: uid('c-'), type: 'multisig', status: 'connected', lastSync: now(), connectedAt: now(), sendEnabled: true, convertKinds: [], convertEnabled: false };
+      return {
+        ...state,
+        connections: [...state.connections, c],
+        opening: { ...state.opening, [c.id]: {} },
+        audit: audit(state, a.connection.created ? 'Created multisig wallet' : 'Connected multisig wallet', `${c.name} · ${c.provider} · ${c.threshold} of ${c.owners.length}`),
+      };
+    }
     case 'CONFIRM_BROADCASTS': {
       // Demo stand-in for the provider: it executes the instruction a few seconds later and reports the
       // on-chain hash back, which TRNZIT then records in the ledger.
       const due = state.requests.filter((r) => r.status === 'broadcast' && Date.now() - new Date(r.broadcastAt).getTime() > 4000);
-      if (!due.length) return state;
-      let next = state;
+      if (!due.length) return advanceOrders(state);
+      let next = advanceOrders(state);
       for (const r of due) next = settle(next, r, '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join(''));
       return { ...next, audit: due.reduce((log, r) => [{ id: uid('a'), at: now(), userId: r.sentBy, action: r.type === 'conversion' ? 'Provider executed conversion' : 'Provider executed payment', detail: describe(r) }, ...log], next.audit) };
     }
@@ -333,7 +452,8 @@ export function StoreProvider({ children }) {
   const me = useMemo(() => state.users.find((u) => u.id === state.currentUserId), [state.users, state.currentUserId]);
   // Each user picks their own display currency; the organisation's base currency is the default.
   setDisplayCurrency(me?.displayCurrency || state.org.baseCurrency);
-  const broadcasting = state.requests.some((r) => r.status === 'broadcast');
+  const broadcasting = state.requests.some((r) => r.status === 'broadcast')
+    || state.onrampOrders.some((o) => o.status === 'processing') || state.zendOrders.some((o) => o.status === 'processing');
   useEffect(() => {
     if (!broadcasting) return undefined;
     const t = setInterval(() => dispatch({ type: 'CONFIRM_BROADCASTS' }), 1000);

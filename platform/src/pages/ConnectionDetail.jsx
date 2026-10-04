@@ -4,7 +4,7 @@ import { useStore } from '../state/store.jsx';
 import { balances, connectionUsd, history, priceOf, usdOf } from '../lib/ledger.js';
 import { amount, date, dateTime, relative, money, moneyShort } from '../lib/format.js';
 import { useState } from 'react';
-import { ASSETS, CONNECTION_TYPES, can, isFiatConn } from '../data/seed.js';
+import { ASSETS, CONNECTION_TYPES, can, isFiatConn, isSelfCustody } from '../data/seed.js';
 import { SEND_METHODS } from '../lib/send.js';
 import { connectionConvertBlock, PAIR_LABELS } from '../lib/convert.js';
 import { ConfirmButton, ConnIcon, Modal, Stat, StatusBadge } from '../components/ui.jsx';
@@ -107,7 +107,7 @@ function SendingPanel({ c }) {
       </div>
       {manage && (c.sendEnabled
         ? <ConfirmButton className="btn sm" prompt="Click again to switch off" onConfirm={() => dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: false })}>Switch off sending</ConfirmButton>
-        : <button className="btn sm primary" onClick={() => (c.type === 'wallet' || c.type === 'custodian' ? dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: true }) : setEnabling(true))}>Switch on sending</button>)}
+        : <button className="btn sm primary" onClick={() => (isSelfCustody(c) || c.type === 'custodian' ? dispatch({ type: 'SET_SEND_ENABLED', id: c.id, enabled: true }) : setEnabling(true))}>Switch on sending</button>)}
       {enabling && <EnableExchangeSending c={c} onClose={() => setEnabling(false)} />}
     </div>
   );
@@ -141,7 +141,7 @@ function ConvertPanel({ c }) {
   const [enabling, setEnabling] = useState(false);
   const manage = can(me, 'manageConnections');
   const kinds = c.convertKinds || [];
-  if (isFiatConn(c) || c.type === 'wallet' || !kinds.length)
+  if (isFiatConn(c) || isSelfCustody(c) || !kinds.length)
     return <div className="card card__body small"><strong>Conversions</strong> · {connectionConvertBlock(c)}</div>;
   return (
     <div className="card card__body row wrap">

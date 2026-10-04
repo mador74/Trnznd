@@ -1,11 +1,11 @@
-import { ASSET_NETWORKS } from '../data/seed.js';
+import { ASSET_NETWORKS, isSelfCustody } from '../data/seed.js';
 
 /** Accounts that can receive an invoice in `currency`: your own wallets (published address) or bank accounts. */
 export function payToOptions(connections, currency) {
   return connections.filter(
     (c) =>
       c.assets.includes(currency) &&
-      (c.type === 'bank' || (c.type === 'wallet' && c.address && (ASSET_NETWORKS[currency] || []).includes(c.network))),
+      (c.type === 'bank' || (isSelfCustody(c) && c.address && (ASSET_NETWORKS[currency] || []).includes(c.network))),
   );
 }
 

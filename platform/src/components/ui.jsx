@@ -52,7 +52,7 @@ export function Avatar({ user }) {
   return <span className="avatar" title={user?.name}>{initials}</span>;
 }
 
-const ICON = { exchange: ['EX', '#0088ff'], custodian: ['CU', '#6c3aed'], wallet: ['W', '#00a88a'], otc: ['OT', '#06b6d4'], bank: ['BK', '#374151'], card: ['CC', '#b45309'] };
+const ICON = { exchange: ['EX', '#0088ff'], custodian: ['CU', '#6c3aed'], wallet: ['W', '#00a88a'], otc: ['OT', '#06b6d4'], bank: ['BK', '#374151'], multisig: ['MS', '#0f766e'], card: ['CC', '#b45309'] };
 export function ConnIcon({ type }) {
   const [t, bg] = ICON[type] || ['?', '#6b7280'];
   return <span className="feed__icon" style={{ background: bg }} aria-hidden="true">{t}</span>;

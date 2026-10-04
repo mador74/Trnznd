@@ -52,6 +52,7 @@ export default function Layout() {
             <NavLink to="/transactions">Transactions</NavLink>
             <NavLink to="/send">Send{ready > 0 && <span className="count" title="Approved payments ready to send">{ready}</span>}</NavLink>
             <NavLink to="/convert">Convert</NavLink>
+            <NavLink to="/fund">Buy & mint</NavLink>
             <NavLink to="/invoices">Invoices</NavLink>
             <NavLink to="/approvals">
               Approvals{plan.approvals ? toSign > 0 && <span className="count" title="Waiting for your signature">{toSign}</span> : <span className="lock" title="Not included in Basic">🔒</span>}

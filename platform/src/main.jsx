@@ -14,6 +14,7 @@ import Settings from './pages/Settings.jsx';
 import Invoices from './pages/Invoices.jsx';
 import Send from './pages/Send.jsx';
 import Convert from './pages/Convert.jsx';
+import Fund from './pages/Fund.jsx';
 import './styles.css';
 
 // HashRouter so the static build works on GitHub Pages without server rewrites.
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="invoices" element={<Invoices />} />
             <Route path="send" element={<Send />} />
             <Route path="convert" element={<Convert />} />
+            <Route path="fund" element={<Fund />} />
             <Route path="approvals" element={<Approvals />} />
             <Route path="team" element={<Team />} />
             <Route path="audit" element={<Audit />} />

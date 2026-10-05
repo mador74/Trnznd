@@ -18,7 +18,7 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Named providers:** exchanges Kraken, Binance, Coinbase, KuCoin and MEXC; on/off-ramp MoonPay; TRNZND S.A. for minting and burning ZEND only (labelled as a Trnznd Group company). Names and website links only, no logos. Links use `rel="nofollow"` and open in a new tab.
 - **Disclosure:** Trnzit and its affiliates have no commercial or referral arrangements with listed providers and receive no payment from them; links are for information only. Note for legal review: TRNZND S.A. is itself an affiliate, so the page says so next to its listing.
 
-- **Plan changes:** upgrades any time, with a new plan and contract starting immediately; downgrades at next renewal. Annual upgrades: pay the pro-rata difference for the rest of the year. Still open: how monthly upgrades are charged.
+- **Plan changes:** upgrades any time, with a new plan and contract starting immediately; downgrades at next renewal. Annual upgrades: a new 12-month plan starts at the higher price, and the unused part of the current plan is credited against it. Still open: how monthly upgrades are charged.
 - **Set-up:** takes minutes; providers and team members can be added as soon as payment is confirmed.
 
 Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.

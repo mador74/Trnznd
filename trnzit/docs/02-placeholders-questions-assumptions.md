@@ -18,7 +18,10 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Named providers:** exchanges Kraken, Binance, Coinbase, KuCoin and MEXC; on/off-ramp MoonPay; TRNZND S.A. for minting and burning ZEND only (labelled as a Trnznd Group company). Names and website links only, no logos. Links use `rel="nofollow"` and open in a new tab.
 - **Disclosure:** Trnzit and its affiliates have no commercial or referral arrangements with listed providers and receive no payment from them; links are for information only. Note for legal review: TRNZND S.A. is itself an affiliate, so the page says so next to its listing.
 
-Items 1, 2, 6 and 9 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
+- **Plan changes:** upgrades any time, with a new plan and contract starting immediately; downgrades at next renewal. Still open: whether unused time on the old plan is credited.
+- **Set-up:** takes minutes; providers and team members can be added as soon as payment is confirmed.
+
+Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
 
 ## A. Open questions (these block launch or change the copy)
 

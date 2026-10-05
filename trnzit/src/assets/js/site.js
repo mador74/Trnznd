@@ -45,7 +45,7 @@
     $$('[data-menu-trigger][aria-expanded="true"]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); document.getElementById(b.getAttribute('aria-controls')).hidden = true; b.focus(); });
     if (nav && nav.classList.contains('is-open')) { closeNav(); navToggle.focus(); }
   });
-  window.matchMedia('(min-width: 1201px)').addEventListener('change', function (m) { if (m.matches) closeNav(); });
+  window.matchMedia('(min-width: 1281px)').addEventListener('change', function (m) { if (m.matches) closeNav(); });
 
   /* Count-up for figures in mock-ups (tabular figures keep width stable) */
   function countUp(el) {

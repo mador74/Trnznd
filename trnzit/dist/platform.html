@@ -40,6 +40,7 @@
             <li><a href="individuals.html" >For individuals<span>Many accounts, one view, your custody</span></a></li>
           </ul>
         </li>
+        <li><a class="nav__link" href="providers.html" >Providers</a></li>
         <li><a class="nav__link" href="pricing.html" >Pricing</a></li>
         <li><a class="nav__link" href="faq.html" >FAQ</a></li>
         <li><a class="nav__link" href="about.html" >About</a></li>
@@ -222,7 +223,7 @@
         <tr><td class="num">02 Oct</td><td>Inbound transfer<br><span class="mock__meta">Custodian B</span></td><td class="r num">+150.00 ETH</td><td><span class="status">Unmatched</span></td></tr>
       </tbody>
     </table></div>
-    <div class="approval__foot" style="margin-top:14px"><span class="mock__meta">3 of 5 matched · period: October 2026</span><span class="mock-btn">Export CSV</span></div>
+    <div class="approval__foot" style="margin-top:14px"><span class="mock__meta">3 matched · 2 open · October 2026</span><span class="mock-btn">Export CSV</span></div>
   </div>
 </div>
 </div>
@@ -280,20 +281,24 @@
       <h2 id="f6">Multi-sig, set to your own compliance policy</h2>
       <p class="lead">Use multi-signature wallets configured to your organisation’s own compliance and control policies, with M-of-N approvals and address whitelisting enforced before anything is signed.</p>
       <ul class="checks">
-        <li><strong>M-of-N approvals:</strong> for example, 2 of 3 for routine payments and 3 of 4 above a threshold</li>
+        <li><strong>M-of-N approvals:</strong> for example, 2 of 3 for routine payments and 3 of 5 above a threshold</li>
         <li><strong>Address whitelisting:</strong> funds can only go to addresses your approvers have agreed</li>
         <li><strong>Policy changes need approval too</strong>, so the rules can’t be quietly rewritten</li>
       </ul>
-      <p class="small muted">Signing keys are held by your own members, never by Trnzit. M-of-N policies and whitelisting on Premium and Institution. <span class="ph">[Confirm which multi-sig wallets are supported]</span></p>
+      <div class="grid grid-2" style="gap:12px;margin-bottom:20px">
+        <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="10" width="18" height="11" rx="3"/><path d="M7 10V7a5 5 0 0110 0v3"/><circle cx="8" cy="15.5" r="1"/><circle cx="12" cy="15.5" r="1"/><circle cx="16" cy="15.5" r="1"/></svg></span><span><b>Safe</b><span>Formerly Gnosis Safe · EVM-compatible assets</span></span></div>
+        <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="10" width="18" height="11" rx="3"/><path d="M7 10V7a5 5 0 0110 0v3"/><circle cx="8" cy="15.5" r="1"/><circle cx="12" cy="15.5" r="1"/><circle cx="16" cy="15.5" r="1"/></svg></span><span><b>Squads</b><span>Solana-based assets</span></span></div>
+      </div>
+      <p class="small muted">Signing keys are held by your own members, never by Trnzit. M-of-N policies and whitelisting on Premium and Institution.</p>
     </div>
     <div class="reveal" style="--d:120ms">
-      <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of four above that, whitelisted addresses only, and two approvals to change a policy. Fictional data.">
+      <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of five above that, whitelisted addresses only, and three of five approvals to change a policy. Fictional data.">
         <div class="mock__bar" aria-hidden="true"><div class="mock__dots"><i></i><i></i><i></i></div><div class="mock__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Treasury policy</div><span class="mock__fiction">Illustrative data</span></div>
         <div class="mock__body policy" aria-hidden="true">
           <div class="policy__rule"><span class="icon-tile icon-tile--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14a6.5 6.5 0 013.5 6"/></svg></span><span><b>Payments up to $250,000</b><span>Any 2 of 3 approvers</span></span><span class="chip chip--teal num">2 of 3</span></div>
-          <div class="policy__rule"><span class="icon-tile icon-tile--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b>Payments above $250,000</b><span>3 of 4, including a director</span></span><span class="chip chip--teal num">3 of 4</span></div>
+          <div class="policy__rule"><span class="icon-tile icon-tile--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b>Payments above $250,000</b><span>Any 3 of 5 approvers, including a director</span></span><span class="chip chip--teal num">3 of 5</span></div>
           <div class="policy__rule"><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg></span><span><b>Destinations</b><span>Whitelisted addresses only · 12 saved</span></span><span class="chip chip--blue">On</span></div>
-          <div class="policy__rule"><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10" width="15" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3M12 14.5v2.5"/></svg></span><span><b>Change this policy</b><span>Requires 2 approvers</span></span><span class="chip num">2 of 3</span></div>
+          <div class="policy__rule"><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10" width="15" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3M12 14.5v2.5"/></svg></span><span><b>Change this policy</b><span>Any 3 of 5 approvers</span></span><span class="chip num">3 of 5</span></div>
         </div>
       </div>
     </div>
@@ -315,7 +320,7 @@
       <p class="note">Trnzit does not give investment advice, and it isn’t an exchange or a broker. <span class="ph">[Legal review: financial promotion wording for UK and other markets]</span></p>
       <p class="small muted"><span class="ph">[Confirm plan availability for trading]</span></p>
     </div>
-    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative convert panel: converting 20 BTC to USDC within the user's own exchange account, subject to a two-person approval policy. Fictional data.">
+    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative convert panel: converting 20 BTC to USDC within the user's own exchange account, subject to a three-of-five approval policy. Fictional data.">
   <div class="mock__bar" aria-hidden="true">
     <div class="mock__dots"><i></i><i></i><i></i></div>
     <div class="mock__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg> Trade &amp; convert</div>
@@ -328,7 +333,7 @@
     <div class="mock__field"><span><span class="mock__label">From</span><br><b class="num">20.0000</b></span><span class="chip">BTC</span></div>
     <div class="mock__field"><span><span class="mock__label">To (indicative quote from your exchange)</span><br><b class="num">≈ 2,000,000.00</b></span><span class="chip">USDC</span></div>
     <dl class="kv" style="margin:12px 0 14px">
-      <dt>Policy</dt><dd>Trades over $500k · 2 approvals</dd>
+      <dt>Policy</dt><dd>Trades over $500k · 3 of 5</dd>
       <dt>Executed by</dt><dd>Exchange account A</dd>
     </dl>
     <span class="mock-btn mock-btn--primary" style="width:100%;justify-content:center;height:38px">Submit for approval</span>
@@ -397,6 +402,7 @@
       <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10" width="15" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3M12 14.5v2.5"/></svg></span><h3>Scoped access</h3><p>Trnzit stores the API details you provide, using the narrowest access each provider allows, such as read-only for banks and cards. <span class="ph">[Confirm per-provider scopes]</span></p></div>
       <div class="card reveal" style="--d:160ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span><h3>Revoke at any time</h3><p>Disconnect from Trnzit, or withdraw access directly at your provider. Either way, the connection stops.</p></div>
     </div>
+    <p style="margin-top:40px"><a class="btn btn--secondary" href="providers.html">See supported providers <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
   </div>
 </section>
 
@@ -428,6 +434,7 @@
         <ul>
           <li><a href="platform.html">Platform</a></li>
           <li><a href="platform.html#connects">How it connects</a></li>
+          <li><a href="providers.html">Supported providers</a></li>
           <li><a href="security.html">Security &amp; Governance</a></li>
           <li><a href="pricing.html">Pricing</a></li>
         </ul>

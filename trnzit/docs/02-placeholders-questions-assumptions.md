@@ -10,7 +10,12 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Basic plan:** transaction history only, with no reconciliation and no invoicing.
 - **Design changes requested:** "Purpose Beyond Payment" removed from the footer (note: Brand Guide p.22 rule 04 asks for it on external communications); large hero Enso removed; header now reads "Treasury Management, by Trnznd" after the wordmark.
 
-Items 1, 2 (signing keys), 6 and 9 (amount) below are answered. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
+- **Multi-sig wallets:** Safe (formerly Gnosis Safe) for EVM-compatible assets, and Squads for Solana-based assets. Named on Platform §06, the new Providers page, FAQ and the Home trust strip (names only, no logos; check each brand's logo/trademark guidelines before adding logos).
+- **Providers page added** (`providers.html`, in the main menu) with placeholder slots for the exchanges and on/off-ramp providers to be listed, plus a placeholder to disclose any referral or commercial arrangements. Listing providers that users open accounts with may count as a financial promotion or introduction in some jurisdictions; include this in the legal review.
+- **Security practices:** a typical draft (encryption in transit and at rest, key management, MFA, staff access, testing, incidents) is on the Security page inside a dashed "Draft · to be confirmed by Trnzit's technical team" box. It must be checked before launch.
+- **Approval examples:** every demonstration now uses 2 of 3 or 3 of 5.
+
+Items 1, 2, 6 and 9 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
 
 ## A. Open questions (these block launch or change the copy)
 

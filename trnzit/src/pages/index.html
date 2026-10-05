@@ -26,8 +26,8 @@ nav: home
       {{> mock-balances}}
       <div class="hero__float mock mock-float reveal" style="--d:900ms" role="img" aria-label="Illustrative notification: a settlement needs one more approval. Fictional data.">
         <div class="mock__body" aria-hidden="true" style="padding:14px">
-          <div class="approval__top"><span class="mock__name">Approval needed</span><span class="status status--pending">1 of 2</span></div>
-          <div class="mock__meta" style="margin:4px 0 10px">Settle INV-2026-0147 · 250,000.00 USDC</div>
+          <div class="approval__top"><span class="mock__name">Approval needed</span><span class="status status--pending">2 of 3</span></div>
+          <div class="mock__meta" style="margin:4px 0 10px">Settle INV-2026-0147 · 250,000.00 USDC · 1 approved, 1 more needed</div>
           <div class="progress"><i style="width:50%"></i></div>
         </div>
       </div>
@@ -41,7 +41,7 @@ nav: home
     <div class="trust__item">{{icon:vault}}<span>No custody<small>Assets stay with your providers</small></span></div>
     <div class="trust__item">{{icon:users}}<span>No unilateral control<small>Policies you define, enforced</small></span></div>
     <div class="trust__item">{{icon:connect}}<span>Your providers<small>You choose every connection</small></span></div>
-    <div class="trust__item"><span class="ph-block" style="width:100%;padding:10px"><strong>Placeholder</strong>Supported-provider logos, once partners are confirmed</span></div>
+    <a class="trust__item" href="providers.html" style="text-decoration:none">{{icon:multisig}}<span>Safe &amp; Squads<small>Multi-sig, plus more providers</small></span></a>
   </div>
 </section>
 

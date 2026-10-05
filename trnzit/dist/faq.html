@@ -40,6 +40,7 @@
             <li><a href="individuals.html" >For individuals<span>Many accounts, one view, your custody</span></a></li>
           </ul>
         </li>
+        <li><a class="nav__link" href="providers.html" >Providers</a></li>
         <li><a class="nav__link" href="pricing.html" >Pricing</a></li>
         <li><a class="nav__link" href="faq.html" aria-current="page">FAQ</a></li>
         <li><a class="nav__link" href="about.html" >About</a></li>
@@ -93,8 +94,10 @@
     <div class="faq-group reveal" id="connections">
       <h2>Connections</h2>
       <div class="faq">
-        <details><summary>What can I connect?</summary><div class="answer"><p>Bank accounts, credit cards, crypto exchanges, custodians and digital wallets. Bank and card connections are read-only. Which connections you can use depends on your plan: Basic supports crypto connections only. <span class="ph">[Publish list of supported providers once confirmed]</span></p></div></details>
-        <details><summary>What does Trnzit store to connect my accounts?</summary><div class="answer"><p>Trnzit stores the API details you provide to connect each account, with the narrowest access each provider allows. It never stores private keys or seed phrases. You can revoke a connection at any time. <span class="ph">[Add how API details are encrypted and protected]</span></p></div></details>
+        <details><summary>What can I connect?</summary><div class="answer"><p>Bank accounts, credit cards, crypto exchanges, custodians and digital wallets. Bank and card connections are read-only. Which connections you can use depends on your plan: Basic supports crypto connections only. See <a href="providers.html">supported providers</a>.</p></div></details>
+        <details><summary>Which multi-signature wallets are supported?</summary><div class="answer"><p>Safe (formerly Gnosis Safe) for EVM-compatible assets, and Squads for Solana-based assets. In both, the signing keys are held by your own members, never by Trnzit.</p></div></details>
+        <details><summary>Can I open new accounts through Trnzit?</summary><div class="answer"><p>Trnzit lists exchanges and on- and off-ramp providers you can open accounts with. You open each account directly with the provider, under its own terms and checks, and then connect it to Trnzit. See <a href="providers.html">supported providers</a>.</p></div></details>
+        <details><summary>What does Trnzit store to connect my accounts?</summary><div class="answer"><p>Trnzit stores the API details you provide to connect each account, with the narrowest access each provider allows. It never stores private keys or seed phrases. You can revoke a connection at any time. <span class="ph">[Draft, to be confirmed by our technical team: API details are encrypted in transit (TLS 1.2+) and at rest (AES-256), with keys held in a separate key management service.]</span> See <a href="security.html">Security &amp; Governance</a>.</p></div></details>
         <details><summary>Can Trnzit move money from my bank account?</summary><div class="answer"><p>No. Bank account and credit card connections are read-only. Trnzit can show balances and transactions, but it can’t initiate payments from them.</p></div></details>
         <details><summary>Can I disconnect a provider?</summary><div class="answer"><p>Yes, at any time, from Trnzit or by withdrawing access directly at the provider.</p></div></details>
       </div>
@@ -150,6 +153,7 @@
         <ul>
           <li><a href="platform.html">Platform</a></li>
           <li><a href="platform.html#connects">How it connects</a></li>
+          <li><a href="providers.html">Supported providers</a></li>
           <li><a href="security.html">Security &amp; Governance</a></li>
           <li><a href="pricing.html">Pricing</a></li>
         </ul>

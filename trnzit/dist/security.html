@@ -40,6 +40,7 @@
             <li><a href="individuals.html" >For individuals<span>Many accounts, one view, your custody</span></a></li>
           </ul>
         </li>
+        <li><a class="nav__link" href="providers.html" >Providers</a></li>
         <li><a class="nav__link" href="pricing.html" >Pricing</a></li>
         <li><a class="nav__link" href="faq.html" >FAQ</a></li>
         <li><a class="nav__link" href="about.html" >About</a></li>
@@ -147,16 +148,16 @@
   <div class="mock__body" aria-hidden="true">
     <div class="approval">
       <div class="approval__top"><div><div class="mock__name">Settle INV-2026-0147</div><div class="mock__meta">Treasury wallet → Arden Logistics (fictional) · whitelisted</div></div><div class="approval__amt num">250,000.00 USDC</div></div>
-      <div class="approval__foot"><span class="approvers"><i class="ok">AR</i><i>JM</i><i>SK</i><span class="mock__meta" style="margin-left:6px">1 of 2 required</span></span><span class="status status--pending">Awaiting approval</span></div>
+      <div class="approval__foot"><span class="approvers"><i class="ok">AR</i><i>JM</i><i>SK</i><span class="mock__meta" style="margin-left:6px">1 approved · 2 of 3 required</span></span><span class="status status--pending">Awaiting approval</span></div>
       <div class="progress"><i style="width:50%"></i></div>
     </div>
     <div class="approval">
       <div class="approval__top"><div><div class="mock__name">Convert 20.0000 BTC → USDC</div><div class="mock__meta">Exchange account A · policy: trades over $500k</div></div><div class="approval__amt num">20.0000 BTC</div></div>
-      <div class="approval__foot"><span class="approvers"><i>AR</i><i>JM</i><span class="mock__meta" style="margin-left:6px">0 of 2 required</span></span><span><span class="mock-btn">Reject</span> <span class="mock-btn mock-btn--primary">Approve</span></span></div>
+      <div class="approval__foot"><span class="approvers"><i>AR</i><i>JM</i><i>SK</i><i>PN</i><i>LT</i><span class="mock__meta" style="margin-left:6px">0 approved · 3 of 5 required</span></span><span><span class="mock-btn">Reject</span> <span class="mock-btn mock-btn--primary">Approve</span></span></div>
     </div>
     <div class="approval">
       <div class="approval__top"><div><div class="mock__name">Whitelist address 0x7f3a…8b2c</div><div class="mock__meta">Custodian B · policy: address changes</div></div></div>
-      <div class="approval__foot"><span class="approvers"><i class="ok">AR</i><i class="ok">JM</i><i class="ok">SK</i><span class="mock__meta" style="margin-left:6px">3 of 3</span></span><span class="status status--ok">Approved</span></div>
+      <div class="approval__foot"><span class="approvers"><i class="ok">AR</i><i class="ok">JM</i><i class="ok">SK</i><i>PN</i><i>LT</i><span class="mock__meta" style="margin-left:6px">3 of 5 approved</span></span><span class="status status--ok">Approved</span></div>
     </div>
   </div>
 </div>
@@ -168,19 +169,20 @@
   <div class="container container--narrow">
     <div class="section-head reveal">
       <p class="eyebrow">Security practices</p>
-      <h2 id="practice-title">Technical detail, published once verified</h2>
-      <p>We’ll publish specifics about how Trnzit is built and operated here once each one is in place and can be verified. We won’t list certifications, audits, licences or partners before they exist.</p>
+      <h2 id="practice-title">How we protect what we store</h2>
+      <p>Trnzit stores the API details that connect your accounts. It never stores private keys, signing keys or seed phrases.</p>
     </div>
-    <div class="ph-block reveal" style="align-items:flex-start;text-align:left;padding:28px">
-      <strong>Placeholder: to be supplied by Trnzit</strong>
-      <ul style="margin:8px 0 0">
-        <li>How the API details Trnzit stores for each connection are encrypted and protected</li>
-        <li>Encryption in transit and at rest; hosting region(s) and data residency</li>
-        <li>Authentication options for members (e.g. passkeys, authenticator apps)</li>
-        <li>Independent testing, audits or certifications, only if and when completed</li>
-        <li>Incident response and customer notification approach</li>
-        <li>Regulatory status by jurisdiction, as confirmed by legal counsel</li>
-      </ul>
+    <div class="draft reveal">
+      <p class="draft__tag">Draft · typical practice · to be confirmed by Trnzit’s technical team before launch</p>
+      <div class="grid grid-2">
+        <div><h3>Stored API details</h3><p>API details are encrypted in transit (TLS 1.2 or higher) and at rest (AES-256). Encryption keys are managed in a dedicated key management service, kept separate from application data, and API details are only decrypted when an approved instruction is sent.</p></div>
+        <div><h3>Least-privilege access</h3><p>We ask each provider for the narrowest permissions a feature needs, and we recommend restricting API details to known IP addresses where the provider supports it.</p></div>
+        <div><h3>Member sign-in</h3><p>Members sign in with multi-factor authentication, using an authenticator app or a passkey. Sessions time out after a period of inactivity.</p></div>
+        <div><h3>Our own access</h3><p>Access to production systems is limited to named staff, protected by multi-factor authentication and logged. No staff member can view stored API details in plain text.</p></div>
+        <div><h3>Testing &amp; monitoring</h3><p>Systems are monitored continuously and tested by independent penetration testers. Results will be summarised here once a test has been completed.</p></div>
+        <div><h3>Incidents</h3><p>If an incident affects your data, we’ll notify you without undue delay and tell you what happened, what it means for you and what we’re doing about it.</p></div>
+      </div>
+      <p class="draft__foot">Still to add, once confirmed: hosting region and data residency, any completed audits or certifications, and regulatory status by jurisdiction.</p>
     </div>
   </div>
 </section>
@@ -221,6 +223,7 @@
         <ul>
           <li><a href="platform.html">Platform</a></li>
           <li><a href="platform.html#connects">How it connects</a></li>
+          <li><a href="providers.html">Supported providers</a></li>
           <li><a href="security.html">Security &amp; Governance</a></li>
           <li><a href="pricing.html">Pricing</a></li>
         </ul>

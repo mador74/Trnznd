@@ -126,20 +126,24 @@ nav: platform
       <h2 id="f6">Multi-sig, set to your own compliance policy</h2>
       <p class="lead">Use multi-signature wallets configured to your organisation’s own compliance and control policies, with M-of-N approvals and address whitelisting enforced before anything is signed.</p>
       <ul class="checks">
-        <li><strong>M-of-N approvals:</strong> for example, 2 of 3 for routine payments and 3 of 4 above a threshold</li>
+        <li><strong>M-of-N approvals:</strong> for example, 2 of 3 for routine payments and 3 of 5 above a threshold</li>
         <li><strong>Address whitelisting:</strong> funds can only go to addresses your approvers have agreed</li>
         <li><strong>Policy changes need approval too</strong>, so the rules can’t be quietly rewritten</li>
       </ul>
-      <p class="small muted">Signing keys are held by your own members, never by Trnzit. M-of-N policies and whitelisting on Premium and Institution. <span class="ph">[Confirm which multi-sig wallets are supported]</span></p>
+      <div class="grid grid-2" style="gap:12px;margin-bottom:20px">
+        <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal">{{icon:multisig}}</span><span><b>Safe</b><span>Formerly Gnosis Safe · EVM-compatible assets</span></span></div>
+        <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal">{{icon:multisig}}</span><span><b>Squads</b><span>Solana-based assets</span></span></div>
+      </div>
+      <p class="small muted">Signing keys are held by your own members, never by Trnzit. M-of-N policies and whitelisting on Premium and Institution.</p>
     </div>
     <div class="reveal" style="--d:120ms">
-      <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of four above that, whitelisted addresses only, and two approvals to change a policy. Fictional data.">
+      <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of five above that, whitelisted addresses only, and three of five approvals to change a policy. Fictional data.">
         <div class="mock__bar" aria-hidden="true"><div class="mock__dots"><i></i><i></i><i></i></div><div class="mock__title">{{icon:sliders}} Treasury policy</div><span class="mock__fiction">Illustrative data</span></div>
         <div class="mock__body policy" aria-hidden="true">
           <div class="policy__rule"><span class="icon-tile icon-tile--teal">{{icon:users}}</span><span><b>Payments up to $250,000</b><span>Any 2 of 3 approvers</span></span><span class="chip chip--teal num">2 of 3</span></div>
-          <div class="policy__rule"><span class="icon-tile icon-tile--teal">{{icon:shield}}</span><span><b>Payments above $250,000</b><span>3 of 4, including a director</span></span><span class="chip chip--teal num">3 of 4</span></div>
+          <div class="policy__rule"><span class="icon-tile icon-tile--teal">{{icon:shield}}</span><span><b>Payments above $250,000</b><span>Any 3 of 5 approvers, including a director</span></span><span class="chip chip--teal num">3 of 5</span></div>
           <div class="policy__rule"><span class="icon-tile">{{icon:list}}</span><span><b>Destinations</b><span>Whitelisted addresses only · 12 saved</span></span><span class="chip chip--blue">On</span></div>
-          <div class="policy__rule"><span class="icon-tile">{{icon:lock}}</span><span><b>Change this policy</b><span>Requires 2 approvers</span></span><span class="chip num">2 of 3</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{icon:lock}}</span><span><b>Change this policy</b><span>Any 3 of 5 approvers</span></span><span class="chip num">3 of 5</span></div>
         </div>
       </div>
     </div>
@@ -179,6 +183,7 @@ nav: platform
       <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:lock}}</span><h3>Scoped access</h3><p>Trnzit stores the API details you provide, using the narrowest access each provider allows, such as read-only for banks and cards. <span class="ph">[Confirm per-provider scopes]</span></p></div>
       <div class="card reveal" style="--d:160ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:ban}}</span><h3>Revoke at any time</h3><p>Disconnect from Trnzit, or withdraw access directly at your provider. Either way, the connection stops.</p></div>
     </div>
+    <p style="margin-top:40px"><a class="btn btn--secondary" href="providers.html">See supported providers {{icon:arrow-right}}</a></p>
   </div>
 </section>
 

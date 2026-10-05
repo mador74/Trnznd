@@ -1,0 +1,134 @@
+<!---
+title: Pricing · Trnzit
+description: Basic, Premium and Institution plans in US dollars, payable in USD, USDT or USDC. Annual billing gives you two months free. 14-day free trial on card-paid plans.
+nav: pricing
+--->
+<section class="page-hero" aria-labelledby="page-title" style="border-bottom:0;padding-bottom:0">
+  <div class="container">
+    <p class="eyebrow">Pricing</p>
+    <h1 id="page-title">Plans that scale with your governance</h1>
+    <p class="lead">Prices in US dollars. Pay by card in USD, or in USDT or USDC. Every plan is non-custodial: you keep your keys and your assets on every tier.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:48px" aria-labelledby="plans-title">
+  <div class="container">
+    <div class="pricing-head">
+      <h2 id="plans-title" class="sr-only">Plans</h2>
+      <div class="billing-toggle" role="group" aria-label="Billing period" data-billing>
+        <button type="button" data-period="monthly" aria-pressed="true">Monthly</button>
+        <button type="button" data-period="annual" aria-pressed="false">Annual <span class="save">2 months free</span></button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-billing-live></p>
+      <div class="pay-methods" aria-label="Accepted payment methods"><span class="chip">{{icon:card}} Card (USD)</span><span class="chip">USDT</span><span class="chip">USDC</span></div>
+    </div>
+
+    <div class="plans">
+      <article class="plan reveal" id="basic" aria-labelledby="p-basic">
+        <h3 class="plan__name" id="p-basic">Basic</h3>
+        <p class="plan__for">For one individual managing crypto accounts and wallets.</p>
+        <div class="plan__price"><span class="plan__amt" data-price data-monthly="15" data-annual="150">$15</span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="or $150/year, 2 months free" data-annual-note="Billed annually · save $30">or $150/year, 2 months free</p>
+        <a class="btn btn--secondary btn--block" href="contact.html?plan=basic">Start free trial</a>
+        <ul class="checks">
+          <li>1 individual user</li>
+          <li>Crypto connections only</li>
+          <li>Up to 5 connections</li>
+          <li>Unified balances</li>
+          <li>Transaction history</li>
+          <li>Reconciliation <span class="ph">[to confirm]</span></li>
+          <li class="no">No invoicing</li>
+          <li class="no">No approval rules</li>
+        </ul>
+      </article>
+
+      <article class="plan plan--featured reveal" style="--d:80ms" id="premium" aria-labelledby="p-premium">
+        <span class="plan__badge">Most popular</span>
+        <h3 class="plan__name" id="p-premium">Premium</h3>
+        <p class="plan__for">For teams that need approvals, invoicing and full reconciliation.</p>
+        <div class="plan__price"><span class="plan__amt" data-price data-monthly="50" data-annual="500">$50</span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="or $500/year, 2 months free" data-annual-note="Billed annually · save $100">or $500/year, 2 months free</p>
+        <a class="btn btn--primary btn--block" href="contact.html?plan=premium">Start free trial</a>
+        <ul class="checks">
+          <li>Up to 5 users</li>
+          <li>Up to 5 connections across crypto, banks (read-only) and credit cards (read-only)</li>
+          <li>Full reconciliation</li>
+          <li>Invoicing &amp; direct settlement</li>
+          <li>M-of-N approval policies</li>
+          <li>Address whitelisting</li>
+        </ul>
+      </article>
+
+      <article class="plan reveal" style="--d:160ms" id="institution" aria-labelledby="p-inst">
+        <h3 class="plan__name" id="p-inst">Institution</h3>
+        <p class="plan__for">For organisations that need unlimited users and connections.</p>
+        <div class="plan__price"><span class="plan__amt" data-price data-monthly="100" data-annual="1000">$100</span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="or $1,000/year, 2 months free" data-annual-note="Billed annually · save $200">or $1,000/year, 2 months free</p>
+        <a class="btn btn--secondary btn--block" href="contact.html?plan=institution">Start free trial</a>
+        <ul class="checks">
+          <li>Everything in Premium, plus:</li>
+          <li>Unlimited users</li>
+          <li>Unlimited connections</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" aria-labelledby="compare-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Compare plans</p>
+      <h2 id="compare-title">Everything in one table</h2>
+    </div>
+    <div class="compare-wrap reveal" tabindex="0" role="region" aria-label="Plan comparison table, scrolls horizontally on small screens">
+      <table class="compare">
+        <thead>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Basic<span>$15/mo · $150/yr</span></th><th scope="col" class="col-featured">Premium<span>$50/mo · $500/yr</span></th><th scope="col">Institution<span>$100/mo · $1,000/yr</span></th></tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th scope="colgroup" colspan="4">Users &amp; connections</th></tr>
+          <tr><th scope="row">Users</th><td>1 individual</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Connections</th><td>Up to 5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Crypto exchanges, custodians &amp; wallets</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Bank accounts (read-only)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Credit cards (read-only)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr class="group"><th scope="colgroup" colspan="4">Visibility &amp; records</th></tr>
+          <tr><th scope="row">Unified balances</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Transaction history</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Reconciliation</th><td><span class="ph">To confirm</span></td><td class="col-featured">Full</td><td>Full</td></tr>
+          <tr class="group"><th scope="colgroup" colspan="4">Governance</th></tr>
+          <tr><th scope="row">Authorised members &amp; authority levels</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">M-of-N approval policies</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Address whitelisting</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Multi-signature wallets</th><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr class="group"><th scope="colgroup" colspan="4">Payments &amp; trading</th></tr>
+          <tr><th scope="row">Invoicing &amp; direct settlement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Trade &amp; convert in your exchange accounts</th><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr class="group"><th scope="colgroup" colspan="4">Billing</th></tr>
+          <tr><th scope="row">Pay by card (USD)</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Pay in USDT or USDC</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Free trial</th><td>14 days*</td><td class="col-featured">14 days*</td><td>14 days*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted" style="margin-top:16px">* Card-paid plans: full 14-day trial. USDT/USDC payments: a 14-day trial limited to one exchange or wallet connection. See terms below.</p>
+  </div>
+</section>
+
+<section class="section" id="terms" aria-labelledby="terms-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Trial &amp; billing terms</p>
+      <h2 id="terms-title">Clear terms, before you start</h2>
+    </div>
+    <div class="terms">
+      <div class="card reveal"><span class="icon-tile" style="margin-bottom:20px">{{icon:card}}</span><h3>Paying by card</h3><p>You get a 14-day free trial, which you can cancel at any time within the 14 days. Before the trial starts, a card pre-authorisation hold of <span class="ph">[AMOUNT]</span> is placed on your card. <span class="ph">[Confirm when the hold is released]</span></p></div>
+      <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:clock}}</span><h3>After the trial</h3><p>To cancel, give at least 30 days’ notice. Your service ends on your renewal date. <span class="ph">[Confirm how notice is given, and what happens if notice falls inside 30 days of renewal]</span></p></div>
+      <div class="card reveal" style="--d:160ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:coins}}</span><h3>Paying in USDT or USDC</h3><p>There is no standard free trial. Instead, you get a 14-day trial limited to one exchange or wallet connection. <span class="ph">[Confirm which networks/chains are accepted for payment]</span></p></div>
+    </div>
+    <p class="small muted" style="margin-top:24px">Prices exclude any applicable taxes <span class="ph">[confirm VAT/sales-tax treatment]</span>. Full terms: <a href="legal/terms.html">Terms of service</a>. Questions: <a href="faq.html#billing">Billing FAQ</a>.</p>
+  </div>
+</section>
+
+{{> cta}}

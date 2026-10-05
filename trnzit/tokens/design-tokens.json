@@ -1,0 +1,92 @@
+{
+  "$description": "Trnzit design tokens, mapped to TRNZND Brand Guide V2.0 (June 2026). 'source' cites the guide page. Values marked 'extension' are not in the guide and need brand approval.",
+  "color": {
+    "brand": {
+      "midnight":      { "value": "#0A0F1E", "source": "p.9 Primary — Backgrounds, text" },
+      "teal":          { "value": "#00D4AA", "source": "p.9 Primary — Primary accent, CTA" },
+      "electric-blue": { "value": "#0088FF", "source": "p.9 Primary — Links, data viz" },
+      "violet":        { "value": "#6C3AED", "source": "p.9 Primary — Premium, innovation (gradient only on this site)" },
+      "cyan":          { "value": "#06B6D4", "source": "p.9 Primary — Data, clarity (not used: two-accent rule)" },
+      "deep-navy":     { "value": "#111827", "source": "p.9 Primary — Secondary dark" }
+    },
+    "neutral": {
+      "white":    { "value": "#FFFFFF", "source": "p.10 White (Light Mode BG)" },
+      "cloud":    { "value": "#F9FAFB", "source": "p.9 Neutrals" },
+      "mist":     { "value": "#E5E7EB", "source": "p.9 Neutrals" },
+      "ash":      { "value": "#9CA3AF", "source": "p.9 Neutrals — dark backgrounds only (2.54:1 on white)" },
+      "steel":    { "value": "#6B7280", "source": "p.9 Neutrals — secondary text on light (4.83:1 on white)" },
+      "graphite": { "value": "#374151", "source": "p.9 Neutrals" },
+      "slate":    { "value": "#1F2937", "source": "p.9 Neutrals" }
+    },
+    "gradient": {
+      "brand": { "value": "linear-gradient(90deg, #00D4AA 0%, #0088FF 50%, #6C3AED 100%)", "source": "p.9 Brand Gradient; p.22 rule 01 (direction Teal → Blue → Violet, left to right)" }
+    },
+    "semantic": {
+      "text":            { "value": "{color.brand.midnight}" },
+      "text-muted":      { "value": "{color.neutral.steel}" },
+      "text-on-dark":    { "value": "{color.neutral.white}" },
+      "text-muted-dark": { "value": "{color.neutral.ash}" },
+      "surface":         { "value": "{color.neutral.white}" },
+      "surface-alt":     { "value": "{color.neutral.cloud}" },
+      "surface-dark":    { "value": "{color.brand.midnight}" },
+      "surface-dark-alt":{ "value": "{color.brand.deep-navy}" },
+      "border":          { "value": "{color.neutral.mist}" },
+      "border-dark":     { "value": "{color.neutral.slate}" },
+      "accent":          { "value": "{color.brand.teal}" },
+      "accent-2":        { "value": "{color.brand.electric-blue}" },
+      "focus":           { "value": "{color.brand.electric-blue}", "note": "3.52:1 on white — meets 3:1 non-text contrast" },
+      "error":           { "value": "#B91C1C", "status": "extension", "note": "Guide defines no error colour; needed for accessible form validation" }
+    }
+  },
+  "font": {
+    "family": {
+      "primary":   { "value": "\"Helvetica Neue\", Helvetica, Arial, sans-serif", "source": "p.12 Primary typeface: Helvetica", "note": "System Helvetica; Windows/Android fall back to Arial unless a Helvetica web licence is bought" },
+      "secondary": { "value": "\"Inter\", \"Helvetica Neue\", Helvetica, Arial, sans-serif", "source": "p.12 Secondary typeface: Inter (data, figures, UI labels)" }
+    },
+    "weight": { "regular": { "value": 400 }, "medium": { "value": 500 }, "semibold": { "value": 600 }, "bold": { "value": 700, "source": "p.12 Helvetica Bold for headings" } },
+    "numeric": { "value": "tabular-nums", "note": "Applied site-wide" }
+  },
+  "typeScale": {
+    "$note": "Guide print scale (p.12) → web scale. Fluid values clamp between mobile and desktop.",
+    "display": { "print": "42px", "web": "clamp(2.75rem, 1.6rem + 4.2vw, 4.5rem)",   "range": "44–72px", "lineHeight": 1.04, "tracking": "-0.025em" },
+    "h1":      { "print": "32px", "web": "clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem)",  "range": "36–52px", "lineHeight": 1.08, "tracking": "-0.02em" },
+    "h2":      { "print": "24px", "web": "clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem)",  "range": "28–40px", "lineHeight": 1.12, "tracking": "-0.015em" },
+    "h3":      { "print": "18px", "web": "clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem)",  "range": "20–24px", "lineHeight": 1.25 },
+    "h4":      { "print": "—",    "web": "1.125rem", "range": "18px", "lineHeight": 1.35 },
+    "lead":    { "print": "14px", "web": "clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem)", "range": "18–21px", "lineHeight": 1.55 },
+    "body":    { "print": "12px", "web": "1.0625rem", "range": "17px", "lineHeight": 1.6 },
+    "small":   { "print": "10px", "web": "0.9375rem", "range": "15px", "lineHeight": 1.5, "note": "Inter, UI and captions only" },
+    "label":   { "print": "8px uppercase", "web": "0.8125rem", "range": "13px", "tracking": "0.08em", "transform": "uppercase", "note": "Inter, overlines/labels only" }
+  },
+  "radius": {
+    "button": { "value": "18px", "source": "p.18 Button hierarchy" },
+    "card":   { "value": "16px", "status": "extension" },
+    "chip":   { "value": "999px", "status": "extension" },
+    "input":  { "value": "12px", "status": "extension" }
+  },
+  "space": {
+    "$note": "4px base; generous spacing per p.18 'Generous Spacing'",
+    "1": "4px", "2": "8px", "3": "12px", "4": "16px", "5": "24px", "6": "32px", "7": "48px", "8": "64px", "9": "96px", "10": "128px",
+    "section": "clamp(4.5rem, 3rem + 6vw, 8rem)",
+    "gutter": "clamp(1rem, 0.5rem + 2.5vw, 2.5rem)",
+    "container": "1200px"
+  },
+  "button": {
+    "primary":   { "background": "{color.brand.teal}", "text": "{color.brand.midnight}", "radius": "{radius.button}", "source": "p.18" },
+    "secondary": { "background": "transparent", "border": "2px {color.brand.teal}", "text-on-dark": "{color.brand.teal}", "text-on-light": "{color.brand.midnight}", "source": "p.18", "note": "Teal text on white is 1.91:1 (fails WCAG). On light backgrounds text is Midnight; Teal border kept." },
+    "ghost":     { "text": "{color.brand.midnight}", "underline": "2px {color.brand.teal}", "source": "p.18" }
+  },
+  "motion": {
+    "ease":     { "value": "cubic-bezier(0.22, 1, 0.36, 1)" },
+    "fast":     { "value": "160ms" },
+    "base":     { "value": "320ms" },
+    "slow":     { "value": "700ms" },
+    "ensoDraw": { "value": "1800ms" },
+    "reducedMotion": "All non-essential motion disabled under prefers-reduced-motion: reduce"
+  },
+  "logo": {
+    "minWidthDigital": { "value": "80px", "source": "p.22 rule 06 — below this use the Enso alone" },
+    "symbolColour":    { "value": "{color.brand.electric-blue}", "note": "Trnzit sub-brand: solid Electric Blue (brief); parent TRNZND Enso uses the gradient" },
+    "clearSpace":      { "value": "x-height of wordmark (≈ 0.37 × Enso height)", "status": "assumption — guide p.7 'Clear Space' has no value" }
+  }
+}

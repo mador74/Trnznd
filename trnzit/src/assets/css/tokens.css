@@ -1,0 +1,74 @@
+/* Trnzit design tokens — mirrors tokens/design-tokens.json (TRNZND Brand Guide V2.0) */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* Brand (p.9) */
+  --midnight: #0A0F1E;
+  --teal: #00D4AA;
+  --electric-blue: #0088FF;
+  --violet: #6C3AED;
+  --cyan: #06B6D4;
+  --deep-navy: #111827;
+  /* Neutrals (p.9) */
+  --white: #FFFFFF;
+  --cloud: #F9FAFB;
+  --mist: #E5E7EB;
+  --ash: #9CA3AF;
+  --steel: #6B7280;
+  --graphite: #374151;
+  --slate: #1F2937;
+  /* Gradient (p.9, p.22 rule 01) */
+  --gradient-brand: linear-gradient(90deg, #00D4AA 0%, #0088FF 50%, #6C3AED 100%);
+
+  /* Semantic */
+  --text: var(--midnight);
+  --text-body: var(--graphite);
+  --text-muted: var(--steel);
+  --surface: var(--white);
+  --surface-alt: var(--cloud);
+  --border: var(--mist);
+  --accent: var(--teal);
+  --accent-2: var(--electric-blue);
+  --focus: var(--electric-blue);
+  --error: #B91C1C; /* extension — not in guide */
+
+  /* Type */
+  --font-primary: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-secondary: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --fs-display: clamp(2.75rem, 1.6rem + 4.2vw, 4.5rem);
+  --fs-h1: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem);
+  --fs-h2: clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem);
+  --fs-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --fs-h4: 1.125rem;
+  --fs-lead: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.8125rem;
+
+  /* Shape & space */
+  --radius-button: 18px;
+  --radius-card: 16px;
+  --radius-input: 12px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px;
+  --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px; --space-10: 128px;
+  --section: clamp(4.5rem, 3rem + 6vw, 8rem);
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --container: 1200px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 15, 30, 0.06);
+  --shadow-md: 0 1px 2px rgba(10, 15, 30, 0.04), 0 8px 24px -8px rgba(10, 15, 30, 0.12);
+  --shadow-lg: 0 2px 4px rgba(10, 15, 30, 0.04), 0 24px 48px -16px rgba(10, 15, 30, 0.18);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 160ms;
+  --t-base: 320ms;
+  --t-slow: 700ms;
+}

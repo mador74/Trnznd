@@ -1,0 +1,32 @@
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="logo" href="{{root}}index.html" aria-label="Trnzit home">{{logo}}</a>
+    <nav class="nav" id="site-nav" aria-label="Main" data-nav>
+      <ul class="nav__list">
+        <li><a class="nav__link" href="{{root}}platform.html" {{nav:platform}}>Platform</a></li>
+        <li><a class="nav__link" href="{{root}}security.html" {{nav:security}}>Security &amp; Governance</a></li>
+        <li class="nav__item">
+          <button class="nav__trigger {{navgroup:solutions}}" type="button" aria-expanded="false" aria-controls="menu-solutions" data-menu-trigger>Solutions {{icon:chevron-down}}</button>
+          <ul class="nav__menu" id="menu-solutions" hidden>
+            <li><a href="{{root}}organisations.html" {{nav:organisations}}>For organisations<span>Treasury teams, finance directors, family offices</span></a></li>
+            <li><a href="{{root}}individuals.html" {{nav:individuals}}>For individuals<span>Many accounts, one view, your custody</span></a></li>
+          </ul>
+        </li>
+        <li><a class="nav__link" href="{{root}}pricing.html" {{nav:pricing}}>Pricing</a></li>
+        <li><a class="nav__link" href="{{root}}faq.html" {{nav:faq}}>FAQ</a></li>
+        <li><a class="nav__link" href="{{root}}about.html" {{nav:about}}>About</a></li>
+      </ul>
+      <div class="header-actions">
+        <a class="btn btn--secondary" href="{{root}}contact.html#talk">Talk to us</a>
+        <a class="btn btn--primary" href="{{root}}contact.html">Start free trial</a>
+      </div>
+    </nav>
+    <div class="header-actions header-actions--desktop">
+      <a class="btn btn--secondary btn--sm" href="{{root}}contact.html#talk">Talk to us</a>
+      <a class="btn btn--primary btn--sm" href="{{root}}contact.html">Start free trial</a>
+    </div>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span class="sr-only">Menu</span>{{icon:menu}}
+    </button>
+  </div>
+</header>

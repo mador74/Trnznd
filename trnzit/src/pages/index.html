@@ -1,0 +1,140 @@
+<!---
+title: Trnzit · One login. Every account. Your controls.
+description: Trnzit centralises control of your bank accounts, cards, exchanges, custodians and wallets in one governed view. Non-custodial by design: your keys, your custody, your controls.
+nav: home
+--->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__wash" aria-hidden="true"></div>
+  <div class="motif orbit-dots" style="right:-6%;top:4%;width:46%;height:90%" aria-hidden="true"></div>
+  <div class="container hero__grid">
+    <div>
+      <p class="eyebrow reveal">Treasury management · from the Trnznd Group</p>
+      <h1 id="hero-title" class="reveal" style="--d:60ms">One login.<br>Every account.</h1>
+      <p class="hero__tagline reveal" style="--d:120ms">Your keys, your custody, your controls.</p>
+      <p class="lead reveal" style="--d:180ms">Trnzit brings bank accounts, credit cards, crypto exchanges, custodians and digital wallets into one governed view. It never holds your keys or your assets. Every instruction is carried out by your own providers, under approval rules you set.</p>
+      <div class="btn-row reveal" style="--d:240ms">
+        <a class="btn btn--primary btn--lg" href="contact.html">Start 14-day free trial {{icon:arrow-right}}</a>
+        <a class="btn btn--secondary btn--lg" href="#connects">See how it connects</a>
+      </div>
+      <ul class="hero__points reveal" style="--d:300ms">
+        <li>{{icon:check-circle}} Non-custodial by design</li>
+        <li>{{icon:check-circle}} M-of-N approvals</li>
+        <li>{{icon:check-circle}} Pay in USD, USDT or USDC</li>
+      </ul>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__enso">{{enso-draw}}</div>
+      {{> mock-balances}}
+      <div class="hero__float mock mock-float reveal" style="--d:900ms" role="img" aria-label="Illustrative notification: a settlement needs one more approval. Fictional data.">
+        <div class="mock__body" aria-hidden="true" style="padding:14px">
+          <div class="approval__top"><span class="mock__name">Approval needed</span><span class="status status--pending">1 of 2</span></div>
+          <div class="mock__meta" style="margin:4px 0 10px">Settle INV-2026-0147 · 250,000.00 USDC</div>
+          <div class="progress"><i style="width:50%"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust" aria-label="Principles">
+  <div class="container trust__inner">
+    <div class="trust__item">{{icon:key}}<span>No keys held<small>Trnzit never holds private keys</small></span></div>
+    <div class="trust__item">{{icon:vault}}<span>No custody<small>Assets stay with your providers</small></span></div>
+    <div class="trust__item">{{icon:users}}<span>No unilateral control<small>Policies you define, enforced</small></span></div>
+    <div class="trust__item">{{icon:connect}}<span>Your providers<small>You choose every connection</small></span></div>
+    <div class="trust__item"><span class="ph-block" style="width:100%;padding:10px"><strong>Placeholder</strong>Supported-provider logos, once partners are confirmed</span></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="caps-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">What Trnzit does</p>
+      <h2 id="caps-title">Centralised control, without centralised custody</h2>
+      <p class="lead">Eight capabilities, one interface. Each one is designed so that the people who hold your assets keep holding them, and the people who approve your transactions are the ones you chose.</p>
+    </div>
+    <div class="cap-grid">
+      <a class="card card--link reveal" href="platform.html#balances"><span class="card__num"><span>01</span><span class="icon-tile">{{icon:layers}}</span></span><h3>Unified balances</h3><p>Banks, cards, exchanges, custodians and wallets in one consolidated view.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:60ms" href="platform.html#non-custodial"><span class="card__num"><span>02</span><span class="icon-tile">{{icon:key}}</span></span><h3>Non-custodial by design</h3><p>Trnzit and Trnznd never hold keys or take custody. You keep both.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:120ms" href="platform.html#members"><span class="card__num"><span>03</span><span class="icon-tile">{{icon:users}}</span></span><h3>Authorised members</h3><p>Add members with different authority levels to match your governance.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:180ms" href="platform.html#reconciliation"><span class="card__num"><span>04</span><span class="icon-tile">{{icon:history}}</span></span><h3>History &amp; reconciliation</h3><p>Every transaction across every connection, or one at a time.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" href="platform.html#invoicing"><span class="card__num"><span>05</span><span class="icon-tile">{{icon:invoice}}</span></span><h3>Invoicing &amp; direct settlement</h3><p>Invoice counterparties and settle directly with other Trnzit users.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:60ms" href="platform.html#multisig"><span class="card__num"><span>06</span><span class="icon-tile">{{icon:multisig}}</span></span><h3>Multi-signature wallets</h3><p>M-of-N approvals and address whitelisting, set to your policies.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:120ms" href="platform.html#trade"><span class="card__num"><span>07</span><span class="icon-tile">{{icon:convert}}</span></span><h3>Trade &amp; convert</h3><p>Trade and convert in your own exchange accounts from one place.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+      <a class="card card--link reveal" style="--d:180ms" href="platform.html#connects"><span class="card__num"><span>08</span><span class="icon-tile">{{icon:connect}}</span></span><h3>How it connects</h3><p>Secure APIs pass your approved instructions to your chosen provider.</p><span class="card__more">Explore {{icon:arrow-right}}</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark has-motif" id="connects" aria-labelledby="arch-title">
+  <svg class="motif motif-arcs" style="left:-220px;top:-160px;width:640px" viewBox="0 0 600 600" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="300" cy="300" r="290" stroke-width="1.5" stroke-dasharray="1500 320"/><circle cx="300" cy="300" r="220" stroke-width="1.5" stroke-dasharray="1100 280"/></svg>
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow"><span class="idx">08</span> / How it connects</p>
+      <h2 id="arch-title">Instructions travel. Custody doesn’t.</h2>
+      <p class="lead">Trnzit sits between you and the providers you already use. It holds your instructions, policies and approvals. Your bank, exchange, custodian or wallet holds your assets and executes, exactly as it does today.</p>
+    </div>
+    <div class="reveal">{{> diagram}}</div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="gov-title">
+  <div class="container split">
+    <div class="reveal">
+      <p class="eyebrow">Governance</p>
+      <h2 id="gov-title">No single person moves your assets alone</h2>
+      <p class="lead">For organisations, every material action can require more than one person. Set who can initiate, who can approve, and how many approvals each type of action needs.</p>
+      <ul class="checks">
+        <li><strong>M-of-N approvals</strong> by amount, connection or action type</li>
+        <li><strong>Address whitelisting</strong> so funds can only go where you’ve agreed in advance</li>
+        <li><strong>Separation of duties:</strong> initiators can’t approve their own requests</li>
+        <li><strong>A full record</strong> of who requested, who approved and when</li>
+      </ul>
+      <a class="btn btn--ghost" href="security.html">Read our security &amp; governance principles</a>
+    </div>
+    <div class="reveal" style="--d:120ms">{{> mock-approvals}}</div>
+  </div>
+</section>
+
+<section class="section section--alt" aria-labelledby="who-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Who it’s for</p>
+      <h2 id="who-title">Built for treasury teams. Useful to anyone with many accounts.</h2>
+    </div>
+    <div class="grid grid-2">
+      <a class="card card--link reveal" href="organisations.html">
+        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{icon:building}}</span>
+        <h3>For organisations</h3>
+        <p>Corporate treasury teams, finance directors and family offices that need one view of every account, and controls that reflect how the organisation is actually governed.</p>
+        <span class="card__more">Trnzit for organisations {{icon:arrow-right}}</span>
+      </a>
+      <a class="card card--link reveal" style="--d:80ms" href="individuals.html">
+        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{icon:user}}</span>
+        <h3>For individuals</h3>
+        <p>Experienced individuals with accounts across several exchanges, wallets and banks who want one login and one view, while keeping sole control of their own assets.</p>
+        <span class="card__more">Trnzit for individuals {{icon:arrow-right}}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="price-title">
+  <div class="container">
+    <div class="pricing-head reveal">
+      <div>
+        <p class="eyebrow">Pricing</p>
+        <h2 id="price-title" style="margin:0">Simple plans. Pay in USD, USDT or USDC.</h2>
+      </div>
+      <a class="btn btn--ghost" href="pricing.html">Compare all features</a>
+    </div>
+    <div class="plans">
+      <div class="plan reveal"><h3 class="plan__name">Basic</h3><p class="plan__for">For one individual with crypto accounts.</p><div class="plan__price"><span class="plan__amt">$15</span><span class="plan__per">/month</span></div><p class="plan__note">or $150/year, 2 months free</p><a class="btn btn--secondary btn--block" href="pricing.html#basic">See Basic</a></div>
+      <div class="plan plan--featured reveal" style="--d:80ms"><span class="plan__badge">Most popular</span><h3 class="plan__name">Premium</h3><p class="plan__for">For small teams that need approvals, invoicing and reconciliation.</p><div class="plan__price"><span class="plan__amt">$50</span><span class="plan__per">/month</span></div><p class="plan__note">or $500/year, 2 months free</p><a class="btn btn--primary btn--block" href="pricing.html#premium">See Premium</a></div>
+      <div class="plan reveal" style="--d:160ms"><h3 class="plan__name">Institution</h3><p class="plan__for">For organisations that need unlimited users and connections.</p><div class="plan__price"><span class="plan__amt">$100</span><span class="plan__per">/month</span></div><p class="plan__note">or $1,000/year, 2 months free</p><a class="btn btn--secondary btn--block" href="pricing.html#institution">See Institution</a></div>
+    </div>
+    <p class="small muted center" style="margin-top:24px">14-day free trial on card-paid plans. Card pre-authorisation of <span class="ph">[AMOUNT]</span> applies. <a href="pricing.html#terms">Trial and cancellation terms</a>.</p>
+  </div>
+</section>
+
+{{> cta}}

@@ -1,0 +1,100 @@
+<!---
+title: Security & Governance · Trnzit
+description: The principles behind Trnzit: non-custodial by design, no unilateral control, least-privilege connections, separation of duties and a complete approval record.
+nav: security
+--->
+<section class="page-hero has-motif" aria-labelledby="page-title">
+  <svg class="motif motif-arcs" viewBox="0 0 600 600" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="300" cy="300" r="290" stroke-width="1.5" stroke-dasharray="1500 320"/><circle cx="300" cy="300" r="220" stroke-width="1.5" stroke-dasharray="1100 280"/><circle cx="300" cy="300" r="150" stroke-width="1.5" stroke-dasharray="700 240"/></svg>
+  <div class="container">
+    <p class="eyebrow">Security &amp; Governance</p>
+    <h1 id="page-title">Control stays where it belongs</h1>
+    <p class="lead">The safest asset is one that a platform can’t move. Trnzit is built on that idea: we coordinate instructions and approvals, and your own providers hold and move your assets.</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="principles-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Principles</p>
+      <h2 id="principles-title">Six principles we design to</h2>
+      <p class="lead">These describe how Trnzit is designed. They aren’t certifications or audit opinions, and we don’t present them as such.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card reveal"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:key}}</span><h3>Non-custodial by design</h3><p>Trnzit and the Trnznd Group never hold private keys, seed phrases or client assets. Custody stays with you and your chosen providers.</p></div>
+      <div class="card reveal" style="--d:60ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:users}}</span><h3>No unilateral control</h3><p>For organisations, approval policies can require more than one person for any material action, so no single member can act alone. Individual account holders keep sole control of their own accounts.</p></div>
+      <div class="card reveal" style="--d:120ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:lock}}</span><h3>Least privilege</h3><p>Connections use the narrowest access each provider allows. Bank and card connections are read-only.</p></div>
+      <div class="card reveal"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:sliders}}</span><h3>Separation of duties</h3><p>The person who requests an action can’t be the person who approves it. Changes to policies follow the same rule.</p></div>
+      <div class="card reveal" style="--d:60ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:history}}</span><h3>A complete record</h3><p>Every request, approval, rejection and policy change is recorded with who did it and when, ready for your own audit and reconciliation.</p></div>
+      <div class="card reveal" style="--d:120ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:20px">{{icon:ban}}</span><h3>Revocable by you</h3><p>You can disconnect any provider from Trnzit, or withdraw access at the provider directly, at any time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" aria-labelledby="never-title">
+  <div class="container split">
+    <div class="reveal">
+      <p class="eyebrow">Our commitments</p>
+      <h2 id="never-title">What Trnzit will never do</h2>
+      <ul class="checks">
+        <li>Hold your private keys or seed phrases</li>
+        <li>Take custody of, pool or hold client assets</li>
+        <li>Transmit funds, or route them through a Trnzit account</li>
+        <li>Execute a transaction that your policies haven’t approved</li>
+        <li>Give investment advice or manage assets on your behalf</li>
+      </ul>
+      <div class="callout" style="margin-top:32px">
+        <strong>We will never ask for your seed phrase or private keys.</strong>
+        <p style="margin:8px 0 0">Not by email, phone, chat or in the app. Anyone who asks for them is not Trnzit. Report it to <span class="ph">[security contact email]</span>.</p>
+      </div>
+    </div>
+    <div class="reveal" style="--d:120ms">{{> mock-custody}}</div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="gov-title">
+  <div class="container split split--reverse">
+    <div class="reveal">
+      <p class="eyebrow">Governance controls</p>
+      <h2 id="gov-title">Your governance, enforced in software</h2>
+      <p class="lead">Trnzit turns the rules your board, finance committee or family office already follows into policies that are applied to every request.</p>
+      <ul class="checks">
+        <li><strong>Authority levels</strong> for viewers, initiators, approvers and administrators</li>
+        <li><strong>M-of-N approvals</strong> by amount, connection, asset or action type</li>
+        <li><strong>Address whitelisting</strong>, with whitelist changes subject to approval</li>
+        <li><strong>Policy change control</strong>, so rules can’t be edited by one person</li>
+      </ul>
+    </div>
+    <div class="reveal" style="--d:120ms">{{> mock-approvals}}</div>
+  </div>
+</section>
+
+<section class="section section--alt" aria-labelledby="practice-title">
+  <div class="container container--narrow">
+    <div class="section-head reveal">
+      <p class="eyebrow">Security practices</p>
+      <h2 id="practice-title">Technical detail, published once verified</h2>
+      <p>We’ll publish specifics about how Trnzit is built and operated here once each one is in place and can be verified. We won’t list certifications, audits, licences or partners before they exist.</p>
+    </div>
+    <div class="ph-block reveal" style="align-items:flex-start;text-align:left;padding:28px">
+      <strong>Placeholder: to be supplied by Trnzit</strong>
+      <ul style="margin:8px 0 0">
+        <li>How connection credentials (API keys, read-only tokens) are stored and protected</li>
+        <li>Encryption in transit and at rest; hosting region(s) and data residency</li>
+        <li>Authentication options for members (e.g. passkeys, authenticator apps)</li>
+        <li>Independent testing, audits or certifications, only if and when completed</li>
+        <li>Incident response and customer notification approach</li>
+        <li>Regulatory status by jurisdiction, as confirmed by legal counsel</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="disclose-title">
+  <div class="container container--narrow center reveal">
+    <span class="icon-tile" style="margin:0 auto 20px">{{icon:shield}}</span>
+    <h2 id="disclose-title">Found a vulnerability?</h2>
+    <p class="lead">Please tell us privately so we can fix it. Email <span class="ph">[security contact email]</span>. <span class="ph">[Confirm disclosure policy and response times]</span></p>
+  </div>
+</section>
+
+{{> cta}}

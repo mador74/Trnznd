@@ -17,7 +17,9 @@ import { icon } from './src/partials/icons.mjs';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
-const SITE_URL = process.env.SITE_URL || 'https://www.example.com'; // [PLACEHOLDER] production domain
+// Production address: the site lives at a slug below the group domain, e.g. https://www.trnznd.io/trnzit
+const SITE_URL = (process.env.SITE_URL || 'https://www.trnznd.io/trnzit').replace(/\/$/, '');
+const GROUP_URL = process.env.GROUP_URL || 'https://www.trnznd.io';
 const YEAR = new Date().getFullYear();
 
 const logoPaths = JSON.parse(readFileSync(join(SRC, 'partials/logo-paths.json'), 'utf8'));
@@ -56,6 +58,7 @@ function render(tpl, ctx, depth = 0) {
     .replace(/\{\{logo-defs\}\}/g, LOGO_DEFS)
     .replace(/\{\{(title|description|canonical|robots|bodyclass|ogimage)\}\}/g, (_, k) => ctx[k] ?? '')
     .replace(/\{\{year\}\}/g, String(YEAR))
+    .replace(/\{\{group\}\}/g, GROUP_URL)
     .replace(/\{\{root\}\}/g, ctx.root);
 }
 
@@ -100,7 +103,8 @@ for (const file of pages) {
   const { meta, body } = parse(readFileSync(file, 'utf8'));
   const path = rel.replace(/index\.html$/, '');
   const ctx = {
-    root: depth ? '../'.repeat(depth) : '',
+    // 404 can be served at any URL, so its links must be absolute
+    root: rel === '404.html' ? `${SITE_URL}/` : depth ? '../'.repeat(depth) : '',
     title: meta.title ? `${meta.title}` : 'Trnzit',
     description: meta.description || '',
     nav: meta.nav || '',
@@ -117,6 +121,7 @@ for (const file of pages) {
   if (!/noindex/.test(ctx.robots) && !/404/.test(rel)) urls.push(ctx.canonical);
 }
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`);
+// Crawlers only read robots.txt at the domain root, so add this sitemap line to the group site's robots.txt
 writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 writeFileSync(join(DIST, '.nojekyll'), '');
 console.log(`Built ${pages.length} pages -> ${relative(process.cwd(), DIST) || '.'}`);

@@ -8,8 +8,17 @@ A static, multi-page marketing site for **Trnzit**, a treasury management platfo
 cd trnzit
 node build.mjs                      # writes ./dist  (Node 18+)
 npx http-server dist -p 8080        # or any static server
-SITE_URL=https://www.your-domain node build.mjs   # sets canonical/OG/sitemap URLs
+SITE_URL=https://www.trnznd.io/trnzit node build.mjs   # default; sets canonical/OG/sitemap URLs
 ```
+
+### Hosting under the group domain
+
+The site is built to live at a slug below the group domain (default `https://www.trnznd.io/trnzit/`). Copy the contents of `dist/` into that folder on the group site. All page links are relative, so the slug can change without touching the pages; just rebuild with the new `SITE_URL`.
+
+- Set the web server to serve `dist/404.html` for missing pages under `/trnzit/`. Its links are absolute for that reason.
+- Crawlers only read `robots.txt` at the domain root. Add `Sitemap: https://www.trnznd.io/trnzit/sitemap.xml` to the group site's own `robots.txt`.
+- `GROUP_URL` (default `https://www.trnznd.io`) sets the "Back to trnznd.io" links.
+- A ZEND site can reuse this build (tokens, components, build script) at its own slug, e.g. `/zend/`.
 
 `dist/` is committed so the site can be previewed or deployed as-is. Don't edit `dist/` by hand; edit `src/` and rebuild.
 

@@ -4,6 +4,7 @@ const s = (body) =>
 
 export const icons = {
   'arrow-right': s('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  'arrow-left': s('<path d="M19 12H5M11 6l-6 6 6 6"/>'),
   'arrow-up-right': s('<path d="M7 17L17 7M9 7h8v8"/>'),
   check: s('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
   'check-circle': s('<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.7L16 9.5"/>'),

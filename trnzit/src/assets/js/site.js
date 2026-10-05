@@ -25,6 +25,7 @@
   if (navToggle && nav) {
     navToggle.addEventListener('click', function () {
       var open = navToggle.getAttribute('aria-expanded') !== 'true';
+      if (open && header) document.documentElement.style.setProperty('--nav-top', Math.max(0, header.getBoundingClientRect().bottom) + 'px');
       navToggle.setAttribute('aria-expanded', String(open));
       nav.classList.toggle('is-open', open);
       document.body.classList.toggle('nav-open', open);

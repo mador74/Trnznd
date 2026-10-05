@@ -50,11 +50,11 @@ nav: platform
     <div class="reveal">
       <div class="feature__num" aria-hidden="true">02</div>
       <p class="eyebrow">Non-custodial by design</p>
-      <h2 id="f2">We never hold your keys. We never hold your assets.</h2>
+      <h2 id="f2">We never hold your private keys. We never hold your assets.</h2>
       <p class="lead">Trnzit and the Trnznd Group never hold private keys and never take custody. Your assets stay with the banks, exchanges, custodians and wallets you chose. You keep control and custody at all times.</p>
       <ul class="checks">
         <li><strong>One login, one point of contact</strong> across all of your providers</li>
-        <li><strong>Revocable access:</strong> disconnect any provider at any time, from Trnzit or from the provider itself</li>
+        <li><strong>Revocable access:</strong> Trnzit stores the API details you provide to connect each account. You can revoke them at any time, from Trnzit or at the provider itself</li>
         <li><strong>No pooled funds:</strong> nothing passes through a Trnzit account, because there isn’t one</li>
       </ul>
       <p class="note">For organisations, Trnzit’s approval policies are designed so that no single member can act alone. Individual account holders keep sole control of their own accounts.</p>
@@ -93,7 +93,7 @@ nav: platform
         <li>Filter by connection, asset, date or status</li>
         <li>Export to CSV <span class="ph">[Confirm export formats and accounting integrations]</span></li>
       </ul>
-      <p class="small muted">Transaction history on all plans. Full reconciliation on Premium and Institution. <span class="ph">[Confirm: reconciliation on Basic?]</span></p>
+      <p class="small muted">Transaction history on all plans. Reconciliation on Premium and Institution.</p>
     </div>
     <div class="reveal" style="--d:120ms">{{> mock-reconcile}}</div>
   </div>
@@ -130,7 +130,7 @@ nav: platform
         <li><strong>Address whitelisting:</strong> funds can only go to addresses your approvers have agreed</li>
         <li><strong>Policy changes need approval too</strong>, so the rules can’t be quietly rewritten</li>
       </ul>
-      <p class="small muted">M-of-N policies and whitelisting on Premium and Institution. <span class="ph">[Confirm who holds signing keys, and which multi-sig wallets are supported]</span></p>
+      <p class="small muted">Signing keys are held by your own members, never by Trnzit. M-of-N policies and whitelisting on Premium and Institution. <span class="ph">[Confirm which multi-sig wallets are supported]</span></p>
     </div>
     <div class="reveal" style="--d:120ms">
       <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of four above that, whitelisted addresses only, and two approvals to change a policy. Fictional data.">
@@ -176,7 +176,7 @@ nav: platform
     <div class="reveal">{{> diagram}}</div>
     <div class="grid grid-3" style="margin-top:56px">
       <div class="card reveal"><span class="icon-tile" style="margin-bottom:20px">{{icon:connect}}</span><h3>You choose the connection</h3><p>Every instruction names the provider that will carry it out. Nothing is routed elsewhere.</p></div>
-      <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:lock}}</span><h3>Scoped access</h3><p>Connections use the narrowest access each provider allows, such as read-only for banks and cards. <span class="ph">[Confirm per-provider scopes]</span></p></div>
+      <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:lock}}</span><h3>Scoped access</h3><p>Trnzit stores the API details you provide, using the narrowest access each provider allows, such as read-only for banks and cards. <span class="ph">[Confirm per-provider scopes]</span></p></div>
       <div class="card reveal" style="--d:160ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:ban}}</span><h3>Revoke at any time</h3><p>Disconnect from Trnzit, or withdraw access directly at your provider. Either way, the connection stops.</p></div>
     </div>
   </div>

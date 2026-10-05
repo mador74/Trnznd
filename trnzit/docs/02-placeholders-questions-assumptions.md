@@ -2,6 +2,16 @@
 
 On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-block`, `.photo-ph`) so it can't be mistaken for final copy. To list them, run `grep -rn 'class="ph' src/`.
 
+## Answers received (applied to the site)
+
+- **Letter "i":** round dot approved and now used in every logo file. The square-dot option has been removed.
+- **Card pre-authorisation hold:** $15.
+- **Credentials:** Trnzit stores the API details used to connect accounts. Multi-sig signing keys are held by users, never by Trnzit. The copy now says "private keys" wherever it promises Trnzit holds none, and says plainly that Trnzit stores API details.
+- **Basic plan:** transaction history only, with no reconciliation and no invoicing.
+- **Design changes requested:** "Purpose Beyond Payment" removed from the footer (note: Brand Guide p.22 rule 04 asks for it on external communications); large hero Enso removed; header now reads "Treasury Management, by Trnznd" after the wordmark.
+
+Items 1, 2 (signing keys), 6 and 9 (amount) below are answered. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
+
 ## A. Open questions (these block launch or change the copy)
 
 Ordered by how much the answer changes the site.

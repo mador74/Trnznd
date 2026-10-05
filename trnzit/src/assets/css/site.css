@@ -577,3 +577,4 @@ a:hover { text-decoration-color: var(--teal); }
 .steps h3 { font-size: 1.125rem; margin-bottom: 6px; }
 .steps p { margin: 0; font-size: var(--fs-small); }
 @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+.provider .link-ghost { align-self: flex-start; margin-top: 4px; font-family: var(--font-secondary); font-weight: 600; }

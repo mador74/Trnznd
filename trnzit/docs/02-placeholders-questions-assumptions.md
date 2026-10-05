@@ -15,6 +15,9 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Security practices:** a typical draft (encryption in transit and at rest, key management, MFA, staff access, testing, incidents) is on the Security page inside a dashed "Draft · to be confirmed by Trnzit's technical team" box. It must be checked before launch.
 - **Approval examples:** every demonstration now uses 2 of 3 or 3 of 5.
 
+- **Named providers:** exchanges Kraken, Binance, Coinbase, KuCoin and MEXC; on/off-ramp MoonPay; TRNZND S.A. for minting and burning ZEND only (labelled as a Trnznd Group company). Names and website links only, no logos. Links use `rel="nofollow"` and open in a new tab.
+- **Disclosure:** Trnzit and its affiliates have no commercial or referral arrangements with listed providers and receive no payment from them; links are for information only. Note for legal review: TRNZND S.A. is itself an affiliate, so the page says so next to its listing.
+
 Items 1, 2, 6 and 9 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
 
 ## A. Open questions (these block launch or change the copy)

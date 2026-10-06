@@ -1,0 +1,56 @@
+file,line,placeholder text (shown on the live site in a highlighted box)
+pages/brand/logo.html,42,[Assumption: the guide’s Clear Space section has no value]
+pages/contact.html,75,[Confirm authentication options]
+pages/contact.html,84,[contact email]
+pages/contact.html,84,[support email]
+pages/contact.html,84,"[phone, optional]"
+pages/faq.html,34,[security contact email]
+pages/faq.html,35,[Update when confirmed]
+pages/faq.html,46,[Confirm supported stablecoins per network with the technical team]
+pages/faq.html,49,"[Draft, to be confirmed by our technical team: API details are encrypted in transit (TLS 1.2+) and at rest (AES-256), with keys held in a separate key management service.]"
+pages/faq.html,58,[Confirm accepted USDT/USDC networks]
+pages/faq.html,62,[Confirm how notice is given]
+pages/faq.html,69,[support email]
+pages/individuals.html,30,[confirm plan availability]
+pages/legal/cookies.html,10,[DATE]
+pages/legal/cookies.html,17,"[If any non-essential cookies or similar technologies are introduced, list them here and add a consent mechanism before they are set, in line with PECR / ePrivacy rules.]"
+pages/legal/cookies.html,18,"[Cookies used by the application, e.g. session and security cookies]"
+pages/legal/privacy.html,10,[DATE]
+pages/legal/privacy.html,16,"[Controller name, address, contact; DPO if applicable]"
+pages/legal/privacy.html,17,"[Account data, member data, connection metadata, transaction data retrieved from providers, billing data]"
+pages/legal/privacy.html,18,[UK GDPR / EU GDPR lawful bases per purpose]
+pages/legal/privacy.html,19,"[Sub-processors, payment processors, connected providers acting on your instruction]"
+pages/legal/privacy.html,20,[Transfer mechanisms]
+pages/legal/privacy.html,21,[Retention periods]
+pages/legal/privacy.html,22,"[Access, rectification, erasure, objection, portability; complaint to the ICO or relevant authority]"
+pages/legal/terms.html,10,[DATE]
+pages/legal/terms.html,16,"[Contracting entity, registered address, governing law]"
+pages/legal/terms.html,18,"[Taxes, currency, billing dates]"
+pages/legal/terms.html,20,[How to give notice; refunds; consumer cancellation rights where applicable]
+pages/legal/terms.html,22,"[Provider accounts, credentials, approvals, accuracy of instructions]"
+pages/legal/terms.html,23,[To be drafted by counsel]
+pages/platform.html,79,[Confirm role names]
+pages/platform.html,95,[Confirm any further export formats]
+pages/platform.html,152,[Confirm which plans include multi-sig wallets]
+pages/platform.html,182,[Legal review: financial promotion wording for UK and other markets]
+pages/platform.html,183,[Confirm plan availability for trading]
+pages/platform.html,200,[Confirm per-provider scopes]
+pages/pricing.html,136,To confirm
+pages/pricing.html,136,To confirm
+pages/pricing.html,136,To confirm
+pages/pricing.html,136,To confirm
+pages/pricing.html,138,To confirm
+pages/pricing.html,138,To confirm
+pages/pricing.html,138,To confirm
+pages/pricing.html,138,To confirm
+pages/pricing.html,165,[Confirm which networks/chains are accepted for payment]
+pages/pricing.html,166,"[Confirm how notice is given, and what happens if notice falls inside 30 days of renewal]"
+pages/pricing.html,170,[confirm VAT/sales-tax treatment]
+pages/providers.html,53,[Further exchanges to be listed]
+pages/providers.html,68,[Further on/off-ramp providers to be listed]
+pages/providers.html,81,[List supported custodians once confirmed]
+pages/security.html,47,[security contact email]
+pages/security.html,98,[security contact email]
+pages/security.html,98,[Confirm disclosure policy and response times]
+partials/footer.html,49,[Legal entity name]
+assets/js/site.js,177,Form submission not connected to a back end

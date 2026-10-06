@@ -1,6 +1,8 @@
 # Trnzit marketing site
 
-A static, multi-page marketing site for **Trnzit**, a treasury management platform from the Trnznd Group. It's built in plain HTML, CSS and JS with a zero-dependency Node build script.
+A static, multi-page marketing site for **Trnzit**, a treasury management platform from the Trnznd Group, currently focused on stablecoins.
+
+**Developers taking over hosting: start with [`HANDOVER.md`](HANDOVER.md).** It's built in plain HTML, CSS and JS with a zero-dependency Node build script.
 
 ## Quick start
 
@@ -46,7 +48,7 @@ trnzit/
 
 ## Pages
 
-Home · Platform (8 capability sections) · Security &amp; Governance · Pricing · For organisations · For individuals · FAQ · About · Contact / Start free trial · Legal (Terms, Privacy, Cookies placeholders) · 404 · `brand/logo.html` (logo review sheet, noindex).
+Home · Platform (8 capability sections) · Security &amp; Governance · Pricing · Providers · For organisations · For individuals · FAQ · About · Contact / Start free trial · Legal (Terms, Privacy, Cookies placeholders) · 404 · `brand/logo.html` (logo review sheet, noindex).
 
 ## Logo set (`src/assets/logo/`)
 
@@ -56,9 +58,8 @@ Home · Platform (8 capability sections) · Security &amp; Governance · Pricing
 | `trnzit-stacked-light.svg` / `-dark.svg` | Square formats, social profiles |
 | `trnzit-wordmark-light.svg` / `-dark.svg` | Wordmark only |
 | `trnzit-symbol.svg`, `favicon.svg` | Enso only: favicon, app icon, anything under 80px wide |
-| `*-i-option-b.svg` | Alternative "i" (round dot), for approval only |
 
-The Enso is the Trnznd symbol with its geometry unchanged, filled solid Electric Blue `#0088FF`. The letters "t", "r", "n" and "z" were traced from the supplied artwork. The "i" is newly drawn and **awaits approval** (see `brand/logo.html`).
+The Enso is the Trnznd symbol with its geometry unchanged, filled solid Electric Blue `#0088FF`. The letters "t", "r", "n" and "z" were traced from the supplied artwork. The "i" uses a round dot (approved).
 
 ## Quality checks run
 

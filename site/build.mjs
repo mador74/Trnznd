@@ -1,15 +1,23 @@
 // Builds the Trnznd site: wraps each page in src/pages with the shared head,
 // header and footer, and copies assets. No dependencies: `node site/build.mjs`.
 // Output goes to docs/, which GitHub Pages serves.
+//
+// `node site/build.mjs <out> --inline [--trnzit=<url>]` builds the clickable
+// prototype for a claude.ai artifact instead: CSS, JS and the font are inlined
+// into every page (the artifact viewer only loads images as separate files), and
+// index.html is written without its document wrapper, which the viewer adds.
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SRC = join(here, 'src');
-const OUT = process.argv[2] ? resolve(process.argv[2]) : join(here, '..', 'docs');
+const args = process.argv.slice(2);
+const INLINE = args.includes('--inline');
+const outArg = args.find((a) => !a.startsWith('--'));
+const OUT = outArg ? resolve(outArg) : join(here, '..', 'docs');
 const SITE_URL = 'https://www.trnznd.io';
-const TRNZIT_URL = 'https://www.trnznd.io/trnzit/'; // Trnzit's canonical URL, as set on the Trnzit site
+const TRNZIT_URL = (args.find((a) => a.startsWith('--trnzit=')) || '').slice(9) || 'https://www.trnznd.io/trnzit/'; // Trnzit's canonical URL, as set on the Trnzit site
 const DASHBOARD_URL = 'https://app.trnznd.io';      // "Enter Dashboard" on the current site
 const YEAR = 2026;
 
@@ -144,6 +152,14 @@ ${col('Legal', [['legal/notice.html', 'Important notice'], ['legal/risk.html', '
 </footer>`;
 }
 
+let inlineCss = '', inlineJs = '';
+if (INLINE) {
+  const font = readFileSync(join(SRC, 'assets', 'fonts', 'inter-latin.woff2')).toString('base64');
+  inlineCss = ['group.css', 'trnznd.css'].map((f) => readFileSync(join(SRC, 'assets', 'css', f), 'utf8')).join('\n')
+    .replace('url("../fonts/inter-latin.woff2")', `url(data:font/woff2;base64,${font})`);
+  inlineJs = readFileSync(join(SRC, 'assets', 'js', 'site.js'), 'utf8');
+}
+
 function head(r, meta, path) {
   const url = SITE_URL + '/' + (path === 'index.html' ? '' : path);
   const title = meta.title ? `${meta.title} · Trnznd` : 'Trnznd · Purpose Beyond Payment';
@@ -168,9 +184,9 @@ function head(r, meta, path) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${r}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${r}assets/img/apple-touch-icon.png">
-<link rel="preload" href="${r}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+${INLINE ? `<style>${inlineCss}</style>` : `<link rel="preload" href="${r}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${r}assets/css/group.css">
-<link rel="stylesheet" href="${r}assets/css/trnznd.css">
+<link rel="stylesheet" href="${r}assets/css/trnznd.css">`}
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -210,7 +226,14 @@ for (const file of walk(PAGES).filter((f) => f.endsWith('.html'))) {
     .replace(/\{\{trnzit\}\}/g, TRNZIT_URL)
     .replace(/\{\{root\}\}/g, r);
   if (/\{\{/.test(content)) throw new Error(`Unresolved token in ${path}`);
-  const html = [head(r, meta, path), sprite, header(r, meta.nav), `<main id="main">${content.trim()}\n</main>`, footer(r), `<script src="${r}assets/js/site.js" defer></script>`, '</body>', '</html>', ''].join('\n');
+  const script = INLINE ? `<script>${inlineJs}</script>` : `<script src="${r}assets/js/site.js" defer></script>`;
+  let html = [head(r, meta, path), sprite, header(r, meta.nav), `<main id="main">${content.trim()}\n</main>`, footer(r), script, '</body>', '</html>', ''].join('\n');
+  if (INLINE && path === 'index.html') {
+    // The artifact viewer wraps the entry page itself: keep the title first, drop the wrapper.
+    html = html.replace(/^<!doctype html>\n<html lang="en-GB">\n<head>\n<meta charset="utf-8">\n<meta name="viewport"[^>]*>\n<title>[^<]*<\/title>/, '<title>Trnznd</title>')
+      .replace('</head>\n<body>\n', '').replace(/\n<\/body>\n<\/html>\n$/, '\n');
+    if (html.startsWith('<!doctype')) throw new Error('Could not unwrap index.html for the artifact build');
+  }
   mkdirSync(dirname(join(OUT, path)), { recursive: true });
   writeFileSync(join(OUT, path), html);
   count++;

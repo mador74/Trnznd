@@ -17,6 +17,14 @@ cd docs && python3 -m http.server 8000
 
 Commit `docs/` after building. GitHub Pages serves it from the branch.
 
+### Clickable prototype (claude.ai artifact)
+
+```bash
+node site/build.mjs <out> --inline --trnzit=https://claude.ai/artifact/YBuV8hYxgnEsWngZUUhtjY
+```
+
+This inlines the CSS, JS and font into every page, as the artifact viewer requires, and points the Trnzit links at the Trnzit prototype. Publish `<out>/index.html` with the other pages and images as supporting files. The current prototype is at https://claude.ai/artifact/WraLy881KNXDy4tkFHYq4r.
+
 ## Structure
 
 ```

@@ -135,6 +135,21 @@
     if (type && $('option[value="' + type.replace(/[^a-z-]/g, '') + '"]', typeSelect)) typeSelect.value = type;
   }
 
+  /* Group contact form: organisation details are required only for ZEND enquiries */
+  if (typeSelect && $('[data-org-field]')) {
+    var syncType = function () {
+      var v = typeSelect.value, zend = v === 'access' || v === 'team';
+      $$('[data-org-field]').forEach(function (f) {
+        f.required = zend;
+        if (!zend) { f.removeAttribute('aria-invalid'); var e = $('.error', f.closest('.field')); if (e) e.classList.remove('is-shown'); }
+      });
+      $$('[data-org-optional]').forEach(function (s) { s.hidden = zend; });
+      $$('[data-type-note]').forEach(function (n) { n.hidden = n.getAttribute('data-type-note').split(' ').indexOf(v) < 0; });
+    };
+    typeSelect.addEventListener('change', syncType);
+    syncType();
+  }
+
   /* Forms: client-side validation. No endpoint is wired up yet. */
   $$('form[data-validate]').forEach(function (form) {
     var status = $('[data-form-status]', form);

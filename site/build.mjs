@@ -1,11 +1,15 @@
-// Builds the Trnznd site: wraps each page in src/pages with the shared head,
-// header and footer, and copies assets. No dependencies: `node site/build.mjs`.
-// Output goes to docs/, which GitHub Pages serves.
+// Builds the three connected Trnznd sites into docs/ (served by GitHub Pages):
+//   /         the Trnznd Group site   (src/group)
+//   /zend/    the ZEND site           (src/zend)
+//   /trnzit/  the Trnzit site         (src/trnzit, finished pages copied with links resolved)
+// Group and ZEND pages are wrapped in their site's head, header and footer; all three
+// share the cross-site strip and the assets in src/assets. No dependencies:
+//   node site/build.mjs
 //
-// `node site/build.mjs <out> --inline [--trnzit=<url>]` builds the clickable
-// prototype for a claude.ai artifact instead: CSS, JS and the font are inlined
-// into every page (the artifact viewer only loads images as separate files), and
-// index.html is written without its document wrapper, which the viewer adds.
+// `node site/build.mjs <out> --inline` builds the clickable prototype for a claude.ai
+// artifact instead: CSS, JS and the font are inlined into every page (the artifact viewer
+// only loads images as separate files), and the group home page is written without its
+// document wrapper, which the viewer adds.
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +21,6 @@ const INLINE = args.includes('--inline');
 const outArg = args.find((a) => !a.startsWith('--'));
 const OUT = outArg ? resolve(outArg) : join(here, '..', 'docs');
 const SITE_URL = 'https://www.trnznd.io';
-const TRNZIT_URL = (args.find((a) => a.startsWith('--trnzit=')) || '').slice(9) || 'https://www.trnznd.io/trnzit/'; // Trnzit's canonical URL, as set on the Trnzit site
 const DASHBOARD_URL = 'https://app.trnznd.io';      // "Enter Dashboard" on the current site
 const YEAR = 2026;
 
@@ -65,44 +68,34 @@ const icon = (name, cls = '') => {
 const LOGO = (label = 'ZEND') =>
   `<svg viewBox="29 27 1688 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
 
-const NAV = [
-  { id: 'zend', href: 'index.html', label: 'ZEND' },
-  { id: 'business', href: 'business.html', label: 'Business' },
-  { id: 'insights', href: 'insights.html', label: 'Insights' },
-  { id: 'resources', label: 'Resources', menu: [
-    { href: 'faq.html', label: 'FAQ', sub: 'ZEND, how it works, and governance' },
-    { href: 'resources.html#documents', label: 'Documents & policies', sub: 'Whitepaper, governance, terms, risk disclosures' },
-    { href: 'resources.html#transparency', label: 'Reserve transparency', sub: 'Reserve framework, attestations, audits' },
-    { href: 'resources.html#guides', label: 'Video guides', sub: 'How to Trnznd' },
-  ] },
-  { id: 'about', href: 'about.html', label: 'About' },
-  { id: 'contact', href: 'contact.html', label: 'Contact' },
-];
+// ── Cross-site strip: the same on every page of all three sites ─────────────
+const SWITCH_CSS = '.site-switch .group-bar__inner{min-height:40px}.site-switch__list{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.site-switch .site-switch__list a{display:inline-block;padding:5px 10px;border-radius:8px;color:var(--steel);font-weight:600;text-decoration:none}.site-switch .site-switch__list a:hover{color:var(--midnight);background:var(--white);text-decoration:none}.site-switch .site-switch__list a[aria-current]{color:var(--midnight);background:var(--white);box-shadow:inset 0 -2px 0 var(--teal)}';
+function siteSwitch(r, current) {
+  const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'ZEND'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
+  const note = { group: 'Two companies, two products, one group', zend: 'ZEND is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Tech' }[current];
+  return `<nav class="group-bar site-switch" aria-label="Trnznd Group sites"><style>${SWITCH_CSS}</style><div class="container group-bar__inner"><ul class="site-switch__list">${items.map(([id, h, l]) => `<li><a href="${r}${h}"${id === current ? ' aria-current="true"' : ''}>${l}</a></li>`).join('')}</ul><span>${note}</span></div></nav>`;
+}
 
-function header(r, current) {
-  const items = NAV.map((n) => {
-    if (n.menu) {
-      const isCur = current === n.id;
-      return `        <li class="nav__item">
-          <button class="nav__trigger${isCur ? ' is-current' : ''}" type="button" aria-expanded="false" aria-controls="menu-${n.id}" data-menu-trigger>${n.label} ${icon('chev')}</button>
+const navItems = (list, current) => list.map((n) => {
+  if (n.menu) {
+    return `        <li class="nav__item">
+          <button class="nav__trigger${current === n.id ? ' is-current' : ''}" type="button" aria-expanded="false" aria-controls="menu-${n.id}" data-menu-trigger>${n.label} ${icon('chev')}</button>
           <ul class="nav__menu" id="menu-${n.id}" hidden>
-${n.menu.map((m) => `            <li><a href="${r}${m.href}">${m.label}<span>${m.sub}</span></a></li>`).join('\n')}
+${n.menu.map((m) => `            <li><a href="${m.href}">${m.label}<span>${m.sub}</span></a></li>`).join('\n')}
           </ul>
         </li>`;
-    }
-    return `        <li><a class="nav__link" href="${r}${n.href}"${current === n.id ? ' aria-current="page"' : ''}>${n.label}</a></li>`;
-  }).join('\n');
-  const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Dashboard</a>
-        <a class="btn btn--primary${sm}" href="${r}contact.html?type=access">Request access</a>`;
-  return `<div class="brand-rule" aria-hidden="true"></div>
-<nav class="group-bar" aria-label="Trnznd Group"><div class="container group-bar__inner"><span>Trnznd Group: ZEND and Trnzit</span><a href="${TRNZIT_URL}">Trnzit: stablecoin treasury management, by Trnznd ${icon('ext', 'ext')}</a></div></nav>
+  }
+  return `        <li><a class="nav__link" href="${n.href}"${current === n.id ? ' aria-current="page"' : ''}>${n.label}</a></li>`;
+}).join('\n');
+
+const headerShell = (switchHtml, logo, items, actions) => `<div class="brand-rule" aria-hidden="true"></div>
+${switchHtml}
 <header class="site-header" data-header>
   <div class="container header-inner">
-    <a class="logo logo--header" href="${r}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>
+    ${logo}
     <nav class="nav" id="site-nav" aria-label="Main" data-nav>
       <ul class="nav__list">
 ${items}
-        <li class="nav__group"><a class="nav__link" href="${TRNZIT_URL}">Trnzit ${icon('ext')}</a></li>
       </ul>
       <div class="header-actions">
         ${actions('')}
@@ -116,43 +109,109 @@ ${items}
     </button>
   </div>
 </header>`;
-}
 
-function footer(r) {
-  const col = (title, links) => `      <div class="footer-col">
+const footerCol = (title, links) => `      <div class="footer-col">
         <h2>${title}</h2>
         <ul>
-${links.map(([h, l]) => `          <li><a href="${/^https?:/.test(h) ? h : r + h}">${l}</a></li>`).join('\n')}
+${links.map(([h, l]) => `          <li><a href="${h}">${l}</a></li>`).join('\n')}
         </ul>
       </div>`;
+
+// ── ZEND site ────────────────────────────────────────────────────────────────
+// r: path to the root of all three sites; s: path to the ZEND site root.
+function zendHeader(r, s, current) {
+  const nav = [
+    { id: 'zend', href: `${s}index.html`, label: 'ZEND' },
+    { id: 'business', href: `${s}business.html`, label: 'Business' },
+    { id: 'insights', href: `${s}insights.html`, label: 'Insights' },
+    { id: 'resources', label: 'Resources', menu: [
+      { href: `${s}faq.html`, label: 'FAQ', sub: 'ZEND, how it works, and governance' },
+      { href: `${s}resources.html#documents`, label: 'Documents & policies', sub: 'Whitepaper, governance, terms, risk disclosures' },
+      { href: `${s}resources.html#transparency`, label: 'Reserve transparency', sub: 'Reserve framework, attestations, audits' },
+      { href: `${s}resources.html#guides`, label: 'Video guides', sub: 'How to Trnznd' },
+    ] },
+    { id: 'about', href: `${r}index.html`, label: 'About' },
+    { id: 'contact', href: `${r}contact.html`, label: 'Contact' },
+  ];
+  const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Dashboard</a>
+        <a class="btn btn--primary${sm}" href="${r}contact.html?type=access">Request access</a>`;
+  const logo = `<a class="logo logo--header" href="${s}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>`;
+  return headerShell(siteSwitch(r, 'zend'), logo, navItems(nav, current), actions);
+}
+
+function zendFooter(r, s) {
   return `<footer class="site-footer on-dark">
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="logo" href="${r}index.html">${LOGO('ZEND home')}</a>
+        <a class="logo" href="${s}index.html">${LOGO('ZEND home')}</a>
         <p><span class="tagline">Global Stability, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
-        <a class="footer-parent" href="${r}about.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
+        <a class="footer-parent" href="${r}index.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
-${col('ZEND', [['index.html', 'ZEND'], ['index.html#how-it-works', 'How it works'], ['business.html', 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
-${col('Resources', [['insights.html', 'Insights'], ['faq.html', 'FAQ'], ['resources.html#documents', 'Documents & policies'], ['resources.html#transparency', 'Reserve transparency']])}
-${col('Company', [['about.html', 'The Trnznd Group'], ['contact.html', 'Contact'], ['contact.html?type=access', 'Request access'], [TRNZIT_URL, 'Trnzit']])}
-${col('Legal', [['legal/notice.html', 'Important notice'], ['legal/risk.html', 'Risk disclosures'], ['legal/terms.html', 'Terms & conditions'], ['legal/privacy.html', 'Privacy'], ['legal/complaints.html', 'Complaints'], ['legal/cookies.html', 'Cookies']])}
+${footerCol('ZEND', [[`${s}index.html`, 'ZEND'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
+${footerCol('Resources', [[`${s}insights.html`, 'Insights'], [`${s}faq.html`, 'FAQ'], [`${s}resources.html#documents`, 'Documents & policies'], [`${s}resources.html#transparency`, 'Reserve transparency']])}
+${footerCol('Company', [[`${r}index.html`, 'The Trnznd Group'], [`${r}contact.html`, 'Contact'], [`${r}contact.html?type=access`, 'Request access'], [`${r}trnzit/index.html`, 'Trnzit']])}
+${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal/risk.html`, 'Risk disclosures'], [`${s}legal/terms.html`, 'Terms & conditions'], [`${s}legal/privacy.html`, 'Privacy'], [`${s}legal/complaints.html`, 'Complaints'], [`${s}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">
-      <p><strong>Important notice:</strong> ZEND is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${r}legal/notice.html">Read the full notice</a>.</p>
+      <p><strong>Important notice:</strong> ZEND is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${s}legal/notice.html">Read the full notice</a>.</p>
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd, S.A. All rights reserved.</p>
       <ul>
-        <li><a href="${r}legal/terms.html">Terms</a></li>
-        <li><a href="${r}legal/privacy.html">Privacy</a></li>
-        <li><a href="${r}legal/cookies.html">Cookies</a></li>
-        <li><a href="${r}brand/logo.html">Brand assets</a></li>
+        <li><a href="${s}legal/terms.html">Terms</a></li>
+        <li><a href="${s}legal/privacy.html">Privacy</a></li>
+        <li><a href="${s}legal/cookies.html">Cookies</a></li>
+        <li><a href="${s}brand/logo.html">Brand assets</a></li>
       </ul>
     </div>
   </div>
 </footer>`;
 }
+
+// ── Group site ───────────────────────────────────────────────────────────────
+function groupHeader(r, s, current) {
+  const nav = [
+    { id: 'about', href: `${r}index.html`, label: 'The group' },
+    { id: 'zend', href: `${r}zend/index.html`, label: 'ZEND' },
+    { id: 'trnzit', href: `${r}trnzit/index.html`, label: 'Trnzit' },
+  ];
+  const actions = (sm) => `<a class="btn btn--primary${sm}" href="${r}contact.html">Contact us</a>`;
+  const logo = `<a class="logo logo--header logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-light.webp" width="135" height="45" alt="Trnznd Group home"><span class="logo__desc">Purpose<br> Beyond Payment</span></a>`;
+  return headerShell(siteSwitch(r, 'group'), logo, navItems(nav, current), actions);
+}
+
+function groupFooter(r) {
+  return `<footer class="site-footer on-dark">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="logo logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd Group home"></a>
+        <p><span class="tagline">Purpose Beyond Payment</span>Trnznd S.A., Panama · Trnznd Tech, DIFC Innovation Hub, UAE</p>
+      </div>
+${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'Group structure'], [`${r}contact.html`, 'Contact']])}
+${footerCol('Products', [[`${r}zend/index.html`, 'ZEND'], [`${r}zend/business.html`, 'ZEND for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform']])}
+${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'ZEND notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
+${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
+    </div>
+    <div class="disclaimer">
+      <p>Trnznd S.A. is a technology company headquartered in Panama and the issuer of ZEND. Trnznd Tech, the group’s technology and software arm, operates from the DIFC Innovation Hub in the UAE and offers Trnzit. Each product has its own terms, notices and policies.</p>
+    </div>
+    <div class="footer-bottom">
+      <p style="margin:0">© ${YEAR} Trnznd Group. All rights reserved.</p>
+      <ul>
+        <li><a href="${r}legal/privacy.html">Privacy</a></li>
+        <li><a href="${r}legal/cookies.html">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>`;
+}
+
+const SITES = [
+  { id: 'group', dir: 'group', base: '', header: groupHeader, footer: groupFooter, titleSuffix: ' · Trnznd Group', defaultTitle: 'Trnznd Group · Purpose Beyond Payment', siteName: 'Trnznd Group' },
+  { id: 'zend', dir: 'zend', base: 'zend/', header: zendHeader, footer: zendFooter, titleSuffix: ' · ZEND', defaultTitle: 'ZEND · Global Stability, by Trnznd', siteName: 'ZEND by Trnznd' },
+];
 
 let inlineCss = '', inlineJs = '';
 if (INLINE) {
@@ -162,9 +221,9 @@ if (INLINE) {
   inlineJs = readFileSync(join(SRC, 'assets', 'js', 'site.js'), 'utf8');
 }
 
-function head(r, meta, path) {
-  const url = SITE_URL + '/' + (path === 'index.html' ? '' : path);
-  const title = meta.title ? `${meta.title} · ZEND` : 'ZEND · Global Stability, by Trnznd';
+function head(r, meta, outPath, site) {
+  const url = SITE_URL + '/' + outPath.replace(/(^|\/)index\.html$/, '$1');
+  const title = meta.title ? `${meta.title}${site.titleSuffix}` : site.defaultTitle;
   const robots = meta.robots || 'index, follow';
   return `<!doctype html>
 <html lang="en-GB">
@@ -178,7 +237,7 @@ function head(r, meta, path) {
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="ZEND by Trnznd">
+<meta property="og:site_name" content="${site.siteName}">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${meta.description}">
 <meta property="og:url" content="${url}">
@@ -207,6 +266,13 @@ function walk(dir) {
   return readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
 }
 
+// Links between the three sites, resolved for a page's depth.
+const crossLinks = (text, r, s) => text
+  .replace(/\{\{group\}\}/g, r)
+  .replace(/\{\{zend\}\}/g, `${r}zend/`)
+  .replace(/\{\{trnzit\}\}/g, `${r}trnzit/`)
+  .replace(/\{\{root\}\}/g, s);
+
 if (existsSync(OUT)) rmSync(OUT, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 cpSync(join(SRC, 'assets'), join(OUT, 'assets'), { recursive: true });
@@ -214,30 +280,54 @@ cpSync(join(SRC, 'favicon.svg'), join(OUT, 'favicon.svg'));
 writeFileSync(join(OUT, '.nojekyll'), '');
 const sprite = readFileSync(join(SRC, 'partials', 'sprite.html'), 'utf8').trim();
 
-const PAGES = join(SRC, 'pages');
 let count = 0;
-for (const file of walk(PAGES).filter((f) => f.endsWith('.html'))) {
-  const path = relative(PAGES, file).split('\\').join('/');
-  const depth = path.split('/').length - 1;
-  const r = '../'.repeat(depth);
-  const { meta, body } = parse(file);
-  const content = body
-    .replace(/\{\{i:([a-z]+)\}\}/g, (_, n) => icon(n))
-    .replace(/\{\{logo\}\}/g, LOGO())
-    .replace(/\{\{dashboard\}\}/g, DASHBOARD_URL)
-    .replace(/\{\{trnzit\}\}/g, TRNZIT_URL)
-    .replace(/\{\{root\}\}/g, r);
-  if (/\{\{/.test(content)) throw new Error(`Unresolved token in ${path}`);
-  const script = INLINE ? `<script>${inlineJs}</script>` : `<script src="${r}assets/js/site.js" defer></script>`;
-  let html = [head(r, meta, path), sprite, header(r, meta.nav), `<main id="main">${content.trim()}\n</main>`, footer(r), script, '</body>', '</html>', ''].join('\n');
-  if (INLINE && path === 'index.html') {
-    // The artifact viewer wraps the entry page itself: keep the title first, drop the wrapper.
-    html = html.replace(/^<!doctype html>\n<html lang="en-GB">\n<head>\n<meta charset="utf-8">\n<meta name="viewport"[^>]*>\n<title>[^<]*<\/title>/, '<title>Trnznd</title>')
-      .replace('</head>\n<body>\n', '').replace(/\n<\/body>\n<\/html>\n$/, '\n');
-    if (html.startsWith('<!doctype')) throw new Error('Could not unwrap index.html for the artifact build');
+for (const site of SITES) {
+  const dir = join(SRC, site.dir);
+  for (const file of walk(dir).filter((f) => f.endsWith('.html'))) {
+    const rel = relative(dir, file).split('\\').join('/');
+    const outPath = site.base + rel;
+    const r = '../'.repeat(outPath.split('/').length - 1);
+    const s = r + site.base;
+    const { meta, body } = parse(file);
+    let content = crossLinks(body
+      .replace(/\{\{i:([a-z]+)\}\}/g, (_, n) => icon(n))
+      .replace(/\{\{logo\}\}/g, LOGO())
+      .replace(/\{\{dashboard\}\}/g, DASHBOARD_URL), r, s)
+      // shared assets live at the root of all three sites
+      .replace(/((?:src|href)=")(?:\.\.\/)*(assets\/|favicon\.svg)/g, `$1${r}$2`);
+    if (site.id === 'zend') {
+      // contact and "about the group" are group pages
+      content = content
+        .replace(/href="(?:\.\.\/)*contact\.html/g, `href="${r}contact.html`)
+        .replace(/href="(?:\.\.\/)*about\.html/g, `href="${r}index.html`);
+    }
+    if (/\{\{/.test(content)) throw new Error(`Unresolved token in ${outPath}`);
+    const script = INLINE ? `<script>${inlineJs}</script>` : `<script src="${r}assets/js/site.js" defer></script>`;
+    let html = [head(r, meta, outPath, site), sprite, site.header(r, s, meta.nav), `<main id="main">${content.trim()}\n</main>`, site.footer(r, s), script, '</body>', '</html>', ''].join('\n');
+    if (INLINE && outPath === 'index.html') {
+      // The artifact viewer wraps the entry page itself: keep the title first, drop the wrapper.
+      html = html.replace(/^<!doctype html>\n<html lang="en-GB">\n<head>\n<meta charset="utf-8">\n<meta name="viewport"[^>]*>\n<title>[^<]*<\/title>/, '<title>Trnznd</title>')
+        .replace('</head>\n<body>\n', '').replace(/\n<\/body>\n<\/html>\n$/, '\n');
+      if (html.startsWith('<!doctype')) throw new Error('Could not unwrap index.html for the artifact build');
+    }
+    mkdirSync(dirname(join(OUT, outPath)), { recursive: true });
+    writeFileSync(join(OUT, outPath), html);
+    count++;
   }
-  mkdirSync(dirname(join(OUT, path)), { recursive: true });
-  writeFileSync(join(OUT, path), html);
-  count++;
 }
-console.log(`Built ${count} pages into ${relative(process.cwd(), OUT) || '.'}`);
+
+// Trnzit: finished pages (styles inlined), copied with the strip and cross-site links resolved.
+const TRNZIT = join(SRC, 'trnzit');
+let tcount = 0;
+for (const file of walk(TRNZIT)) {
+  const rel = relative(TRNZIT, file).split('\\').join('/');
+  const outPath = 'trnzit/' + rel;
+  mkdirSync(dirname(join(OUT, outPath)), { recursive: true });
+  if (!file.endsWith('.html')) { cpSync(file, join(OUT, outPath)); continue; }
+  const r = '../'.repeat(outPath.split('/').length - 1);
+  const html = crossLinks(readFileSync(file, 'utf8').replace('{{site-switch}}', siteSwitch(r, 'trnzit')), r, r + 'trnzit/');
+  if (/\{\{(group|zend|trnzit|root|site-switch)\}\}/.test(html)) throw new Error(`Unresolved token in ${outPath}`);
+  writeFileSync(join(OUT, outPath), html);
+  tcount++;
+}
+console.log(`Built ${count} group and ZEND pages and ${tcount} Trnzit pages into ${relative(process.cwd(), OUT) || '.'}`);

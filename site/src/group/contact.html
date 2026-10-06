@@ -1,0 +1,95 @@
+<!--
+title: Contact
+description: Contact the Trnznd Group: request access to ZEND, ask about Trnzit, or reach the team about partnerships, press and anything else.
+nav: contact
+-->
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Contact</p>
+    <h1 id="page-title">Talk to the Trnznd Group</h1>
+    <p class="lead">One place to reach us about ZEND, Trnzit or the group. Choose what you need below and we will route it to the right team.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split" style="align-items:start">
+    <div>
+      <form class="form" action="#" method="post" novalidate data-validate aria-labelledby="form-title">
+        <h2 id="form-title" style="font-size:var(--fs-h3)">Your details</h2>
+        <div class="field"><label for="f-type">How can we help?</label>
+          <select id="f-type" name="type" required data-type-select>
+            <optgroup label="ZEND">
+              <option value="access" selected>Request access to ZEND</option>
+              <option value="team">Speak to the ZEND team</option>
+            </optgroup>
+            <optgroup label="Trnzit">
+              <option value="trnzit">Talk to the Trnzit team</option>
+            </optgroup>
+            <optgroup label="Trnznd Group">
+              <option value="partnership">Partnerships</option>
+              <option value="press">Press and media</option>
+              <option value="updates">Get insights and updates</option>
+              <option value="general">General enquiry</option>
+            </optgroup>
+          </select>
+          <p class="hint" data-type-note="access team">ZEND is available to organisations of every kind: businesses, trusts, charities, foundations and other organisations. Access is subject to onboarding, verification and eligibility requirements.</p>
+          <p class="hint" data-type-note="trnzit" hidden>Want to start straight away? The Free plan needs no conversation: <a href="{{trnzit}}index.html">see Trnzit plans</a>.</p>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required><p class="error">Enter your full name.</p></div>
+          <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="error">Enter a valid email address.</p></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-org">Organisation name <span class="muted" data-org-optional hidden>(optional)</span></label><input id="f-org" name="organisation" autocomplete="organization" required data-org-field><p class="error">Enter your organisation’s name.</p></div>
+          <div class="field"><label for="f-orgtype">Organisation type <span class="muted" data-org-optional hidden>(optional)</span></label>
+            <select id="f-orgtype" name="organisation_type" required data-org-field>
+              <option value="" selected>Choose a type</option>
+              <option value="business">Business</option>
+              <option value="trust">Trust</option>
+              <option value="charity">Charity or non-profit</option>
+              <option value="foundation">Foundation</option>
+              <option value="financial-institution">Financial institution</option>
+              <option value="public-body">Public body or agency</option>
+              <option value="other">Other organisation</option>
+            </select>
+            <p class="error">Choose your organisation type.</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-role">Your role <span class="muted" data-org-optional hidden>(optional)</span></label><input id="f-role" name="role" autocomplete="organization-title" required data-org-field><p class="error">Enter your role in the organisation.</p></div>
+          <div class="field"><label for="f-country">Country of registration <span class="muted" data-org-optional hidden>(optional)</span></label><input id="f-country" name="country" autocomplete="country-name" required data-org-field><p class="error">Enter the country your organisation is registered in.</p></div>
+        </div>
+        <div class="field"><label for="f-msg">Message <span class="muted">(optional)</span></label><p class="hint" id="h-msg">For example: the currencies you settle in, the wallets and exchanges you use, or typical monthly volume.</p><textarea id="f-msg" name="message" aria-describedby="h-msg"></textarea></div>
+        <div class="field">
+          <label class="check-row" for="f-privacy"><input id="f-privacy" type="checkbox" name="privacy" required> <span>I have read the <a href="legal/privacy.html">Trnznd Group privacy notice</a>.</span></label>
+          <p class="error">Please confirm to continue.</p>
+        </div>
+        <button class="btn btn--primary btn--lg" type="submit">Send {{i:arrow}}</button>
+        <p class="form-status" role="status" tabindex="-1" hidden data-form-status></p>
+      </form>
+    </div>
+    <aside class="stack">
+      <div class="card">
+        <h3>Requesting ZEND access?</h3>
+        <ol style="margin:0;padding-left:1.2em">
+          <li>We review your request and reply by email.</li>
+          <li>Your organisation and its authorised representatives complete a streamlined verification process.</li>
+          <li>Once verified, you can enter the Dashboard and start minting.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <span class="icon-tile" style="margin-bottom:20px">{{i:grid}}</span>
+        <h3>Starting with Trnzit?</h3>
+        <p>The Free plan has no end date, and paid plans can be tried free for 30 days.</p>
+        <a class="btn btn--secondary" style="margin-top:16px;align-self:flex-start" href="{{trnzit}}index.html">See Trnzit plans</a>
+      </div>
+      <div class="card" id="team">
+        <span class="icon-tile" style="margin-bottom:20px">{{i:mail}}</span>
+        <h3>Email the group</h3>
+        <p>For institutional set-ups, partnerships or press.</p>
+        <p style="margin-top:12px">Email <span class="ph">[contact email]</span><br>Press <span class="ph">[press email]</span></p>
+      </div>
+      <div class="callout"><p class="small" style="margin:0"><strong>We will never ask for your seed phrase or private keys.</strong> If someone does, it isn’t us.</p></div>
+    </aside>
+  </div>
+</section>

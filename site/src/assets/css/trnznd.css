@@ -132,3 +132,9 @@
 .uses{list-style:none;margin:var(--space-3) 0 var(--space-2);padding:0;display:grid;gap:6px}
 .uses li{position:relative;padding-left:18px;color:var(--text-body)}
 .uses li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--teal)}
+
+/* Group lock-up: the Trnznd master logo in the group header and footer */
+.logo--group img{width:135px;height:auto}
+.footer-brand .logo--group img{width:150px}
+@media (max-width:420px){.logo--header.logo--group img{width:111px}}
+@media (max-width:380px){.logo--header.logo--group img{width:96px}}

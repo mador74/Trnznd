@@ -1,6 +1,16 @@
 # Trnznd website
 
-The trnznd.io site, rebuilt in the Trnzit look and feel so the group reads as one family. It is plain HTML, CSS and a little JavaScript. There is no framework and nothing to install.
+www.trnznd.io is three connected sites in one build, all in the same look and feel:
+
+| Path | Site | Source |
+|---|---|---|
+| `/` | The Trnznd Group: group brief, shared Contact page, group privacy and cookies | `src/group/` |
+| `/zend/` | ZEND, the stablecoin from Trnznd S.A. | `src/zend/` |
+| `/trnzit/` | Trnzit, the stablecoin management platform from Trnznd Tech | `src/trnzit/` |
+
+A strip above every header links the three. It is plain HTML, CSS and a little JavaScript. There is no framework and nothing to install.
+
+This repository is the master copy of the Trnzit site. The earlier standalone Trnzit prototype artifact is superseded.
 
 ## Build
 
@@ -20,19 +30,20 @@ Commit `docs/` after building. GitHub Pages serves it from the branch.
 ### Clickable prototype (claude.ai artifact)
 
 ```bash
-node site/build.mjs <out> --inline --trnzit=https://claude.ai/artifact/YBuV8hYxgnEsWngZUUhtjY
+node site/build.mjs <out> --inline
 ```
 
-This inlines the CSS, JS and font into every page, as the artifact viewer requires, and points the Trnzit links at the Trnzit prototype. Publish `<out>/index.html` with the other pages and images as supporting files. The current prototype is at https://claude.ai/artifact/WraLy881KNXDy4tkFHYq4r.
+This inlines the CSS, JS and font into every group and ZEND page, as the artifact viewer requires (the Trnzit pages already carry their styles inline). Publish `<out>/index.html` with the other pages and images as supporting files. The current prototype is at https://claude.ai/artifact/WraLy881KNXDy4tkFHYq4r.
 
 ## Structure
 
 ```
 site/
-  build.mjs                 shared head, header, footer, icon set; assembles pages
+  build.mjs                 site strip, group and ZEND headers and footers, icon set; assembles pages
   src/
-    pages/                  one file per page; meta block at the top (title, description, nav)
-      legal/  brand/
+    group/                  the group site at /: index (group brief), contact, 404, legal/
+    zend/                   the ZEND site at /zend/: one file per page, plus legal/ and brand/
+    trnzit/                 the Trnzit site at /trnzit/: finished pages with their own assets
     partials/sprite.html    the Enso and the zend wordmark as inline SVG symbols
     assets/css/group.css    the group design system, identical to Trnzit's (keep in step)
     assets/css/trnznd.css   Trnznd-only additions
@@ -42,7 +53,11 @@ site/
     assets/logo/            ZEND logo set, the Trnznd master logo (light/dark) and the Trnzit lock-up
 ```
 
-Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the lock-up, `{{dashboard}}` and `{{trnzit}}` the external URLs, and `{{root}}` the relative path to the site root.
+Group and ZEND pages start with a meta block (title, description, nav). Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the ZEND lock-up and `{{dashboard}}` the Dashboard URL. For links between sites, `{{group}}`, `{{zend}}` and `{{trnzit}}` give the relative path to each site's folder (so `{{zend}}faq.html`), and `{{root}}` the current site's own folder. In Trnzit pages `{{site-switch}}` marks where the strip goes.
+
+Each site keeps its own legal pages. Contact is shared: every site links to the group Contact page, and `?type=` preselects the enquiry (`access`, `team`, `trnzit`, `partnership`, `press`, `updates`, `general`). Organisation details are required only for the two ZEND enquiry types.
+
+Trnzit pages are finished HTML with their CSS and JavaScript inline, as imported. They are slower to edit than the group and ZEND pages until they are moved onto the shared build.
 
 ## Artwork
 
@@ -56,7 +71,9 @@ Change a scene's seed or parameters in `render.mjs` to get a different compositi
 
 ## Pages
 
-ZEND (home), Business, Insights, Resources, FAQ, About, Contact, the legal pages (important notice, risk, terms, privacy, complaints, cookies), the brand logo set and a 404 page.
+Group: the group brief (home), Contact, privacy, cookies and a 404 page. ZEND: home, Business, Insights, Resources, FAQ, the legal pages (important notice, risk, terms, privacy, complaints, cookies) and the brand logo set. Trnzit: home, Platform, Security & Governance, Organisations, Individuals, Providers, Pricing, FAQ, About, Contact (trial sign-up), terms, privacy, cookies, the brand page and a 404 page.
+
+The ZEND pages used to sit at the root (`/business.html`, `/faq.html` and so on). They now live under `/zend/`, so the old URLs need redirects at the host before launch.
 
 ## Before launch
 
@@ -71,7 +88,8 @@ Also outstanding:
 - The contact form validates but has no endpoint; connect it in `site.js`.
 - The legal pages are outlines only, apart from the important notice, which matches the current site footer word for word. The current site already publishes Terms, Privacy, Risk Disclosures and a Complaints Policy: move their wording across.
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
-- The site carries the ZEND lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `brand/logo.html`).
-- External URLs are set at the top of `build.mjs`: the Dashboard (`app.trnznd.io`) and Trnzit (`www.trnznd.io/trnzit/`).
+- The site carries the ZEND lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `zend/brand/logo.html`).
+- The group privacy notice must name the data controller for the shared contact form (Trnznd S.A., Trnznd Tech, or both).
+- The Dashboard URL (`app.trnznd.io`) is set at the top of `build.mjs`.
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

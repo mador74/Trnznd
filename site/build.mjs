@@ -1,8 +1,8 @@
 // Builds the three connected Trnznd sites into docs/ (served by GitHub Pages):
 //   /         the Trnznd Group site   (src/group)
-//   /zend/    the ZEND site           (src/zend)
+//   /zend/    the Zend site           (src/zend)
 //   /trnzit/  the Trnzit site         (src/trnzit, finished pages copied with links resolved)
-// Group and ZEND pages are wrapped in their site's head, header and footer; all three
+// Group and Zend pages are wrapped in their site's head, header and footer; all three
 // share the cross-site strip and the assets in src/assets. No dependencies:
 //   node site/build.mjs
 //
@@ -64,16 +64,16 @@ const icon = (name, cls = '') => {
   return `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name]}</svg>`;
 };
 
-// The ZEND lock-up: the Trnznd Enso in solid Teal, then the zend wordmark.
-const LOGO = (label = 'ZEND') =>
+// The Zend lock-up: the Trnznd Enso in solid Teal, then the zend wordmark.
+const LOGO = (label = 'Zend') =>
   `<svg viewBox="29 27 1688 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
 
 // ── Cross-site strip: the same on every page of all three sites ─────────────
 const SWITCH_CSS = '.site-switch .group-bar__inner{min-height:40px}.site-switch__list{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.site-switch .site-switch__list a{display:inline-block;padding:5px 10px;border-radius:8px;color:var(--steel);font-weight:600;text-decoration:none}.site-switch .site-switch__list a:hover{color:var(--midnight);background:var(--white);text-decoration:none}.site-switch .site-switch__list a[aria-current]{color:var(--midnight);background:var(--white);box-shadow:inset 0 -2px 0 var(--teal)}';
 function siteSwitch(r, current) {
-  const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'ZEND'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
-  const note = { group: 'Two companies, two products, one group', zend: 'ZEND is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Tech' }[current];
-  return `<nav class="group-bar site-switch" aria-label="Trnznd Group sites"><style>${SWITCH_CSS}</style><div class="container group-bar__inner"><ul class="site-switch__list">${items.map(([id, h, l]) => `<li><a href="${r}${h}"${id === current ? ' aria-current="true"' : ''}>${l}</a></li>`).join('')}</ul><span>${note}</span></div></nav>`;
+  const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'Zend'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
+  const note = { group: '', zend: 'Zend is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Tech' }[current];
+  return `<nav class="group-bar site-switch" aria-label="Trnznd Group sites"><style>${SWITCH_CSS}</style><div class="container group-bar__inner"><ul class="site-switch__list">${items.map(([id, h, l]) => `<li><a href="${r}${h}"${id === current ? ' aria-current="true"' : ''}>${l}</a></li>`).join('')}</ul>${note ? `<span>${note}</span>` : ''}</div></nav>`;
 }
 
 const navItems = (list, current) => list.map((n) => {
@@ -117,15 +117,15 @@ ${links.map(([h, l]) => `          <li><a href="${h}">${l}</a></li>`).join('\n')
         </ul>
       </div>`;
 
-// ── ZEND site ────────────────────────────────────────────────────────────────
-// r: path to the root of all three sites; s: path to the ZEND site root.
+// ── Zend site ────────────────────────────────────────────────────────────────
+// r: path to the root of all three sites; s: path to the Zend site root.
 function zendHeader(r, s, current) {
   const nav = [
-    { id: 'zend', href: `${s}index.html`, label: 'ZEND' },
+    { id: 'zend', href: `${s}index.html`, label: 'Zend' },
     { id: 'business', href: `${s}business.html`, label: 'Business' },
     { id: 'insights', href: `${s}insights.html`, label: 'Insights' },
     { id: 'resources', label: 'Resources', menu: [
-      { href: `${s}faq.html`, label: 'FAQ', sub: 'ZEND, how it works, and governance' },
+      { href: `${s}faq.html`, label: 'FAQ', sub: 'Zend, how it works, and governance' },
       { href: `${s}resources.html#documents`, label: 'Documents & policies', sub: 'Whitepaper, governance, terms, risk disclosures' },
       { href: `${s}resources.html#transparency`, label: 'Reserve transparency', sub: 'Reserve framework, attestations, audits' },
       { href: `${s}resources.html#guides`, label: 'Video guides', sub: 'How to Trnznd' },
@@ -135,7 +135,7 @@ function zendHeader(r, s, current) {
   ];
   const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Dashboard</a>
         <a class="btn btn--primary${sm}" href="${r}contact.html?type=access">Request access</a>`;
-  const logo = `<a class="logo logo--header" href="${s}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>`;
+  const logo = `<a class="logo logo--header" href="${s}index.html">${LOGO('Zend home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>`;
   return headerShell(siteSwitch(r, 'zend'), logo, navItems(nav, current), actions);
 }
 
@@ -144,17 +144,17 @@ function zendFooter(r, s) {
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="logo" href="${s}index.html">${LOGO('ZEND home')}</a>
+        <a class="logo" href="${s}index.html">${LOGO('Zend home')}</a>
         <p><span class="tagline">Global Stability, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
         <a class="footer-parent" href="${r}index.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
-${footerCol('ZEND', [[`${s}index.html`, 'ZEND'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
+${footerCol('<span class="brand-case">Zend</span>', [[`${s}index.html`, 'Zend'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
 ${footerCol('Resources', [[`${s}insights.html`, 'Insights'], [`${s}faq.html`, 'FAQ'], [`${s}resources.html#documents`, 'Documents & policies'], [`${s}resources.html#transparency`, 'Reserve transparency']])}
 ${footerCol('Company', [[`${r}index.html`, 'The Trnznd Group'], [`${r}contact.html`, 'Contact'], [`${r}contact.html?type=access`, 'Request access'], [`${r}trnzit/index.html`, 'Trnzit']])}
 ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal/risk.html`, 'Risk disclosures'], [`${s}legal/terms.html`, 'Terms & conditions'], [`${s}legal/privacy.html`, 'Privacy'], [`${s}legal/complaints.html`, 'Complaints'], [`${s}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">
-      <p><strong>Important notice:</strong> ZEND is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${s}legal/notice.html">Read the full notice</a>.</p>
+      <p><strong>Important notice:</strong> Zend is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${s}legal/notice.html">Read the full notice</a>.</p>
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd, S.A. All rights reserved.</p>
@@ -173,7 +173,7 @@ ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal
 function groupHeader(r, s, current) {
   const nav = [
     { id: 'about', href: `${r}index.html`, label: 'The group' },
-    { id: 'zend', href: `${r}zend/index.html`, label: 'ZEND' },
+    { id: 'zend', href: `${r}zend/index.html`, label: 'Zend' },
     { id: 'trnzit', href: `${r}trnzit/index.html`, label: 'Trnzit' },
   ];
   const actions = (sm) => `<a class="btn btn--primary${sm}" href="${r}contact.html">Contact us</a>`;
@@ -190,12 +190,12 @@ function groupFooter(r) {
         <p><span class="tagline">Purpose Beyond Payment</span>Trnznd S.A., Panama · Trnznd Tech, DIFC Innovation Hub, UAE</p>
       </div>
 ${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'Group structure'], [`${r}contact.html`, 'Contact']])}
-${footerCol('Products', [[`${r}zend/index.html`, 'ZEND'], [`${r}zend/business.html`, 'ZEND for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform']])}
-${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'ZEND notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
+${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform']])}
+${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">
-      <p>Trnznd S.A. is a technology company headquartered in Panama and the issuer of ZEND. Trnznd Tech, the group’s technology and software arm, operates from the DIFC Innovation Hub in the UAE and offers Trnzit. Each product has its own terms, notices and policies.</p>
+      <p>Trnznd S.A. is a technology company headquartered in Panama and the issuer of Zend. Trnznd Tech, the group’s technology and software arm, operates from the DIFC Innovation Hub in the UAE and offers Trnzit. Each product has its own terms, notices and policies.</p>
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd Group. All rights reserved.</p>
@@ -210,7 +210,7 @@ ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/c
 
 const SITES = [
   { id: 'group', dir: 'group', base: '', header: groupHeader, footer: groupFooter, titleSuffix: ' · Trnznd Group', defaultTitle: 'Trnznd Group · Purpose Beyond Payment', siteName: 'Trnznd Group' },
-  { id: 'zend', dir: 'zend', base: 'zend/', header: zendHeader, footer: zendFooter, titleSuffix: ' · ZEND', defaultTitle: 'ZEND · Global Stability, by Trnznd', siteName: 'ZEND by Trnznd' },
+  { id: 'zend', dir: 'zend', base: 'zend/', header: zendHeader, footer: zendFooter, titleSuffix: ' · Zend', defaultTitle: 'Zend · Global Stability, by Trnznd', siteName: 'Zend by Trnznd' },
 ];
 
 let inlineCss = '', inlineJs = '';
@@ -330,4 +330,4 @@ for (const file of walk(TRNZIT)) {
   writeFileSync(join(OUT, outPath), html);
   tcount++;
 }
-console.log(`Built ${count} group and ZEND pages and ${tcount} Trnzit pages into ${relative(process.cwd(), OUT) || '.'}`);
+console.log(`Built ${count} group and Zend pages and ${tcount} Trnzit pages into ${relative(process.cwd(), OUT) || '.'}`);

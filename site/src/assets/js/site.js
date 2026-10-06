@@ -135,7 +135,7 @@
     if (type && $('option[value="' + type.replace(/[^a-z-]/g, '') + '"]', typeSelect)) typeSelect.value = type;
   }
 
-  /* Group contact form: organisation details are required only for ZEND enquiries */
+  /* Group contact form: organisation details are required only for Zend enquiries */
   if (typeSelect && $('[data-org-field]')) {
     var syncType = function () {
       var v = typeSelect.value, zend = v === 'access' || v === 'team';

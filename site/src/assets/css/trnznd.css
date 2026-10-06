@@ -1,11 +1,6 @@
 /* Trnznd-only additions to the group design system (group.css).
    Everything here composes the same tokens, so Trnznd and Trnzit stay one family. */
 
-/* Lock-up: the trnznd wordmark is wider than trnzit's, so the box grows to keep the same height. */
-.logo svg{width:146px}
-.footer-brand .logo svg{width:156px}
-@media (max-width:420px){.logo--header svg{width:118px}}
-@media (max-width:380px){.logo--header svg{width:100px}}
 
 /* Long hero headline (the ZEND home page) */
 .hero--long h1{font-size:clamp(2.5rem,1.6rem + 3.1vw,3.9rem);line-height:1.04}
@@ -80,3 +75,17 @@
 
 /* Page hero beside a photo: a step down from display size so the headline keeps to three or four lines */
 .page-hero .split h1{font-size:clamp(2.5rem,1.7rem + 2.6vw,3.6rem);max-width:none}
+
+/* ZEND lock-up, sized to the same height as the Trnzit lock-up (45px in the header) */
+.logo svg{width:122px}
+.footer-brand .logo svg{width:130px}
+@media (max-width:420px){.logo--header svg{width:100px}}
+@media (max-width:380px){.logo--header svg{width:85px}}
+
+/* Parent brand in the footer: the Trnznd master logo */
+.footer-parent{display:inline-flex;flex-direction:column;gap:10px;margin-top:var(--space-5);text-decoration:none;color:var(--ash);font-family:var(--font-secondary);font-size:var(--fs-label);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.footer-parent img{width:150px;height:auto}
+.footer-parent:hover{color:var(--white)}
+.parent-logo{width:180px;height:auto;margin-bottom:var(--space-5)}
+.group-card .logo-mark{min-height:50px}
+.group-card .logo-mark svg,.group-card .logo-mark img{width:132px;height:auto}

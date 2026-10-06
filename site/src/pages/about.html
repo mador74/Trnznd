@@ -59,21 +59,27 @@ nav: about
   </div>
 </section>
 
-<section class="section" aria-labelledby="group-title">
+<section class="section" id="group" aria-labelledby="group-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">The Trnznd Group</p>
       <h2 id="group-title">Who does what</h2>
-      <p class="lead">Trnznd is the parent company and the issuer of ZEND. Trnzit is the group’s treasury management platform, a separate product.</p>
+      <p class="lead">Trnznd is the parent company and the issuer of ZEND. ZEND is the group’s settlement asset, and Trnzit its treasury management platform.</p>
     </div>
-    <div class="grid grid-2">
-      <div class="card reveal">
-        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:coins}}</span>
+    <div class="grid grid-3">
+      <div class="card group-card reveal">
+        <span class="logo-mark"><img src="assets/logo/trnznd-logo-light.webp" width="150" height="50" alt="Trnznd"></span>
         <h3>Trnznd, S.A.</h3>
-        <p>A financial technology company incorporated in Panama, developing digital settlement infrastructure for cross-border commerce. Issuer of ZEND.</p>
+        <p>The parent company: a financial technology company incorporated in Panama, developing digital settlement infrastructure for cross-border commerce. Issuer of ZEND.</p>
       </div>
-      <a class="card card--link reveal" style="--d:80ms" href="{{trnzit}}">
-        <span class="icon-tile" style="margin-bottom:24px">{{i:layers}}</span>
+      <a class="card card--link group-card reveal" style="--d:60ms" href="index.html">
+        <span class="logo-mark">{{logo}}</span>
+        <h3>ZEND</h3>
+        <p>Global Value, by Trnznd: a fully backed, currency-neutral settlement asset for organisations trading across borders.</p>
+        <span class="card__more">About ZEND {{i:arrow}}</span>
+      </a>
+      <a class="card card--link group-card reveal" style="--d:120ms" href="{{trnzit}}">
+        <span class="logo-mark"><img src="assets/logo/trnzit-horizontal-light.svg" width="132" height="45" alt="Trnzit"></span>
         <h3>Trnzit</h3>
         <p>Stablecoin treasury management: one login and one governed view across exchange accounts, custodians and wallets. Non-custodial by design.</p>
         <span class="card__more">Visit Trnzit {{i:ext}}</span>

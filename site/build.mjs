@@ -61,8 +61,9 @@ const icon = (name, cls = '') => {
   return `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name]}</svg>`;
 };
 
-const LOGO = (label = 'Trnznd') =>
-  `<svg viewBox="29 27 1965 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="url(#lg-grad)"/><use href="#lg-word" fill="currentColor"/></svg>`;
+// The ZEND lock-up: the Trnznd Enso in solid Teal, then the zend wordmark.
+const LOGO = (label = 'ZEND') =>
+  `<svg viewBox="29 27 1640 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
 
 const NAV = [
   { id: 'zend', href: 'index.html', label: 'ZEND' },
@@ -97,7 +98,7 @@ ${n.menu.map((m) => `            <li><a href="${r}${m.href}">${m.label}<span>${m
 <nav class="group-bar" aria-label="Trnznd Group"><div class="container group-bar__inner"><span>Trnznd Group: ZEND and Trnzit</span><a href="${TRNZIT_URL}">Trnzit: stablecoin treasury management, by Trnznd ${icon('ext', 'ext')}</a></div></nav>
 <header class="site-header" data-header>
   <div class="container header-inner">
-    <a class="logo logo--header" href="${r}index.html">${LOGO('Trnznd home')}<span class="logo__desc">Purpose<br> Beyond Payment</span></a>
+    <a class="logo logo--header" href="${r}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Value,<br> by Trnznd</span></a>
     <nav class="nav" id="site-nav" aria-label="Main" data-nav>
       <ul class="nav__list">
 ${items}
@@ -128,8 +129,9 @@ ${links.map(([h, l]) => `          <li><a href="${/^https?:/.test(h) ? h : r + h
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="logo" href="${r}index.html">${LOGO('Trnznd home')}</a>
-        <p><span class="tagline">Purpose Beyond Payment</span>Engineered for stability. Compliant by design. Made to transcend barriers.</p>
+        <a class="logo" href="${r}index.html">${LOGO('ZEND home')}</a>
+        <p><span class="tagline">Global Value, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
+        <a class="footer-parent" href="${r}about.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
 ${col('ZEND', [['index.html', 'ZEND'], ['index.html#how-it-works', 'How it works'], ['business.html', 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
 ${col('Resources', [['insights.html', 'Insights'], ['faq.html', 'FAQ'], ['resources.html#documents', 'Documents & policies'], ['resources.html#transparency', 'Reserve transparency']])}
@@ -162,7 +164,7 @@ if (INLINE) {
 
 function head(r, meta, path) {
   const url = SITE_URL + '/' + (path === 'index.html' ? '' : path);
-  const title = meta.title ? `${meta.title} · Trnznd` : 'Trnznd · Purpose Beyond Payment';
+  const title = meta.title ? `${meta.title} · ZEND` : 'ZEND · Global Value, by Trnznd';
   const robots = meta.robots || 'index, follow';
   return `<!doctype html>
 <html lang="en-GB">
@@ -176,7 +178,7 @@ function head(r, meta, path) {
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Trnznd">
+<meta property="og:site_name" content="ZEND by Trnznd">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${meta.description}">
 <meta property="og:url" content="${url}">

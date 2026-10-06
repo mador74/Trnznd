@@ -33,13 +33,13 @@ site/
   src/
     pages/                  one file per page; meta block at the top (title, description, nav)
       legal/  brand/
-    partials/sprite.html    the Enso and wordmark as inline SVG symbols
+    partials/sprite.html    the Enso and the zend wordmark as inline SVG symbols
     assets/css/group.css    the group design system, identical to Trnzit's (keep in step)
     assets/css/trnznd.css   Trnznd-only additions
     assets/js/site.js       progressive enhancement (menus, reveals, tabs, form checks)
     assets/fonts/           Inter (Latin subset), self-hosted
     assets/img/             brand artwork rendered by site/art (see below), WebP
-    assets/logo/            Trnznd logo set, plus the Trnzit lock-up used on the group card
+    assets/logo/            ZEND logo set, the Trnznd master logo (light/dark) and the Trnzit lock-up
 ```
 
 Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the lock-up, `{{dashboard}}` and `{{trnzit}}` the external URLs, and `{{root}}` the relative path to the site root.
@@ -71,7 +71,7 @@ Also outstanding:
 - The contact form validates but has no endpoint; connect it in `site.js`.
 - The legal pages are outlines only, apart from the important notice, which matches the current site footer word for word. The current site already publishes Terms, Privacy, Risk Disclosures and a Complaints Policy: move their wording across.
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
-- The “d” in the wordmark was built from the “n” of the traced artwork. Check it against the master logo (see `brand/logo.html`).
+- The site carries the ZEND lock-up (Teal Enso, zend wordmark, “Global Value, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `brand/logo.html`).
 - External URLs are set at the top of `build.mjs`: the Dashboard (`app.trnznd.io`) and Trnzit (`www.trnznd.io/trnzit/`).
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

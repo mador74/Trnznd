@@ -1,58 +1,91 @@
 <!--
 title: Resources
-description: Documents, disclosures and reserve transparency for ZEND: risk disclosures, terms and conditions, the compliance overview, reserve attestations and audit reports.
+description: Everything you need to evaluate ZEND: corporate and governance documents, the whitepaper, terms and policies, risk disclosures, and reserve transparency.
 nav: resources
 -->
 <section class="page-hero" aria-labelledby="page-title">
   <div class="container">
     <p class="eyebrow">Resources</p>
     <h1 id="page-title">Everything you need to evaluate ZEND</h1>
-    <p class="lead">Read the documentation before you use the platform. Our reserve reports are published here as they are issued.</p>
+    <p class="lead">Corporate and governance documents, the essentials to read before you use the platform, and reserve transparency, in one place.</p>
   </div>
 </section>
 
 <section class="section" id="documents" aria-labelledby="docs-title">
-  <div class="container split" style="align-items:start">
+  <div class="container">
+    <h2 id="docs-title" class="sr-only">Documents</h2>
+    <div class="callout callout--dashed reveal" style="margin-bottom:40px"><p class="small" style="margin:0"><strong>Documents to migrate.</strong> Items marked <em>Published</em> are live on the current site. Move each file here and link it. <span class="ph">[Whitepaper, Governance Framework and Compliance Overview files; final Terms, Privacy, Risk and Complaints wording]</span></p></div>
+    <div class="grid grid-3">
+      <div class="card reveal" id="governance">
+        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:bank}}</span>
+        <h3>Corporate &amp; governance</h3>
+        <div class="policy" style="margin-top:16px">
+          <div class="policy__rule"><span class="icon-tile">{{i:users}}</span><span><b><a href="about.html">About us</a></b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:layers}}</span><span><b>Corporate structure</b></span><span class="chip">Coming soon</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:scale}}</span><span><b>Governance framework</b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:shield}}</span><span><b>Compliance overview</b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+        </div>
+      </div>
+      <div class="card reveal" style="--d:60ms" id="essentials">
+        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:book}}</span>
+        <h3>Essentials</h3>
+        <div class="policy" style="margin-top:16px">
+          <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b>Whitepaper</b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b><a href="legal/terms.html">Terms &amp; conditions</a></b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:lock}}</span><span><b><a href="legal/privacy.html">Privacy policy</a></b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:wave}}</span><span><b><a href="legal/risk.html">Risk disclosures</a></b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:mail}}</span><span><b><a href="legal/complaints.html">Complaints policy</a></b></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
+        </div>
+      </div>
+      <div class="card reveal" style="--d:120ms" id="transparency">
+        <span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:eye}}</span>
+        <h3>Transparency</h3>
+        <div class="policy" style="margin-top:16px">
+          <div class="policy__rule"><span class="icon-tile">{{i:coins}}</span><span><b>Reserve framework</b></span><span class="chip">Coming soon</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:eye}}</span><span><b>Attestations</b></span><span class="chip">Coming soon</span></div>
+          <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b>Audits</b></span><span class="chip">Coming soon</span></div>
+        </div>
+        <p class="footnote" style="margin-bottom:0">Reserve reports are published here as they are issued.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" aria-labelledby="reserve-title">
+  <div class="container split">
     <div class="reveal">
-      <p class="eyebrow">Documents &amp; disclosures</p>
-      <h2 id="docs-title">Read before you use the platform</h2>
-      <p>These documents set out how ZEND works, the risks involved, and the terms on which Trnznd services are provided.</p>
-    </div>
-    <div class="policy reveal" style="--d:120ms">
-      <div class="policy__rule"><span class="icon-tile icon-tile--teal">{{i:shield}}</span><span><b><a href="legal/notice.html">Important notice</a></b><span>What ZEND is, and what it is not</span></span><span class="chip chip--teal"><span class="dot"></span>Published</span></div>
-      <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b><a href="legal/risk.html">Risk disclosures</a></b><span>The risks of using ZEND</span></span><span class="chip">Draft</span></div>
-      <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b><a href="legal/terms.html">Terms &amp; conditions</a></b><span>The terms of Trnznd services</span></span><span class="chip">Draft</span></div>
-      <div class="policy__rule"><span class="icon-tile">{{i:doc}}</span><span><b>Compliance overview</b><span>Onboarding, KYC/AML and FATF alignment</span></span><span class="chip">To follow</span></div>
-      <div class="policy__rule"><span class="icon-tile">{{i:lock}}</span><span><b><a href="legal/privacy.html">Privacy notice</a></b><span>How we handle your personal data</span></span><span class="chip">Draft</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section section--alt" id="transparency" aria-labelledby="transparency-title">
-  <div class="container">
-    <div class="section-head reveal">
       <p class="eyebrow">Reserve transparency</p>
-      <h2 id="transparency-title">Reserves you can verify</h2>
-      <p class="lead">Every ZEND in circulation is backed by a minimum of 100% reserves, in cash and cash equivalents, held in segregated custody.</p>
+      <h2 id="reserve-title">Reserves you can verify</h2>
+      <p class="lead">Every ZEND in circulation is backed by a minimum of 100% reserves, in cash and cash equivalents.</p>
+      <ul class="checks">
+        <li><strong>Segregated custody:</strong> reserves held structurally apart from Trnznd’s operational accounts</li>
+        <li><strong>Professional Swiss management</strong> of the reserve</li>
+        <li><strong>Independent assurance:</strong> attestations and audit reports, published here</li>
+      </ul>
     </div>
-    <div class="grid grid-3">
-      <div class="card reveal"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:eye}}</span><h3>Monthly attestations</h3><p>An independent attestation of the reserve, each month.</p><p class="footnote" style="margin-bottom:0"><span class="ph">[Link the latest attestation]</span></p></div>
-      <div class="card reveal" style="--d:60ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:doc}}</span><h3>Quarterly &amp; annual audits</h3><p>Audit reports published by one of the Big Four accountancy firms.</p><p class="footnote" style="margin-bottom:0"><span class="ph">[Link the latest audit report]</span></p></div>
-      <div class="card reveal" style="--d:120ms"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:vault}}</span><h3>Segregated custody</h3><p>Reserves kept structurally apart from Trnznd’s operational accounts, under professional Swiss management.</p><p class="footnote" style="margin-bottom:0"><span class="ph">[Name the custodian(s), if disclosable]</span></p></div>
-    </div>
+    <figure class="media reveal" style="--d:120ms"><img src="assets/img/enso-detail.webp" width="1376" height="768" alt="Close-up of the Enso artifact: brushed titanium around a channel of glowing teal glass." loading="lazy"></figure>
   </div>
 </section>
 
-<section class="section" aria-labelledby="more-title">
+<section class="section" id="guides" aria-labelledby="guides-title">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Learn more</p>
-      <h2 id="more-title">Guides and answers</h2>
+      <p class="eyebrow">Video guides</p>
+      <h2 id="guides-title">How to Trnznd</h2>
+      <p class="lead">Short walkthroughs of onboarding, buying and redeeming ZEND, and settling with counterparties.</p>
     </div>
-    <div class="grid grid-3">
-      <a class="card card--link reveal" href="faq.html"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:book}}</span><h3>FAQ</h3><p>ZEND, how it works, and how the network is governed.</p><span class="card__more">Read the FAQ {{i:arrow}}</span></a>
-      <a class="card card--link reveal" style="--d:60ms" href="insights.html"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:chart}}</span><h3>Insights</h3><p>Perspectives on currency risk, settlement and cross-border trade.</p><span class="card__more">Read Insights {{i:arrow}}</span></a>
-      <a class="card card--link reveal" style="--d:120ms" href="brand/logo.html"><span class="icon-tile icon-tile--teal" style="margin-bottom:24px">{{i:download}}</span><h3>Brand assets</h3><p>The Trnznd logo set, with usage rules, for partners and press.</p><span class="card__more">Get the logos {{i:arrow}}</span></a>
+    <div class="draft reveal">
+      <p class="draft__tag">Coming soon</p>
+      <div class="grid grid-3">
+        <div><h3>Getting verified</h3><p>Completing onboarding for you and your business.</p></div>
+        <div><h3>Buying and redeeming ZEND</h3><p>Using the Trnznd Dashboard with stablecoins or fiat currencies.</p></div>
+        <div><h3>Settling with a counterparty</h3><p>Sending and receiving ZEND on the verified network.</p></div>
+      </div>
+      <p class="draft__foot small">Suggested topics. <span class="ph">[Replace with the video guides once recorded]</span></p>
+    </div>
+    <div class="btn-row reveal" style="margin-top:40px">
+      <a class="btn btn--primary btn--lg" href="contact.html?type=access">Access Trnznd {{i:arrow}}</a>
+      <a class="btn btn--secondary btn--lg" href="faq.html">Read the FAQ</a>
     </div>
   </div>
 </section>

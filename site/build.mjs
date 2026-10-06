@@ -62,8 +62,9 @@ const NAV = [
   { id: 'insights', href: 'insights.html', label: 'Insights' },
   { id: 'resources', label: 'Resources', menu: [
     { href: 'faq.html', label: 'FAQ', sub: 'ZEND, how it works, and governance' },
-    { href: 'resources.html#documents', label: 'Documents & disclosures', sub: 'Risk disclosures, terms, compliance overview' },
-    { href: 'resources.html#transparency', label: 'Reserve transparency', sub: 'Attestations and audit reports' },
+    { href: 'resources.html#documents', label: 'Documents & policies', sub: 'Whitepaper, governance, terms, risk disclosures' },
+    { href: 'resources.html#transparency', label: 'Reserve transparency', sub: 'Reserve framework, attestations, audits' },
+    { href: 'resources.html#guides', label: 'Video guides', sub: 'How to Trnznd' },
   ] },
   { id: 'about', href: 'about.html', label: 'About' },
   { id: 'contact', href: 'contact.html', label: 'Contact' },
@@ -120,12 +121,12 @@ ${links.map(([h, l]) => `          <li><a href="${/^https?:/.test(h) ? h : r + h
     <div class="footer-top">
       <div class="footer-brand">
         <a class="logo" href="${r}index.html">${LOGO('Trnznd home')}</a>
-        <p><span class="tagline">Purpose Beyond Payment</span>Currency-neutral settlement driving social impact.</p>
+        <p><span class="tagline">Purpose Beyond Payment</span>Engineered for stability. Compliant by design. Made to transcend barriers.</p>
       </div>
 ${col('ZEND', [['index.html', 'ZEND'], ['index.html#how-it-works', 'How it works'], ['business.html', 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
-${col('Resources', [['insights.html', 'Insights'], ['faq.html', 'FAQ'], ['resources.html#documents', 'Documents & disclosures'], ['resources.html#transparency', 'Reserve transparency']])}
+${col('Resources', [['insights.html', 'Insights'], ['faq.html', 'FAQ'], ['resources.html#documents', 'Documents & policies'], ['resources.html#transparency', 'Reserve transparency']])}
 ${col('Company', [['about.html', 'About Trnznd'], ['contact.html', 'Contact'], ['contact.html?type=access', 'Request access'], [TRNZIT_URL, 'Trnzit']])}
-${col('Legal', [['legal/notice.html', 'Important notice'], ['legal/risk.html', 'Risk disclosures'], ['legal/terms.html', 'Terms & conditions'], ['legal/privacy.html', 'Privacy'], ['legal/cookies.html', 'Cookies']])}
+${col('Legal', [['legal/notice.html', 'Important notice'], ['legal/risk.html', 'Risk disclosures'], ['legal/terms.html', 'Terms & conditions'], ['legal/privacy.html', 'Privacy'], ['legal/complaints.html', 'Complaints'], ['legal/cookies.html', 'Cookies']])}
     </div>
     <div class="disclaimer">
       <p><strong>Important notice:</strong> ZEND is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${r}legal/notice.html">Read the full notice</a>.</p>

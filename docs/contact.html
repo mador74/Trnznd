@@ -67,7 +67,7 @@
   <div class="container">
     <p class="eyebrow">Contact</p>
     <h1 id="page-title">Request access, or talk to the team</h1>
-    <p class="lead">Tell us a little about you and your cross-border flows. Access is subject to onboarding, identity verification and eligibility requirements.</p>
+    <p class="lead">ZEND is for businesses and institutions only. Tell us about your company and its cross-border flows. Access is subject to onboarding, verification and eligibility requirements.</p>
   </div>
 </section>
 
@@ -89,19 +89,11 @@
           <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required><p class="error">Enter your full name.</p></div>
           <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="error">Enter a valid email address.</p></div>
         </div>
-        <div class="field">
-          <fieldset>
-            <legend>You are</legend>
-            <div class="choice">
-              <label><input type="radio" name="kind" value="business" checked> A business or institution</label>
-              <label><input type="radio" name="kind" value="individual"> An individual</label>
-            </div>
-          </fieldset>
-        </div>
         <div class="form-row">
-          <div class="field"><label for="f-org">Organisation <span class="muted">(optional for individuals)</span></label><input id="f-org" name="organisation" autocomplete="organization"></div>
-          <div class="field"><label for="f-country">Country</label><input id="f-country" name="country" autocomplete="country-name" required><p class="error">Enter your country.</p></div>
+          <div class="field"><label for="f-org">Company name</label><input id="f-org" name="organisation" autocomplete="organization" required><p class="error">Enter your company name.</p></div>
+          <div class="field"><label for="f-role">Job title</label><input id="f-role" name="role" autocomplete="organization-title" required><p class="error">Enter your job title.</p></div>
         </div>
+        <div class="field"><label for="f-country">Country of incorporation</label><input id="f-country" name="country" autocomplete="country-name" required><p class="error">Enter the country your company is incorporated in.</p></div>
         <div class="field"><label for="f-msg">Message <span class="muted">(optional)</span></label><p class="hint" id="h-msg">For example: the currencies you settle in, and typical monthly volume.</p><textarea id="f-msg" name="message" aria-describedby="h-msg"></textarea></div>
         <div class="field">
           <label class="check-row" for="f-privacy"><input id="f-privacy" type="checkbox" name="privacy" required> <span>I have read the <a href="legal/privacy.html">Privacy notice</a>.</span></label>
@@ -116,8 +108,8 @@
         <h3>What happens next</h3>
         <ol style="margin:0;padding-left:1.2em">
           <li>We review your request and reply by email.</li>
-          <li>You complete a streamlined KYC process for you and your business.</li>
-          <li>Once verified, you can enter the Dashboard and start settling.</li>
+          <li>Your business and its authorised representatives complete a streamlined verification process.</li>
+          <li>Once verified, you can enter the Dashboard and start minting.</li>
         </ol>
       </div>
       <div class="card" id="team">

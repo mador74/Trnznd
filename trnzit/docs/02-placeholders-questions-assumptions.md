@@ -28,6 +28,7 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 
 - **Free plan and trials (latest):** a Free plan with no end date replaces the old limited trial (one user, one exchange or wallet connection, balances and history; assumed same feature set as Basic otherwise). Paid plans: 30-day free trial for card, Google Pay, Apple Pay and PayPal; payment details authorised at sign-up, no payment taken, first payment on day 31 unless cancelled. The $15 pre-authorisation hold has been removed. USDT/USDC: paid in advance, full refund if cancelled within 30 days. Annual prices are now shown first, with monthly as an option.
 
+- **Teams replaces Basic** (same prices for now, pending confirmation): 5 users, payment-threshold approvals, audit trails, standard roles, up to 5 exchange and custody connections, white-glove onboarding, 1-working-day email.
 - **Standing rule:** every plan card shows greyed-out "No …" lines for anything it doesn't include.
 
 Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.

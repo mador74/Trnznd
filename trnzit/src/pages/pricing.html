@@ -1,6 +1,6 @@
 <!---
 title: Pricing · Trnzit
-description: A Free plan with no end date, plus Basic, Premium and Institution plans in US dollars with a 30-day free trial. Annual billing gives you two months free. Pay by card, Google Pay, Apple Pay, PayPal, USDT or USDC.
+description: A Free plan with no end date, plus Teams, Premium and Institution plans in US dollars with a 30-day free trial. Annual billing gives you two months free. Pay by card, Google Pay, Apple Pay, PayPal, USDT or USDC.
 nav: pricing
 --->
 <section class="page-hero" aria-labelledby="page-title" style="border-bottom:0;padding-bottom:0">
@@ -47,21 +47,24 @@ nav: pricing
           <li class="no">No exchange or custodian connections</li>
         </ul>
       </article>
-      <article class="plan reveal" style="--d:60ms" id="basic" data-plan-card aria-labelledby="p-basic">
-        <h3 class="plan__name" id="p-basic">Basic</h3>
-        <p class="plan__for">For individuals or small businesses managing a limited number of crypto accounts and wallets.</p>
-        <div class="card-toggle" role="group" aria-label="Billing period for Basic"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
+      <article class="plan reveal" style="--d:60ms" id="teams" data-plan-card aria-labelledby="p-teams">
+        <h3 class="plan__name" id="p-teams">Teams</h3>
+        <p class="plan__for">For a small team.</p>
+        <div class="card-toggle" role="group" aria-label="Billing period for Teams"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
         <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="29" data-annual="290">$290</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="14.99" data-annual="149">$149</span></span><span class="plan__per" data-per>/year</span></div>
         <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $29/month" data-annual-note="New users: first year, then $290/year">New users: first year, then $290/year</p>
-        <a class="btn btn--secondary btn--block" href="contact.html?plan=basic&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
+        <a class="btn btn--secondary btn--block" href="contact.html?plan=teams&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
+        <p class="plan__plus">Everything in Free, plus:</p>
         <ul class="checks">
-          <li>1 individual user</li>
-          <li>Up to 5 connections</li>
-          <li>Unified balances</li>
-          <li>Transaction history</li>
+          <li>4 additional users (5 total)</li>
+          <li>Your approvals above customisable payment thresholds</li>
+          <li>Audit trails for who did what, and when</li>
+          <li>Standard roles and authority permissions</li>
+          <li>Up to 5 exchange and digital custody connections</li>
+          <li>White-glove onboarding</li>
+          <li>Email answered within 1 working day</li>
           <li class="no">No reconciliation</li>
           <li class="no">No invoicing</li>
-          <li class="no">No approval rules</li>
         </ul>
       </article>
       <article class="plan plan--featured reveal" style="--d:120ms" id="premium" data-plan-card aria-labelledby="p-premium">
@@ -108,12 +111,12 @@ nav: pricing
     <div class="compare-wrap reveal" tabindex="0" role="region" aria-label="Plan comparison table, scrolls horizontally on small screens">
       <table class="compare">
         <thead>
-          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Free<span>No end date</span></th><th scope="col">Basic<span>From $149/yr</span></th><th scope="col" class="col-featured">Premium<span>From $499/yr</span></th><th scope="col">Institution<span>From $1,249/yr</span></th></tr>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Free<span>No end date</span></th><th scope="col">Teams<span>From $149/yr</span></th><th scope="col" class="col-featured">Premium<span>From $499/yr</span></th><th scope="col">Institution<span>From $1,249/yr</span></th></tr>
         </thead>
         <tbody>
           <tr class="group"><th scope="colgroup" colspan="5">Users &amp; connections</th></tr>
-          <tr><th scope="row">Users</th><td>1 seat</td><td>1 individual</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
-          <tr><th scope="row">Connections</th><td>Unlimited own wallets</td><td>Up to 5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Users</th><td>1 seat</td><td>5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Exchange &amp; custody connections</th><td>—</td><td>Up to 5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
           <tr><th scope="row">Your own software &amp; hardware wallets</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Crypto exchanges &amp; custodians</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Chains: EVM, Solana, Tron</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
@@ -122,8 +125,9 @@ nav: pricing
           <tr><th scope="row">Transaction history</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Reconciliation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured">Full</td><td>Full</td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Governance</th></tr>
-          <tr><th scope="row">Authorised members &amp; authority levels</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
-          <tr><th scope="row">M-of-N approval policies</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Authorised members &amp; authority levels</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Audit trail</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr><th scope="row">M-of-N approval policies</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Payment thresholds</td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Address whitelisting</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Multi-signature wallets (Safe, Squads)</th><td><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Payments &amp; trading</th></tr>

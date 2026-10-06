@@ -635,3 +635,6 @@ a:hover { text-decoration-color: var(--teal); }
 .plan .card-toggle + .plan__price { margin-top: var(--space-4); }
 @media (min-width: 1181px) { .plans--4 .plan__for { min-height: 6.4em; } }
 .billing-row { display: flex; justify-content: center; margin-bottom: var(--space-7); }
+
+.plan__plus { margin: var(--space-5) 0 0; font-family: var(--font-secondary); font-size: 0.9375rem; font-weight: 600; color: var(--midnight); }
+.plan__plus + .checks { margin-top: var(--space-3); }

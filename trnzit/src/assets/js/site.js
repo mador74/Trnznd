@@ -90,9 +90,10 @@
     var buttons = $$('button', toggle);
     var apply = function (period) {
       buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-period') === period)); });
-      $$('[data-price]').forEach(function (el) {
-        var v = el.getAttribute('data-' + period);
-        el.textContent = '$' + Number(v).toLocaleString('en-US');
+      $$('[data-price], [data-was]').forEach(function (el) {
+        var v = Number(el.getAttribute('data-' + period));
+        var whole = v === Math.round(v);
+        el.textContent = '$' + v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 });
       });
       $$('[data-per]').forEach(function (el) { el.textContent = period === 'annual' ? '/year' : '/month'; });
       $$('[data-plan-note]').forEach(function (el) { el.textContent = el.getAttribute('data-' + period + '-note'); });

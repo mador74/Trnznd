@@ -604,3 +604,14 @@ a:hover { text-decoration-color: var(--teal); }
 .pay-logo { display: block; width: auto; max-width: 100px; }
 .pay-coin { width: 22px; height: 22px; flex-shrink: 0; }
 .pay-badge span { font-family: var(--font-secondary); font-weight: 700; font-size: .8125rem; color: var(--midnight); }
+
+/* Struck-through normal price (diagonal slash) and new-user offer */
+.plan__price { flex-wrap: wrap; row-gap: 4px; }
+.plan__was { position: relative; display: inline-block; align-self: center; margin-right: 6px; color: var(--steel); font-size: 1.375rem; font-weight: 600; text-decoration: none; }
+.plan__was::after { content: ""; position: absolute; left: -6%; right: -6%; top: 50%; border-top: 2px solid var(--midnight); transform: rotate(-20deg); }
+.plan__amt { font-size: clamp(2rem, 1.6rem + 1vw, 2.5rem); }
+.compare thead s { text-decoration-color: var(--midnight); margin-right: 2px; }
+.offer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 var(--space-7); font-family: var(--font-secondary); font-weight: 600; color: var(--midnight); }
+/* Struck price sits on its own line above the offer price, so long annual prices never wrap */
+.plan .plan__price { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 6px; row-gap: 2px; }
+.plan .plan__was { grid-column: 1 / -1; justify-self: start; margin: 0; font-size: 1.125rem; }

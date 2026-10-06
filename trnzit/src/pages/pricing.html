@@ -23,12 +23,13 @@ nav: pricing
       <div class="pay-row"><span class="pay-label">Pay with</span>{{> payment-logos}}</div>
     </div>
 
+    <p class="offer reveal"><span class="chip chip--teal">New-user offer</span> About half price for your first 12 months on every plan.</p>
     <div class="plans">
       <article class="plan reveal" id="basic" aria-labelledby="p-basic">
         <h3 class="plan__name" id="p-basic">Basic</h3>
         <p class="plan__for">For one individual managing crypto accounts and wallets.</p>
-        <div class="plan__price"><span class="plan__amt" data-price data-monthly="15" data-annual="150">$15</span><span class="plan__per" data-per>/month</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="or $150/year, 2 months free" data-annual-note="Billed annually · save $30">or $150/year, 2 months free</p>
+        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="29" data-annual="290">$29</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="14.99" data-annual="149.90">$14.99</span></span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $29/month" data-annual-note="New users: first year, then $290/year">New users: first 12 months, then $29/month</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=basic">Start free trial</a>
         <ul class="checks">
           <li>1 individual user</li>
@@ -46,8 +47,8 @@ nav: pricing
         <span class="plan__badge">Most popular</span>
         <h3 class="plan__name" id="p-premium">Premium</h3>
         <p class="plan__for">For teams that need approvals, invoicing and full reconciliation.</p>
-        <div class="plan__price"><span class="plan__amt" data-price data-monthly="50" data-annual="500">$50</span><span class="plan__per" data-per>/month</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="or $500/year, 2 months free" data-annual-note="Billed annually · save $100">or $500/year, 2 months free</p>
+        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$99</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49.99" data-annual="499.90">$49.99</span></span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first 12 months, then $99/month</p>
         <a class="btn btn--primary btn--block" href="contact.html?plan=premium">Start free trial</a>
         <ul class="checks">
           <li>Up to 5 users</li>
@@ -62,8 +63,8 @@ nav: pricing
       <article class="plan reveal" style="--d:160ms" id="institution" aria-labelledby="p-inst">
         <h3 class="plan__name" id="p-inst">Institution</h3>
         <p class="plan__for">For organisations that need unlimited users and connections.</p>
-        <div class="plan__price"><span class="plan__amt" data-price data-monthly="100" data-annual="1000">$100</span><span class="plan__per" data-per>/month</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="or $1,000/year, 2 months free" data-annual-note="Billed annually · save $200">or $1,000/year, 2 months free</p>
+        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="249" data-annual="2490">$249</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="124.99" data-annual="1249.90">$124.99</span></span><span class="plan__per" data-per>/month</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $249/month" data-annual-note="New users: first year, then $2,490/year">New users: first 12 months, then $249/month</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=institution">Start free trial</a>
         <ul class="checks">
           <li>Everything in Premium, plus:</li>
@@ -84,7 +85,7 @@ nav: pricing
     <div class="compare-wrap reveal" tabindex="0" role="region" aria-label="Plan comparison table, scrolls horizontally on small screens">
       <table class="compare">
         <thead>
-          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Basic<span>$15/mo · $150/yr</span></th><th scope="col" class="col-featured">Premium<span>$50/mo · $500/yr</span></th><th scope="col">Institution<span>$100/mo · $1,000/yr</span></th></tr>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Basic<span><s>$29</s> $14.99/mo</span></th><th scope="col" class="col-featured">Premium<span><s>$99</s> $49.99/mo</span></th><th scope="col">Institution<span><s>$249</s> $124.99/mo</span></th></tr>
         </thead>
         <tbody>
           <tr class="group"><th scope="colgroup" colspan="4">Users &amp; connections</th></tr>

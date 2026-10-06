@@ -127,3 +127,8 @@
 /* CTA headline set as separate lines */
 .cta-band h2.cta-band__lines{max-width:none}
 .cta-band__lines .line{display:block}
+
+/* Short "useful for" list inside a card: plain teal bullets, distinct from the feature checks */
+.uses{list-style:none;margin:var(--space-3) 0 var(--space-2);padding:0;display:grid;gap:6px}
+.uses li{position:relative;padding-left:18px;color:var(--text-body)}
+.uses li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--teal)}

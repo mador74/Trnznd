@@ -26,6 +26,8 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 
 - **Prices:** normal prices $29 / $99 / $249 a month shown struck through; new users pay $14.99 / $49.99 / $124.99 a month for their first 12 months. **Assumed** annual prices keep "2 months free" (10 × monthly): normal $290 / $990 / $2,490, new-user first year $149 / $499 / $1,249 (cents dropped). New user = never had a Trnzit account; returning if a new email connects a provider that is/was connected to another account, or if a plan was previously cancelled. Upgrades during the discount period get the discounted higher plan on the standard upgrade terms. The discount still ends 12 months after the user first joined.
 
+- **Free plan and trials (latest):** a Free plan with no end date replaces the old limited trial (one user, one exchange or wallet connection, balances and history; assumed same feature set as Basic otherwise). Paid plans: 30-day free trial for card, Google Pay, Apple Pay and PayPal; payment details authorised at sign-up, no payment taken, first payment on day 31 unless cancelled. The $15 pre-authorisation hold has been removed. USDT/USDC: paid in advance, full refund if cancelled within 30 days. Annual prices are now shown first, with monthly as an option.
+
 Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
 
 ## A. Open questions (these block launch or change the copy)

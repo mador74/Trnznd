@@ -29,6 +29,7 @@ nav: pricing
       <article class="plan reveal" id="free" aria-labelledby="p-free">
         <h3 class="plan__name" id="p-free">Free</h3>
         <p class="plan__for">For trying Trnzit with a single exchange or wallet.</p>
+        <div class="card-toggle card-toggle--spacer" aria-hidden="true"></div>
         <div class="plan__price"><span class="plan__was plan__was--empty" aria-hidden="true">&nbsp;</span><span class="plan__amt">$0</span><span class="plan__per">no end date</span></div>
         <p class="plan__note">Free for as long as you use it</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=free">Start free</a>
@@ -42,12 +43,13 @@ nav: pricing
           <li class="no">No approval rules</li>
         </ul>
       </article>
-      <article class="plan reveal" style="--d:60ms" id="basic" aria-labelledby="p-basic">
+      <article class="plan reveal" style="--d:60ms" id="basic" data-plan-card aria-labelledby="p-basic">
         <h3 class="plan__name" id="p-basic">Basic</h3>
-        <p class="plan__for">For one individual managing crypto accounts and wallets.</p>
+        <p class="plan__for">For individuals or small businesses managing a limited number of crypto accounts and wallets.</p>
+        <div class="card-toggle" role="group" aria-label="Billing period for Basic"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
         <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="29" data-annual="290">$290</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="14.99" data-annual="149">$149</span></span><span class="plan__per" data-per>/year</span></div>
         <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $29/month" data-annual-note="New users: first year, then $290/year">New users: first year, then $290/year</p>
-        <a class="btn btn--secondary btn--block" href="contact.html?plan=basic">Start 30-day free trial</a>
+        <a class="btn btn--secondary btn--block" href="contact.html?plan=basic&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <ul class="checks">
           <li>1 individual user</li>
           <li>Crypto connections only</li>
@@ -59,13 +61,14 @@ nav: pricing
           <li class="no">No approval rules</li>
         </ul>
       </article>
-      <article class="plan plan--featured reveal" style="--d:120ms" id="premium" aria-labelledby="p-premium">
+      <article class="plan plan--featured reveal" style="--d:120ms" id="premium" data-plan-card aria-labelledby="p-premium">
         <span class="plan__badge">Most popular</span>
         <h3 class="plan__name" id="p-premium">Premium</h3>
         <p class="plan__for">For teams that need approvals, invoicing and full reconciliation.</p>
+        <div class="card-toggle" role="group" aria-label="Billing period for Premium"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
         <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49.99" data-annual="499">$499</span></span><span class="plan__per" data-per>/year</span></div>
         <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first year, then $990/year</p>
-        <a class="btn btn--primary btn--block" href="contact.html?plan=premium">Start 30-day free trial</a>
+        <a class="btn btn--primary btn--block" href="contact.html?plan=premium&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <ul class="checks">
           <li>Up to 5 users</li>
           <li>Up to 5 connections across crypto, banks (read-only) and credit cards (read-only)</li>
@@ -75,12 +78,13 @@ nav: pricing
           <li>Address whitelisting</li>
         </ul>
       </article>
-      <article class="plan reveal" style="--d:180ms" id="institution" aria-labelledby="p-institution">
+      <article class="plan reveal" style="--d:180ms" id="institution" data-plan-card aria-labelledby="p-institution">
         <h3 class="plan__name" id="p-institution">Institution</h3>
         <p class="plan__for">For organisations that need unlimited users and connections.</p>
+        <div class="card-toggle" role="group" aria-label="Billing period for Institution"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
         <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="249" data-annual="2490">$2,490</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="124.99" data-annual="1249">$1,249</span></span><span class="plan__per" data-per>/year</span></div>
         <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $249/month" data-annual-note="New users: first year, then $2,490/year">New users: first year, then $2,490/year</p>
-        <a class="btn btn--secondary btn--block" href="contact.html?plan=institution">Start 30-day free trial</a>
+        <a class="btn btn--secondary btn--block" href="contact.html?plan=institution&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <ul class="checks">
           <li>Everything in Premium, plus:</li>
           <li>Unlimited users</li>

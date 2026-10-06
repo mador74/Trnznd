@@ -624,3 +624,13 @@ a:hover { text-decoration-color: var(--teal); }
 .plans--4 .plan__for { min-height: 4.8em; }
 .plans--4 .plan__note { min-height: 3em; }
 @media (max-width: 640px) { .plans--4 .plan__for, .plans--4 .plan__note { min-height: 0; } }
+
+/* Per-card annual/monthly switch (shown only when JavaScript runs) */
+.card-toggle { display: none; }
+.js .card-toggle { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; margin-top: var(--space-4); background: var(--cloud); border: 1px solid var(--border); border-radius: 12px; font-family: var(--font-secondary); }
+.js .card-toggle--spacer { visibility: hidden; height: 38px; width: 10px; }
+.card-toggle button { min-height: 30px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: var(--graphite); font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease); }
+.card-toggle button:hover { color: var(--midnight); }
+.card-toggle button[aria-pressed="true"] { background: var(--white); color: var(--midnight); box-shadow: var(--shadow-sm), 0 0 0 1px var(--border); }
+.plan .card-toggle + .plan__price { margin-top: var(--space-4); }
+@media (min-width: 1181px) { .plans--4 .plan__for { min-height: 6.4em; } }

@@ -84,23 +84,49 @@
     revealables.forEach(function (el) { el.classList.add('is-visible'); if (el.hasAttribute('data-count')) countUp(el); });
   }
 
-  /* Pricing: monthly / annual */
+  /* Pricing: annual / monthly. The main switch sets every card; each card's own switch sets just that card. */
+  var fmtPrice = function (v) {
+    v = Number(v);
+    var whole = v === Math.round(v);
+    return '$' + v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 });
+  };
+  var live = $('[data-billing-live]');
+  var setCard = function (card, period) {
+    $$('[data-price], [data-was]', card).forEach(function (el) { el.textContent = fmtPrice(el.getAttribute('data-' + period)); });
+    $$('[data-per]', card).forEach(function (el) { el.textContent = period === 'annual' ? '/year' : '/month'; });
+    $$('[data-plan-note]', card).forEach(function (el) { el.textContent = el.getAttribute('data-' + period + '-note'); });
+    $$('[data-card-period]', card).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-card-period') === period)); });
+    $$('[data-plan-link]', card).forEach(function (a) { a.setAttribute('href', a.getAttribute('href').replace(/billing=(annual|monthly)/, 'billing=' + period)); });
+  };
+  var cards = $$('[data-plan-card]');
+  cards.forEach(function (card) {
+    $$('[data-card-period]', card).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var period = b.getAttribute('data-card-period');
+        setCard(card, period);
+        var name = $('.plan__name', card);
+        if (live && name) live.textContent = name.textContent + ': showing ' + period + ' prices.';
+      });
+    });
+  });
   var toggle = $('[data-billing]');
   if (toggle) {
     var buttons = $$('button', toggle);
-    var apply = function (period) {
-      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-period') === period)); });
-      $$('[data-price], [data-was]').forEach(function (el) {
-        var v = Number(el.getAttribute('data-' + period));
-        var whole = v === Math.round(v);
-        el.textContent = '$' + v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 });
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var period = b.getAttribute('data-period');
+        buttons.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        cards.forEach(function (card) { setCard(card, period); });
+        if (live) live.textContent = period === 'annual' ? 'Showing annual prices. Two months free.' : 'Showing monthly prices.';
       });
-      $$('[data-per]').forEach(function (el) { el.textContent = period === 'annual' ? '/year' : '/month'; });
-      $$('[data-plan-note]').forEach(function (el) { el.textContent = el.getAttribute('data-' + period + '-note'); });
-      var live = $('[data-billing-live]');
-      if (live) live.textContent = period === 'annual' ? 'Showing annual prices. Two months free.' : 'Showing monthly prices.';
-    };
-    buttons.forEach(function (b) { b.addEventListener('click', function () { apply(b.getAttribute('data-period')); }); });
+    });
+  }
+
+  /* Pre-select billing period from ?billing= on the sign-up form */
+  var billingSelect = $('[data-billing-select]');
+  if (billingSelect && window.URLSearchParams) {
+    var billing = new URLSearchParams(window.location.search).get('billing');
+    if (billing === 'annual' || billing === 'monthly') billingSelect.value = billing;
   }
 
   /* Platform sub-navigation: highlight current capability */

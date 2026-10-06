@@ -67,7 +67,7 @@ The images are original brand artwork drawn in code, so there are no stock or th
 NODE_PATH=$(npm root -g) node site/art/render.mjs   # needs Playwright with Chromium
 ```
 
-Change a scene's seed or parameters in `render.mjs` to get a different composition. The group hero uses `enso-hero.webp` (and `-sm`), a vertical mirror of `enso-light.webp` made with Pillow; re-make it if the Enso scene changes.
+Change a scene's seed or parameters in `render.mjs` to get a different composition. The group hero uses `enso-hero.webp` (and `-sm`), `enso-light.webp` flipped vertically and turned 90° anticlockwise with Pillow (the side margins are padded to keep it 16:10); re-make it if the Enso scene changes.
 
 ## Pages
 

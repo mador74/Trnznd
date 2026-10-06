@@ -89,3 +89,10 @@
 .parent-logo{width:180px;height:auto;margin-bottom:var(--space-5)}
 .group-card .logo-mark{min-height:50px}
 .group-card .logo-mark svg,.group-card .logo-mark img{width:132px;height:auto}
+
+/* Home hero: the headline spans the full width in two lines, set by the copy */
+.hero--long .hero__title{font-size:clamp(2.25rem,5.4vw,4.25rem);line-height:1.06;letter-spacing:-0.03em;max-width:none;margin-bottom:var(--space-6)}
+.hero--long .hero__title .line{display:block}
+.hero--long .container + .hero__grid{align-items:start}
+.hero--long .hero__visual>.mock.hero__main{margin-top:96px}
+@media (max-width:960px){.hero--long .hero__visual>.mock.hero__main{margin-top:104px}}

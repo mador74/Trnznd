@@ -190,7 +190,7 @@ function groupFooter(r) {
         <a class="logo logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd Group home"></a>
         <p><span class="tagline">Purpose Beyond Payment</span>Trnznd S.A., Panama · Trnznd Tech, DIFC Innovation Hub, UAE</p>
       </div>
-${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'Group structure'], [`${r}contact.html`, 'Contact']])}
+${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
 ${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform']])}
 ${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}

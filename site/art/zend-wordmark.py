@@ -38,9 +38,12 @@ def e_at(cx):
 z_dx = 800 - 1357
 z_right = 1536 + z_dx
 e_cx = z_right + 22 + R
-n_dx = (e_cx + R + 24) - 1563
-parts = [P(Z, (1,0,0,1,z_dx,0)), e_at(e_cx), P(tr['n2'], (1,0,0,1,n_dx,0)), P(tr['d'], (1,0,0,1,n_dx,0))]
+# "zend" uses the plain n (no n-d overlap; the overlap belongs to the trnznd logo only)
+N = subs[2]                          # n, x 1120..1317 in the master
+n_dx = (e_cx + R + 24) - 1120
+d_dx = (1317 + n_dx + 30) - 1742     # d's bowl starts 30 units after the n
+parts = [P(Z, (1,0,0,1,z_dx,0)), e_at(e_cx), P(N, (1,0,0,1,n_dx,0)), P(tr['d'], (1,0,0,1,d_dx,0))]
 out = ''.join(svgd(p) for p in parts)
-right = 1973 + n_dx
+right = 1973 + d_dx
 open('zend-word.d', 'w').write(out)
 print('word right edge', right, 'e centre', e_cx)

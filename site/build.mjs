@@ -63,7 +63,7 @@ const icon = (name, cls = '') => {
 
 // The ZEND lock-up: the Trnznd Enso in solid Teal, then the zend wordmark.
 const LOGO = (label = 'ZEND') =>
-  `<svg viewBox="29 27 1640 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
+  `<svg viewBox="29 27 1688 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
 
 const NAV = [
   { id: 'zend', href: 'index.html', label: 'ZEND' },

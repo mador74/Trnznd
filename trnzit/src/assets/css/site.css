@@ -594,3 +594,13 @@ a:hover { text-decoration-color: var(--teal); }
 .nav__group { display: none; }
 .nav__group svg { width: 16px; height: 16px; }
 @media (max-width: 1280px) { .nav__group { display: block; } }
+
+/* Payment method logos (horizontal row of matching badges) */
+.pay-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.pay-row--center { justify-content: center; }
+.pay-label { font-family: var(--font-secondary); font-size: var(--fs-label); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--steel); }
+.pay-logos { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.pay-badge { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 44px; min-width: 72px; padding: 0 12px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
+.pay-logo { display: block; width: auto; max-width: 100px; }
+.pay-coin { width: 22px; height: 22px; flex-shrink: 0; }
+.pay-badge span { font-family: var(--font-secondary); font-weight: 700; font-size: .8125rem; color: var(--midnight); }

@@ -20,7 +20,7 @@ nav: pricing
         <button type="button" data-period="annual" aria-pressed="false">Annual <span class="save">2 months free</span></button>
       </div>
       <p class="sr-only" aria-live="polite" data-billing-live></p>
-      <div class="pay-methods" aria-label="Accepted payment methods"><span class="chip">{{icon:card}} Card (USD)</span><span class="chip">USDT</span><span class="chip">USDC</span></div>
+      <div class="pay-row"><span class="pay-label">Pay with</span>{{> payment-logos}}</div>
     </div>
 
     <div class="plans">
@@ -106,7 +106,7 @@ nav: pricing
           <tr><th scope="row">Invoicing &amp; direct settlement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Trade &amp; convert in your exchange accounts</th><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="4">Billing</th></tr>
-          <tr><th scope="row">Pay by card (USD)</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Visa, Mastercard, Google Pay, Apple Pay or PayPal (USD)</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Pay in USDT or USDC</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Free trial</th><td>14 days*</td><td class="col-featured">14 days*</td><td>14 days*</td></tr>
         </tbody>

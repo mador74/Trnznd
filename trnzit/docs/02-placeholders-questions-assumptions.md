@@ -22,7 +22,7 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Set-up:** takes minutes; providers and team members can be added as soon as payment is confirmed.
 
 - **Hosting:** slugs confirmed as www.trnznd.io/trnzit and www.trnznd.io/zend.
-- **Payment methods:** Visa, Mastercard, Google Pay, Apple Pay, PayPal (USD), USDT, USDC, shown as a horizontal logo row on Pricing and Home. Logo artwork comes from open-source icon sets (simple-icons, payment-icons, cryptocurrency-icons). **Before launch, replace with official artwork from each brand's media kit and follow their acceptance-mark rules** (Apple and Google in particular require their official marks). Open question: do Google Pay, Apple Pay and PayPal payments get the same 14-day free trial and $15 pre-authorisation as card payments?
+- **Payment methods:** Visa, Mastercard, Google Pay, Apple Pay, PayPal (USD), USDT, USDC, shown as a horizontal logo row on Pricing and Home. Logo artwork comes from open-source icon sets (simple-icons, payment-icons, cryptocurrency-icons). **Before launch, replace with official artwork from each brand's media kit and follow their acceptance-mark rules** (Apple and Google in particular require their official marks). Free trial extended to **30 days** for card, Google Pay, Apple Pay and PayPal payments. Assumed: the USDT/USDC limited trial (one connection) is also 30 days, and the $15 pre-authorisation applies to Google Pay, Apple Pay and PayPal as well as cards.
 
 Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.
 

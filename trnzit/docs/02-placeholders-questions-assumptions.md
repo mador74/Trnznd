@@ -30,6 +30,7 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 
 - **Teams replaces Basic** (same prices for now, pending confirmation): 5 users, payment-threshold approvals, audit trails, standard roles, up to 5 exchange and custody connections, white-glove onboarding, 1-working-day email.
 - **Premium (new):** everything in Teams plus 10 seats, your own approval rules, custom roles, up to 10 exchange and custody connections, priority support and named onboarding. Description "For growing teams." is a placeholder. Reconciliation and invoicing now shown as not included on Free, Teams and Premium (to confirm).
+- **Enterprise replaces Institution:** everything in Premium plus seats and connections as required, platform customisation, a service agreement and named manager; negotiated price ("Talk to us", no trial, no new-user discount). Description is a placeholder. User wrote "Everything in Business": Premium may be renamed Business (to confirm).
 - **Standing rule:** every plan card shows greyed-out "No …" lines for anything it doesn't include.
 
 Items 1, 2, 6, 9 and 15 below are answered. Still open: technical sign-off of the draft security text, and the names of the exchanges and on/off-ramp providers. Still open: how API details are encrypted and protected, and which multi-sig wallets are supported.

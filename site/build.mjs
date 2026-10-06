@@ -222,6 +222,12 @@ if (INLINE) {
   inlineJs = readFileSync(join(SRC, 'assets', 'js', 'site.js'), 'utf8');
 }
 
+// Landing intro (pages with `intro: yes`): the Trnznd Enso on Midnight, drawn in, then opened as a portal
+// onto the page. Shown once per browser session, never with reduced motion, and skipped on any input.
+const INTRO_HEAD = (r) => `<link rel="preload" as="image" href="${r}assets/img/intro-enso.webp" imagesrcset="${r}assets/img/intro-enso-sm.webp 459w, ${r}assets/img/intro-enso.webp 919w" imagesizes="min(56vmin, 420px)">
+<script>(function(){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;try{if(sessionStorage.getItem('trnznd-intro'))return;sessionStorage.setItem('trnznd-intro','1')}catch(e){}document.documentElement.classList.add('has-intro')})()</script>`;
+const INTRO = (r) => `<div class="intro" aria-hidden="true" data-intro><div class="intro__iris"></div><div class="intro__ground"></div><div class="intro__glow"></div><img class="intro__enso" src="${r}assets/img/intro-enso.webp" srcset="${r}assets/img/intro-enso-sm.webp 459w, ${r}assets/img/intro-enso.webp 919w" sizes="min(56vmin, 420px)" width="919" height="903" alt="" decoding="sync"></div>`;
+
 function head(r, meta, outPath, site) {
   const url = SITE_URL + '/' + outPath.replace(/(^|\/)index\.html$/, '$1');
   const title = meta.title ? `${meta.title}${site.titleSuffix}` : site.defaultTitle;
@@ -249,9 +255,9 @@ function head(r, meta, outPath, site) {
 ${INLINE ? `<style>${inlineCss}</style>` : `<link rel="preload" href="${r}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${r}assets/css/group.css">
 <link rel="stylesheet" href="${r}assets/css/trnznd.css">`}
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js')</script>${meta.intro === 'yes' ? '\n' + INTRO_HEAD(r) : ''}
 </head>
-<body>
+<body>${meta.intro === 'yes' ? '\n' + INTRO(r) : ''}
 <a class="skip-link" href="#main">Skip to content</a>`;
 }
 

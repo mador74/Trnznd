@@ -68,6 +68,22 @@
     requestAnimationFrame(step);
   }
 
+  /* Landing intro: any input skips straight to the exit; the overlay removes itself when done */
+  var intro = $('[data-intro]');
+  if (intro && document.documentElement.classList.contains('has-intro')) {
+    var evs = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+    var skip = function () {
+      if (intro.isConnected) document.documentElement.classList.add('intro-now');
+      evs.forEach(function (ev) { window.removeEventListener(ev, skip); });
+    };
+    evs.forEach(function (ev) { window.addEventListener(ev, skip, { passive: true }); });
+    intro.addEventListener('animationend', function (e) {
+      if (e.target !== intro) return;
+      intro.parentNode.removeChild(intro);
+      evs.forEach(function (ev) { window.removeEventListener(ev, skip); });
+    });
+  }
+
   /* Scroll reveals */
   var revealables = $$('.reveal, .glide, [data-count]');
   /* An in-page link to a card that hasn't glided in yet: place it at once, so the jump lands where it should */

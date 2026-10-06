@@ -182,3 +182,57 @@
 .js .glide{opacity:0;transform:translateY(96px) scale(.94);transform-origin:50% 0;transition:opacity .8s var(--ease),transform 1.1s cubic-bezier(.16,1,.3,1)}
 .js .glide.is-visible{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.js .glide{opacity:1;transform:none;transition:none}}
+
+/* Landing intro (group home, first visit in a session).
+   0.1s  the Enso is drawn in along its brush stroke, from the teal head anticlockwise to the violet tail
+   1.55s the Midnight ground drops away, leaving an iris set inside the ring; the iris and the Enso
+         expand together at the same rate, so the page opens up through the middle of the Enso
+   2.6s  the intro is gone; the hero settles and its text rises into place
+   Skipped on any click, key, wheel or touch (html.intro-now), and never shown with reduced motion. */
+@property --intro-sweep{syntax:'<angle>';inherits:false;initial-value:0deg}
+.intro{display:none}
+.has-intro .intro{display:block;position:fixed;inset:0;z-index:200;overflow:hidden;pointer-events:auto;--enso:min(56vmin,420px);animation:intro-done 0s linear 2.6s forwards}
+.intro__ground{position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,#0e1830 0%,#090E1C 70%);animation:intro-off 0s linear 1.55s forwards}
+.intro__glow{position:absolute;left:50%;top:50%;width:calc(var(--enso) * 1.6);aspect-ratio:1;margin:calc(var(--enso) * -.8) 0 0 calc(var(--enso) * -.8);border-radius:50%;background:radial-gradient(circle,rgba(0,136,255,.22) 0%,rgba(0,212,170,.10) 35%,transparent 65%);transform:scale(.6);opacity:0;animation:intro-glow 1.3s cubic-bezier(.16,1,.3,1) .2s forwards,intro-glow-out .7s cubic-bezier(.76,0,.24,1) 1.55s forwards}
+.intro__iris{position:absolute;left:50%;top:50%;width:calc(var(--enso) * .58);aspect-ratio:1;margin:calc(var(--enso) * -.29) 0 0 calc(var(--enso) * -.29);border-radius:50%;box-shadow:0 0 0 250vmax #090E1C;animation:intro-iris 1s cubic-bezier(.76,0,.24,1) 1.55s forwards}
+.intro__enso{position:absolute;left:50%;top:50%;width:var(--enso);height:auto;max-width:none;
+  /* centre the ring's inner hole (47.2% across, 53.7% down the artwork) on the viewport */
+  margin:calc(var(--enso) * -.5277) 0 0 calc(var(--enso) * -.472);transform-origin:47.2% 53.7%;
+  -webkit-mask-image:conic-gradient(from 112deg at 47.2% 53.7%,transparent calc(360deg - var(--intro-sweep)),#000 calc(388deg - var(--intro-sweep)));
+  mask-image:conic-gradient(from 112deg at 47.2% 53.7%,transparent calc(360deg - var(--intro-sweep)),#000 calc(388deg - var(--intro-sweep)));
+  animation:intro-draw 1.15s cubic-bezier(.65,0,.35,1) .1s both,intro-enso-out 1s cubic-bezier(.76,0,.24,1) 1.55s forwards}
+@keyframes intro-draw{from{--intro-sweep:0deg;transform:rotate(28deg) scale(.9)}to{--intro-sweep:390deg;transform:none}}
+@keyframes intro-glow{to{transform:none;opacity:1}}
+@keyframes intro-glow-out{from{transform:none;opacity:1}to{transform:scale(4);opacity:0}}
+@keyframes intro-iris{from{transform:scale(1)}to{transform:scale(12.5)}}
+@keyframes intro-enso-out{0%{--intro-sweep:390deg;transform:none;filter:blur(0);opacity:1}70%{opacity:1}100%{--intro-sweep:390deg;transform:scale(12) rotate(-10deg);filter:blur(4px);opacity:0}}
+@keyframes intro-off{to{visibility:hidden}}
+@keyframes intro-done{to{visibility:hidden;pointer-events:none}}
+/* The page behind settles as it is revealed */
+.has-intro .hero-enso__bg{animation:intro-bg 1.8s cubic-bezier(.16,1,.3,1) 1.55s both}
+.has-intro .hero-enso .container>*{animation:intro-rise .9s cubic-bezier(.16,1,.3,1) both}
+.has-intro .hero-enso .container>:nth-child(1){animation-delay:1.95s}
+.has-intro .hero-enso .container>:nth-child(2){animation-delay:2.05s}
+.has-intro .hero-enso .container>:nth-child(3){animation-delay:2.15s}
+.has-intro .hero-enso .container>:nth-child(4){animation-delay:2.25s}
+@keyframes intro-bg{from{transform:scale(1.14)}to{transform:none}}
+@keyframes intro-rise{from{transform:translateY(32px);opacity:0}to{transform:none;opacity:1}}
+/* Skipped: run the exit straight away (separate keyframe names so the animations restart) */
+.intro-now .intro{animation:intro-done-now 0s linear .75s forwards}
+.intro-now .intro__ground{animation:intro-off-now 0s linear 0s forwards}
+.intro-now .intro__glow{animation:none;opacity:0}
+.intro-now .intro__iris{animation:intro-iris-now .75s cubic-bezier(.76,0,.24,1) 0s forwards}
+.intro-now .intro__enso{--intro-sweep:390deg;animation:intro-enso-now .75s cubic-bezier(.76,0,.24,1) 0s forwards}
+.intro-now .hero-enso__bg{animation:intro-bg-now 1.4s cubic-bezier(.16,1,.3,1) 0s both}
+.intro-now .hero-enso .container>*{animation-name:intro-rise-now}
+.intro-now .hero-enso .container>:nth-child(1){animation-delay:.3s}
+.intro-now .hero-enso .container>:nth-child(2){animation-delay:.38s}
+.intro-now .hero-enso .container>:nth-child(3){animation-delay:.46s}
+.intro-now .hero-enso .container>:nth-child(4){animation-delay:.54s}
+@keyframes intro-iris-now{from{transform:scale(1)}to{transform:scale(12.5)}}
+@keyframes intro-enso-now{from{transform:none;filter:blur(0);opacity:1}70%{opacity:1}to{transform:scale(12) rotate(-10deg);filter:blur(4px);opacity:0}}
+@keyframes intro-off-now{to{visibility:hidden}}
+@keyframes intro-done-now{to{visibility:hidden;pointer-events:none}}
+@keyframes intro-bg-now{from{transform:scale(1.14)}to{transform:none}}
+@keyframes intro-rise-now{from{transform:translateY(32px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.intro{display:none !important}}

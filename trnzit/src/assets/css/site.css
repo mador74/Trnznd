@@ -120,7 +120,7 @@ a:hover { text-decoration-color: var(--teal); }
 .menu-toggle svg { width: 22px; }
 .menu-toggle { flex-shrink: 0; }
 @media (max-width: 380px) { .logo--header svg { width: 92px; } .logo__desc { font-size: 0.6875rem; padding-left: 8px; } .logo--header { gap: 8px; } }
-@media (max-width: 340px) { .logo__desc { white-space: normal; max-width: 118px; } .logo__desc br { display: none; } }
+@media (max-width: 340px) { .logo__desc { white-space: normal; max-width: 100px; } }
 
 @media (max-width: 1280px) {
   /* backdrop-filter would make the header the containing block for the fixed menu panel */

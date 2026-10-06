@@ -8,7 +8,7 @@ nav: platform
   <div class="container">
     <p class="eyebrow">Platform</p>
     <h1 id="page-title">Every account, governed from one place</h1>
-    <p class="lead">Trnzit gives you one login and one point of contact for the banks, cards, exchanges, custodians and wallets you already use. It adds visibility and control. It doesn’t add a custodian.</p>
+    <p class="lead">Trnzit gives you one login and one point of contact for the exchanges, custodians and wallets you already use. It adds visibility and control. It doesn’t add a custodian.</p>
   </div>
 </section>
 
@@ -33,13 +33,13 @@ nav: platform
       <div class="feature__num" aria-hidden="true">01</div>
       <p class="eyebrow">Unified balances</p>
       <h2 id="f1">Every balance, one view</h2>
-      <p class="lead">Bank accounts, credit cards, crypto exchanges, custodians and digital wallets, consolidated into a single position with a common reporting currency.</p>
+      <p class="lead">Crypto exchange accounts, custodians, self-hosted software wallets and hardware wallets, consolidated into a single position with a common reporting currency.</p>
       <ul class="checks">
         <li>See totals by connection, asset type or provider</li>
         <li>Drill into any single account without switching logins</li>
-        <li>Bank and card connections are <strong>read-only</strong>, so Trnzit can see them but can’t move anything</li>
+        <li>Assets on <strong>EVM-compatible chains, Solana and Tron</strong></li>
       </ul>
-      <p class="small muted">All plans. Basic supports crypto connections only; Premium and Institution add banks and cards.</p>
+      <p class="small muted">All plans. The Free plan includes one exchange or wallet connection.</p>
     </div>
     <div class="reveal" style="--d:120ms">{{> mock-balances}}</div>
   </div>
@@ -51,7 +51,7 @@ nav: platform
       <div class="feature__num" aria-hidden="true">02</div>
       <p class="eyebrow">Non-custodial by design</p>
       <h2 id="f2">We never hold your private keys. We never hold your assets.</h2>
-      <p class="lead">Trnzit and the Trnznd Group never hold private keys and never take custody. Your assets stay with the banks, exchanges, custodians and wallets you chose. You keep control and custody at all times.</p>
+      <p class="lead">Trnzit and the Trnznd Group never hold private keys and never take custody. Your assets stay with the exchanges, custodians and wallets you chose. You keep control and custody at all times.</p>
       <ul class="checks">
         <li><strong>One login, one point of contact</strong> across all of your providers</li>
         <li><strong>Revocable access:</strong> Trnzit stores the API details you provide to connect each account. You can revoke them at any time, from Trnzit or at the provider itself</li>
@@ -89,7 +89,7 @@ nav: platform
       <h2 id="f4">Reconcile across every connection, or one at a time</h2>
       <p class="lead">View transaction history across all of your connections in a single list, or focus on one. Match transactions to invoices and references, flag the exceptions, and export for your accounting records.</p>
       <ul class="checks">
-        <li>One timeline across banks, cards, exchanges, custodians and wallets</li>
+        <li>One timeline across exchanges, custodians and wallets</li>
         <li>Filter by connection, asset, date or status</li>
         <li>Export to CSV <span class="ph">[Confirm export formats and accounting integrations]</span></li>
       </ul>
@@ -175,12 +175,12 @@ nav: platform
       <div class="feature__num" aria-hidden="true">08</div>
       <p class="eyebrow">How it connects</p>
       <h2 id="f8">Secure APIs carry your instructions. Your providers do the rest.</h2>
-      <p class="lead">When you approve an action in Trnzit, the instruction is passed through a secure API to the connection you selected: your bank, exchange, custodian or wallet. The provider executes it. Custody never moves.</p>
+      <p class="lead">When you approve an action in Trnzit, the instruction is passed through a secure API to the connection you selected: your exchange, custodian or wallet. The provider executes it. Custody never moves.</p>
     </div>
     <div class="reveal">{{> diagram}}</div>
     <div class="grid grid-3" style="margin-top:56px">
       <div class="card reveal"><span class="icon-tile" style="margin-bottom:20px">{{icon:connect}}</span><h3>You choose the connection</h3><p>Every instruction names the provider that will carry it out. Nothing is routed elsewhere.</p></div>
-      <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:lock}}</span><h3>Scoped access</h3><p>Trnzit stores the API details you provide, using the narrowest access each provider allows, such as read-only for banks and cards. <span class="ph">[Confirm per-provider scopes]</span></p></div>
+      <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:lock}}</span><h3>Scoped access</h3><p>Trnzit stores the API details you provide, using the narrowest access each provider allows. <span class="ph">[Confirm per-provider scopes]</span></p></div>
       <div class="card reveal" style="--d:160ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:ban}}</span><h3>Revoke at any time</h3><p>Disconnect from Trnzit, or withdraw access directly at your provider. Either way, the connection stops.</p></div>
     </div>
     <p style="margin-top:40px"><a class="btn btn--secondary" href="providers.html">See supported providers {{icon:arrow-right}}</a></p>

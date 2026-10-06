@@ -103,3 +103,9 @@ Ordered by how much the answer changes the site.
 - I didn't name real exchanges, banks or custodians. Mock-ups use generic labels ("Exchange account A", "Custodian B").
 - I didn't describe Trnzit as a bank, wallet provider, custodian, exchange or investment platform. The copy states the opposite wherever it's relevant.
 - I didn't use Violet or Cyan as standalone accents (two-accent rule).
+
+## Positioning: stablecoin focus (Oct 2026)
+
+- Confirmed: Trnzit is a treasury management platform currently focused on stablecoins on Ethereum and other EVM-compatible chains, Solana and Tron. Other assets remain visible in balances.
+- Stablecoins named on the site: USDT, USDC, EURC, USDS, USDe, DAI. **Placeholder:** which of these are supported on which network (not every issuer supports every chain, e.g. Tron) needs confirming by the technical team.
+- Demo screens now lead with stablecoins: the conversion example is USDT → USDC; one ETH balance remains to show non-stablecoin assets.

@@ -326,6 +326,7 @@ a:hover { text-decoration-color: var(--teal); }
 .approval + .approval { margin-top: 10px; }
 .approval__top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
 .approval__amt { font-weight: 700; color: var(--midnight); font-size: 1rem; }
+.approval__top > :first-child { min-width: 0; } .approval__amt { flex-shrink: 0; text-align: right; }
 .approval__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .mock-btn { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; border: 1.5px solid var(--teal); color: var(--midnight); background: transparent; }
 .mock-btn--primary { background: var(--teal); }

@@ -1,0 +1,78 @@
+<!--
+title: Contact
+description: Request access to ZEND and the Trnznd Dashboard, or contact the Trnznd team about cross-border settlement and treasury.
+nav: contact
+-->
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="container">
+    <p class="eyebrow">Contact</p>
+    <h1 id="page-title">Request access, or talk to the team</h1>
+    <p class="lead">Tell us a little about you and your cross-border flows. Access is subject to onboarding, identity verification and eligibility requirements.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split" style="align-items:start">
+    <div>
+      <form class="form" action="#" method="post" novalidate data-validate aria-labelledby="form-title">
+        <h2 id="form-title" style="font-size:var(--fs-h3)">Your details</h2>
+        <div class="field"><label for="f-type">How can we help?</label>
+          <select id="f-type" name="type" required data-type-select>
+            <option value="access" selected>Request access to ZEND</option>
+            <option value="team">Speak to the team</option>
+            <option value="partnership">Partnerships</option>
+            <option value="press">Press and media</option>
+            <option value="updates">Get insights and updates</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required><p class="error">Enter your full name.</p></div>
+          <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="error">Enter a valid email address.</p></div>
+        </div>
+        <div class="field">
+          <fieldset>
+            <legend>You are</legend>
+            <div class="choice">
+              <label><input type="radio" name="kind" value="business" checked> A business or institution</label>
+              <label><input type="radio" name="kind" value="individual"> An individual</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-org">Organisation <span class="muted">(optional for individuals)</span></label><input id="f-org" name="organisation" autocomplete="organization"></div>
+          <div class="field"><label for="f-country">Country</label><input id="f-country" name="country" autocomplete="country-name" required><p class="error">Enter your country.</p></div>
+        </div>
+        <div class="field"><label for="f-msg">Message <span class="muted">(optional)</span></label><p class="hint" id="h-msg">For example: the currencies you settle in, and typical monthly volume.</p><textarea id="f-msg" name="message" aria-describedby="h-msg"></textarea></div>
+        <div class="field">
+          <label class="check-row" for="f-privacy"><input id="f-privacy" type="checkbox" name="privacy" required> <span>I have read the <a href="legal/privacy.html">Privacy notice</a>.</span></label>
+          <p class="error">Please confirm to continue.</p>
+        </div>
+        <button class="btn btn--primary btn--lg" type="submit">Send {{i:arrow}}</button>
+        <p class="form-status" role="status" tabindex="-1" hidden data-form-status></p>
+      </form>
+    </div>
+    <aside class="stack">
+      <div class="card">
+        <h3>What happens next</h3>
+        <ol style="margin:0;padding-left:1.2em">
+          <li>We review your request and reply by email.</li>
+          <li>You complete a streamlined KYC process for you and your business.</li>
+          <li>Once verified, you can enter the Dashboard and start settling.</li>
+        </ol>
+      </div>
+      <div class="card" id="team">
+        <span class="icon-tile" style="margin-bottom:20px">{{i:mail}}</span>
+        <h3>Speak to the team</h3>
+        <p>For institutional set-ups, partnerships or questions before you apply.</p>
+        <p style="margin-top:12px">Email <span class="ph">[contact email]</span><br>Press <span class="ph">[press email]</span></p>
+      </div>
+      <div class="card">
+        <span class="icon-tile" style="margin-bottom:20px">{{i:grid}}</span>
+        <h3>Already a member?</h3>
+        <p>Buy, redeem and settle in the Trnznd Dashboard.</p>
+        <a class="btn btn--secondary" style="margin-top:16px;align-self:flex-start" href="{{dashboard}}">Enter Dashboard</a>
+      </div>
+      <div class="callout"><p class="small" style="margin:0"><strong>We will never ask for your seed phrase or private keys.</strong> If someone does, it isn’t us.</p></div>
+    </aside>
+  </div>
+</section>

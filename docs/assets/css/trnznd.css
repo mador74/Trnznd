@@ -1,0 +1,82 @@
+/* Trnznd-only additions to the group design system (group.css).
+   Everything here composes the same tokens, so Trnznd and Trnzit stay one family. */
+
+/* Lock-up: the trnznd wordmark is wider than trnzit's, so the box grows to keep the same height. */
+.logo svg{width:146px}
+.footer-brand .logo svg{width:156px}
+@media (max-width:420px){.logo--header svg{width:118px}}
+@media (max-width:380px){.logo--header svg{width:100px}}
+
+/* Long hero headline (the ZEND home page) */
+.hero--long h1{font-size:clamp(2.5rem,1.6rem + 3.1vw,3.9rem);line-height:1.04}
+.hero__visual>.mock.hero__main{position:relative;width:min(460px,100%);margin:120px 0 0 auto}
+@media (max-width:480px){.hero__visual>.mock.hero__main{margin-top:104px}}
+
+/* Brand photography in a frame */
+.media{position:relative;margin:0;border-radius:var(--radius-card);overflow:hidden;background:var(--midnight);box-shadow:var(--shadow-lg);aspect-ratio:16 / 10}
+.media img{width:100%;height:100%;object-fit:cover}
+.media--tall{aspect-ratio:4 / 3}
+.media figcaption{position:absolute;left:16px;bottom:14px;font-family:var(--font-secondary);font-size:0.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+
+/* Dark band over brand photography */
+.photo-band{position:relative;isolation:isolate;overflow:hidden}
+.photo-band__img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.photo-band::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,15,30,.92) 0%,rgba(10,15,30,.78) 45%,rgba(10,15,30,.94) 100%)}
+.photo-band .card{background:rgba(17,24,39,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* Numbered steps on a dark section */
+.section--dark .steps li{border-top-color:var(--slate)}
+.section--dark .steps p{color:var(--ash)}
+
+/* Tabs (progressive: without JS every panel shows, one after another) */
+.tabs__list{display:none}
+.js .tabs__list{display:inline-flex;flex-wrap:wrap;gap:4px;padding:5px;margin-bottom:var(--space-6);background:var(--cloud);border:1px solid var(--border);border-radius:16px;font-family:var(--font-secondary)}
+.tabs__list button{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:0;border-radius:12px;background:transparent;font-weight:600;font-size:0.9375rem;color:var(--graphite);cursor:pointer;transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
+.tabs__list button:hover{color:var(--midnight)}
+.tabs__list button[aria-selected="true"]{background:var(--white);color:var(--midnight);box-shadow:var(--shadow-sm),0 0 0 1px var(--border)}
+.tabs__panel + .tabs__panel{margin-top:var(--space-7)}
+.js .tabs__panel + .tabs__panel{margin-top:0}
+.tabs__panel[hidden]{display:none}
+.tabs__panel:focus-visible{outline-offset:8px}
+.js .tabs__panel .tabs__title{position:absolute !important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Currency chips */
+.chip-cloud{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.chip-cloud .chip{font-size:0.875rem;padding:6px 12px}
+
+/* Small print under figures */
+.footnote{font-family:var(--font-secondary);font-size:0.8125rem;color:var(--text-muted);margin-top:var(--space-5)}
+.section--dark .footnote{color:var(--ash)}
+
+/* Two-product group cards */
+.group-card{position:relative;overflow:hidden}
+.group-card .logo-mark{display:flex;align-items:center;gap:14px;margin-bottom:var(--space-5)}
+.group-card .logo-mark svg{width:132px;height:auto;color:var(--midnight)}
+.group-card .chip{position:absolute;top:20px;right:20px}
+
+/* Document rows (Resources, legal) reuse the policy rule layout */
+.policy__rule a{font-weight:600}
+.policy__rule .chip{justify-self:end}
+@media (max-width:560px){.policy__rule{grid-template-columns:40px 1fr}.policy__rule>:last-child{grid-column:2}}
+
+/* Article cards (Insights) */
+.article{display:flex;flex-direction:column;gap:10px}
+.article__meta{font-family:var(--font-secondary);font-size:0.8125rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--steel)}
+.article .media{aspect-ratio:16 / 9;box-shadow:none;margin-bottom:6px}
+
+/* Group bar: Trnznd points onward to Trnzit */
+.group-bar a .ext{width:13px;height:13px}
+.group-bar a:hover .ext{transform:translate(2px,-2px)}
+
+/* Footer tagline line */
+.footer-brand .tagline{display:block;color:var(--white);font-weight:700}
+.group-card .logo-mark img{width:132px;height:auto}
+
+/* Footer notice link on Midnight */
+.disclaimer a{color:var(--white)}
+
+/* "Enter Dashboard" stays visible in the desktop header (Trnzit hides its secondary button) */
+@media (min-width:1281px){.header-actions--desktop .btn--secondary{display:inline-flex}}
+
+/* Page hero beside a photo: a step down from display size so the headline keeps to three or four lines */
+.page-hero .split h1{font-size:clamp(2.5rem,1.7rem + 2.6vw,3.6rem);max-width:none}

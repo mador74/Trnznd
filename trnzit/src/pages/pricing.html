@@ -14,9 +14,6 @@ nav: pricing
 <section class="section" style="padding-top:48px" aria-labelledby="plans-title">
   <div class="container">
     <h2 id="plans-title" class="sr-only">Plans</h2>
-
-    <p class="offer reveal"><span class="chip chip--teal">New user discount</span> About half price for your first 12 months on Teams and Premium.</p>
-    <p class="small muted" style="margin:-36px 0 var(--space-7);max-width:72ch">A new user is an organisation or individual that has never had a Trnzit account. You’re a returning user if you register with a different email address but connect a wallet, exchange account, custodian account or other provider that is, or was, connected to another Trnzit account, or if you previously cancelled a Trnzit plan.</p>
     <div class="billing-row">
       <div class="billing-toggle" role="group" aria-label="Billing period for all plans" data-billing>
         <button type="button" data-period="annual" aria-pressed="true">Annual <span class="save">2 months free</span></button>
@@ -29,7 +26,7 @@ nav: pricing
         <h3 class="plan__name" id="p-free">Free</h3>
         <p class="plan__for">For one person, or a one-person business.</p>
         <div class="card-toggle card-toggle--spacer" aria-hidden="true"></div>
-        <div class="plan__price"><span class="plan__was plan__was--empty" aria-hidden="true">&nbsp;</span><span class="plan__amt">$0</span><span class="plan__per">no end date</span></div>
+        <div class="plan__price"><span class="plan__amt">$0</span><span class="plan__per">no end date</span></div>
         <p class="plan__note">Free for as long as you use it</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=free">Start free</a>
         <ul class="checks">
@@ -54,8 +51,8 @@ nav: pricing
         <h3 class="plan__name" id="p-teams">Teams</h3>
         <p class="plan__for">For a small team.</p>
         <div class="card-toggle" role="group" aria-label="Billing period for Teams"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
-        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49" data-annual="490">$490</span></span><span class="plan__per" data-per>/year</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first year, then $990/year</p>
+        <div class="plan__price"><span class="plan__amt"><span data-price data-monthly="49" data-annual="490">$490</span></span><span class="plan__per" data-per>/year</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="Billed monthly · or $490/year" data-annual-note="Billed annually · 2 months free">Billed annually · 2 months free</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=teams&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <p class="plan__plus">Everything in Free, plus:</p>
         <ul class="checks">
@@ -74,8 +71,8 @@ nav: pricing
         <h3 class="plan__name" id="p-premium">Premium</h3>
         <p class="plan__for">For active teams with regular settlements.</p>
         <div class="card-toggle" role="group" aria-label="Billing period for Premium"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
-        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="599" data-annual="5990">$5,990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="299" data-annual="2990">$2,990</span></span><span class="plan__per" data-per>/year</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $599/month" data-annual-note="New users: first year, then $5,990/year">New users: first year, then $5,990/year</p>
+        <div class="plan__price"><span class="plan__amt"><span data-price data-monthly="299" data-annual="2990">$2,990</span></span><span class="plan__per" data-per>/year</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="Billed monthly · or $2,990/year" data-annual-note="Billed annually · 2 months free">Billed annually · 2 months free</p>
         <a class="btn btn--primary btn--block" href="contact.html?plan=premium&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <p class="plan__plus">Everything in Teams, plus:</p>
         <ul class="checks">
@@ -90,7 +87,7 @@ nav: pricing
         <h3 class="plan__name" id="p-enterprise">Enterprise</h3>
         <p class="plan__for">For organisations with multiple members and connections who need a bespoke solution.</p>
         <div class="card-toggle card-toggle--spacer" aria-hidden="true"></div>
-        <div class="plan__price"><span class="plan__was plan__was--empty" aria-hidden="true">&nbsp;</span><span class="plan__amt plan__amt--text">Negotiated</span></div>
+        <div class="plan__price"><span class="plan__amt plan__amt--text">Negotiated</span></div>
         <p class="plan__note">Priced to your organisation</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=enterprise#talk">Talk to us</a>
         <p class="plan__plus">Everything in Premium, plus:</p>
@@ -143,7 +140,7 @@ nav: pricing
           <tr><th scope="row">Service agreement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Platform customisation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Billing</th></tr>
-          <tr><th scope="row">Price</th><td>Free</td><td><s>$990</s> $490/yr</td><td class="col-featured"><s>$5,990</s> $2,990/yr</td><td>Negotiated</td></tr>
+          <tr><th scope="row">Price</th><td>Free</td><td>$490/yr or $49/mo</td><td class="col-featured">$2,990/yr or $299/mo</td><td>Negotiated</td></tr>
           <tr><th scope="row">Visa, Mastercard, Google Pay, Apple Pay or PayPal (USD)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td>By agreement</td></tr>
           <tr><th scope="row">Pay in USDT or USDC</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td>By agreement</td></tr>
           <tr><th scope="row">Free trial</th><td>No end date</td><td>30 days*</td><td class="col-featured">30 days*</td><td>By agreement</td></tr>
@@ -165,7 +162,7 @@ nav: pricing
       <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:card}}</span><h3>30-day free trial on Teams and Premium</h3><p>Paying by card, Google Pay, Apple Pay or PayPal: your payment details are authorised when you sign up, but no payment is taken. Cancel within 30 days and you pay nothing. If you don’t cancel, your first payment is taken on day 31.</p></div>
       <div class="card reveal"><span class="icon-tile" style="margin-bottom:20px">{{icon:coins}}</span><h3>Paying in USDT or USDC</h3><p>Monthly and annual plans are paid in advance. If you cancel within 30 days, you get a full refund. <span class="ph">[Confirm which networks/chains are accepted for payment]</span></p></div>
       <div class="card reveal" style="--d:80ms"><span class="icon-tile" style="margin-bottom:20px">{{icon:clock}}</span><h3>Cancelling after 30 days</h3><p>Give at least 30 days’ notice. Your service ends on your renewal date. <span class="ph">[Confirm how notice is given, and what happens if notice falls inside 30 days of renewal]</span></p></div>
-      <div class="card reveal terms__wide"><span class="icon-tile" style="margin-bottom:20px">{{icon:convert}}</span><h3>Changing plan</h3><p>Upgrade at any time: your new plan and contract start immediately. If you upgrade part way through an annual plan, a new 12-month plan starts at the higher price, and the unused part of your current plan is credited against it. Monthly plans work the same way: the new plan starts immediately at the higher fee, the unused part of your current month is credited against your first new monthly fee, and every month after that is charged on the new plan. Downgrades take effect at your next renewal date. If you upgrade during your discount period, you get the discounted price of the higher plan, on the same terms as any other upgrade. The discount still ends 12 months after you first joined.</p></div>
+      <div class="card reveal terms__wide"><span class="icon-tile" style="margin-bottom:20px">{{icon:convert}}</span><h3>Changing plan</h3><p>Upgrade at any time: your new plan and contract start immediately. If you upgrade part way through an annual plan, a new 12-month plan starts at the higher price, and the unused part of your current plan is credited against it. Monthly plans work the same way: the new plan starts immediately at the higher fee, the unused part of your current month is credited against your first new monthly fee, and every month after that is charged on the new plan. Downgrades take effect at your next renewal date.</p></div>
     </div>
     <p class="small muted" style="margin-top:16px">Set-up takes minutes. As soon as you sign up, you can start connecting providers and inviting your team.</p>
     <p class="small muted" style="margin-top:8px">Prices exclude any applicable taxes <span class="ph">[confirm VAT/sales-tax treatment]</span>. Full terms: <a href="legal/terms.html">Terms of service</a>. Questions: <a href="faq.html#billing">Billing FAQ</a>.</p>

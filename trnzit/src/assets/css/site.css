@@ -640,4 +640,4 @@ a:hover { text-decoration-color: var(--teal); }
 .plan__plus + .checks { margin-top: var(--space-3); }
 
 .plan__amt--text { font-size: clamp(1.75rem, 1.4rem + 0.8vw, 2.125rem); }
-.plans--4 .plan__price { min-height: 4.75rem; align-content: end; }
+.plans--4 .plan__price { min-height: 3.25rem; align-content: end; }

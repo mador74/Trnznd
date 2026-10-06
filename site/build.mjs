@@ -98,7 +98,7 @@ ${n.menu.map((m) => `            <li><a href="${r}${m.href}">${m.label}<span>${m
 <nav class="group-bar" aria-label="Trnznd Group"><div class="container group-bar__inner"><span>Trnznd Group: ZEND and Trnzit</span><a href="${TRNZIT_URL}">Trnzit: stablecoin treasury management, by Trnznd ${icon('ext', 'ext')}</a></div></nav>
 <header class="site-header" data-header>
   <div class="container header-inner">
-    <a class="logo logo--header" href="${r}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Value,<br> by Trnznd</span></a>
+    <a class="logo logo--header" href="${r}index.html">${LOGO('ZEND home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>
     <nav class="nav" id="site-nav" aria-label="Main" data-nav>
       <ul class="nav__list">
 ${items}
@@ -130,7 +130,7 @@ ${links.map(([h, l]) => `          <li><a href="${/^https?:/.test(h) ? h : r + h
     <div class="footer-top">
       <div class="footer-brand">
         <a class="logo" href="${r}index.html">${LOGO('ZEND home')}</a>
-        <p><span class="tagline">Global Value, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
+        <p><span class="tagline">Global Stability, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
         <a class="footer-parent" href="${r}about.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
 ${col('ZEND', [['index.html', 'ZEND'], ['index.html#how-it-works', 'How it works'], ['business.html', 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
@@ -164,7 +164,7 @@ if (INLINE) {
 
 function head(r, meta, path) {
   const url = SITE_URL + '/' + (path === 'index.html' ? '' : path);
-  const title = meta.title ? `${meta.title} · ZEND` : 'ZEND · Global Value, by Trnznd';
+  const title = meta.title ? `${meta.title} · ZEND` : 'ZEND · Global Stability, by Trnznd';
   const robots = meta.robots || 'index, follow';
   return `<!doctype html>
 <html lang="en-GB">

@@ -71,7 +71,7 @@ Also outstanding:
 - The contact form validates but has no endpoint; connect it in `site.js`.
 - The legal pages are outlines only, apart from the important notice, which matches the current site footer word for word. The current site already publishes Terms, Privacy, Risk Disclosures and a Complaints Policy: move their wording across.
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
-- The site carries the ZEND lock-up (Teal Enso, zend wordmark, “Global Value, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `brand/logo.html`).
+- The site carries the ZEND lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `brand/logo.html`).
 - External URLs are set at the top of `build.mjs`: the Dashboard (`app.trnznd.io`) and Trnzit (`www.trnznd.io/trnzit/`).
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

@@ -84,7 +84,7 @@
     <div class="grid grid-4">
       <div class="card reveal"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 4H6a2 2 0 00-2 2v12a2 2 0 002 2h4"/><path d="M14 8l4 4-4 4M18 12H9"/></svg></span><h3>Scattered logins</h3><p>Every provider has its own portal, its own users and its own approval rules.</p></div>
       <div class="card reveal" style="--d:60ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span><h3>Key-person risk</h3><p>Too often, one person can move funds on one platform without anyone else signing off.</p></div>
-      <div class="card reveal" style="--d:120ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 103-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg></span><h3>Manual reconciliation</h3><p>Month-end means exporting from every provider and matching it by hand.</p></div>
+      <div class="card reveal" style="--d:120ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 103-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg></span><h3>Scattered records</h3><p>Month-end means exporting from every provider and piecing it together by hand.</p></div>
       <div class="card reveal" style="--d:180ms"><span class="icon-tile" style="margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg></span><h3>Payment-detail risk</h3><p>Destination details arrive by email and are typed in by hand, which invites errors and fraud.</p></div>
     </div>
   </div>
@@ -103,7 +103,7 @@
         <li>A full record of every request, approval and policy change</li>
       </ul>
     </div>
-    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative approval queue: a 250,000 USDC invoice settlement awaiting a second approver, a conversion awaiting approval, and an approved address whitelisting. Fictional data.">
+    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative approval queue: a 250,000 USDC payment awaiting a second approver, a conversion awaiting approval, and an approved address whitelisting. Fictional data.">
   <div class="mock__bar" aria-hidden="true">
     <div class="mock__dots"><i></i><i></i><i></i></div>
     <div class="mock__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg> Approval queue</div>
@@ -111,7 +111,7 @@
   </div>
   <div class="mock__body" aria-hidden="true">
     <div class="approval">
-      <div class="approval__top"><div><div class="mock__name">Settle INV-2026-0147</div><div class="mock__meta">Treasury wallet → Arden Logistics (fictional) · whitelisted</div></div><div class="approval__amt num">250,000.00 USDC</div></div>
+      <div class="approval__top"><div><div class="mock__name">Payment PAY-2026-0147</div><div class="mock__meta">Treasury wallet → Arden Logistics (fictional) · whitelisted</div></div><div class="approval__amt num">250,000.00 USDC</div></div>
       <div class="approval__foot"><span class="approvers"><i class="ok">AR</i><i>JM</i><i>SK</i><span class="mock__meta" style="margin-left:6px">1 approved · 2 of 3 required</span></span><span class="status status--pending">Awaiting approval</span></div>
       <div class="progress"><i style="width:50%"></i></div>
     </div>
@@ -132,15 +132,15 @@
 <section class="section" aria-labelledby="close-title">
   <div class="container split split--reverse">
     <div class="reveal">
-      <p class="eyebrow">Reporting &amp; reconciliation</p>
+      <p class="eyebrow">Records &amp; reporting</p>
       <h2 id="close-title">A faster, cleaner month-end</h2>
-      <p class="lead">One consolidated history across every connection, invoices that reconcile against settlements, and exports for your accounting records.</p>
-      <a class="btn btn--ghost" href="platform.html#reconciliation">How reconciliation works</a>
+      <p class="lead">One consolidated history across every connection, with statements and CSV export for your accounting records.</p>
+      <a class="btn btn--ghost" href="platform.html#history">How transaction history works</a>
     </div>
-    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative reconciliation view listing five transactions across connections, three matched, one for review and one unmatched. Fictional data.">
+    <div class="reveal" style="--d:120ms"><div class="mock" role="img" aria-label="Illustrative transaction history listing five transactions across exchanges, a custodian and wallets, four confirmed and one pending. Fictional data.">
   <div class="mock__bar" aria-hidden="true">
     <div class="mock__dots"><i></i><i></i><i></i></div>
-    <div class="mock__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 103-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg> Transactions &amp; reconciliation</div>
+    <div class="mock__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 103-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg> Transaction history</div>
     <span class="mock__fiction">Illustrative data</span>
   </div>
   <div class="mock__body" aria-hidden="true">
@@ -148,14 +148,14 @@
     <div class="table-scroll"><table>
       <thead><tr><th>Date</th><th>Reference · connection</th><th class="r">Amount</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td class="num">05 Oct</td><td>INV-2026-0147<br><span class="mock__meta">Treasury wallet</span></td><td class="r num">+250,000.00 USDC</td><td><span class="status status--ok">Matched</span></td></tr>
-        <tr><td class="num">04 Oct</td><td>Convert SOL→USDC<br><span class="mock__meta">Exchange A</span></td><td class="r num">−5,000.00 SOL</td><td><span class="status status--ok">Matched</span></td></tr>
-        <tr><td class="num">04 Oct</td><td>Supplier payment<br><span class="mock__meta">Exchange B</span></td><td class="r num">−184,220.00 USDT</td><td><span class="status status--ok">Matched</span></td></tr>
-        <tr><td class="num">03 Oct</td><td>Network fee<br><span class="mock__meta">Cold storage</span></td><td class="r num">−0.0120 ETH</td><td><span class="status status--info">Review</span></td></tr>
-        <tr><td class="num">02 Oct</td><td>Inbound transfer<br><span class="mock__meta">Custodian B</span></td><td class="r num">+150.00 ETH</td><td><span class="status">Unmatched</span></td></tr>
+        <tr><td class="num">05 Oct</td><td>PAY-2026-0147<br><span class="mock__meta">Treasury wallet</span></td><td class="r num">−250,000.00 USDC</td><td><span class="status status--ok">Confirmed</span></td></tr>
+        <tr><td class="num">04 Oct</td><td>Convert SOL→USDC<br><span class="mock__meta">Exchange A</span></td><td class="r num">−5,000.00 SOL</td><td><span class="status status--ok">Confirmed</span></td></tr>
+        <tr><td class="num">04 Oct</td><td>Supplier payment<br><span class="mock__meta">Exchange B</span></td><td class="r num">−184,220.00 USDT</td><td><span class="status status--ok">Confirmed</span></td></tr>
+        <tr><td class="num">03 Oct</td><td>Network fee<br><span class="mock__meta">Cold storage</span></td><td class="r num">−0.0120 ETH</td><td><span class="status status--ok">Confirmed</span></td></tr>
+        <tr><td class="num">02 Oct</td><td>Inbound transfer<br><span class="mock__meta">Custodian B</span></td><td class="r num">+150.00 ETH</td><td><span class="status status--pending">Pending</span></td></tr>
       </tbody>
     </table></div>
-    <div class="approval__foot" style="margin-top:14px"><span class="mock__meta">3 matched · 2 open · October 2026</span><span class="mock-btn">Export CSV</span></div>
+    <div class="approval__foot" style="margin-top:14px"><span class="mock__meta">5 transactions · October 2026</span><span class="mock-btn">Export CSV</span></div>
   </div>
 </div>
 </div>

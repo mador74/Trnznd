@@ -1,6 +1,6 @@
 <!---
 title: Platform · Trnzit
-description: Unified balances, non-custodial control, authorised members, reconciliation, invoicing and direct settlement, multi-signature wallets, and trading in your own exchange accounts. One login.
+description: Unified balances, non-custodial control, authorised members, transaction history, address whitelisting, multi-signature wallets, and trading in your own exchange accounts. One login.
 nav: platform
 --->
 <section class="page-hero has-motif" aria-labelledby="page-title">
@@ -18,8 +18,8 @@ nav: platform
       <li><a href="#balances"><span>01</span> Unified balances</a></li>
       <li><a href="#non-custodial"><span>02</span> Non-custodial</a></li>
       <li><a href="#members"><span>03</span> Authorised members</a></li>
-      <li><a href="#reconciliation"><span>04</span> Reconciliation</a></li>
-      <li><a href="#invoicing"><span>05</span> Invoicing &amp; settlement</a></li>
+      <li><a href="#history"><span>04</span> Transaction history</a></li>
+      <li><a href="#whitelisting"><span>05</span> Address whitelisting</a></li>
       <li><a href="#multisig"><span>06</span> Multi-sig wallets</a></li>
       <li><a href="#trade"><span>07</span> Trade &amp; convert</a></li>
       <li><a href="#connects"><span>08</span> How it connects</a></li>
@@ -81,40 +81,52 @@ nav: platform
   </div>
 </section>
 
-<section class="section section--alt feature" id="reconciliation" aria-labelledby="f4">
+<section class="section section--alt feature" id="history" aria-labelledby="f4">
   <div class="container split split--reverse">
     <div class="reveal">
       <div class="feature__num" aria-hidden="true">04</div>
-      <p class="eyebrow">Transaction history &amp; reconciliation</p>
-      <h2 id="f4">Reconcile across every connection, or one at a time</h2>
-      <p class="lead">View transaction history across all of your connections in a single list, or focus on one. Match transactions to invoices and references, flag the exceptions, and export for your accounting records.</p>
+      <p class="eyebrow">Transaction history</p>
+      <h2 id="f4">Every transaction, across every connection, or one at a time</h2>
+      <p class="lead">See transaction history across all of your wallets, exchanges and custodians in one list, or focus on a single connection. Export statements and CSV files for your own records.</p>
       <ul class="checks">
         <li>One timeline across exchanges, custodians and wallets</li>
         <li>Filter by connection, asset, date or status</li>
-        <li>Export to CSV <span class="ph">[Confirm export formats and accounting integrations]</span></li>
+        <li>Statement and CSV export <span class="ph">[Confirm any further export formats]</span></li>
       </ul>
-      <p class="small muted">Transaction history on all plans. <span class="ph">[Confirm which plans include reconciliation]</span></p>
+      <p class="small muted">All plans.</p>
     </div>
-    <div class="reveal" style="--d:120ms">{{> mock-reconcile}}</div>
+    <div class="reveal" style="--d:120ms">{{> mock-history}}</div>
   </div>
 </section>
 
-<section class="section feature" id="invoicing" aria-labelledby="f5">
+<section class="section feature" id="whitelisting" aria-labelledby="f5">
   <div class="container split">
     <div class="reveal">
       <div class="feature__num" aria-hidden="true">05</div>
-      <p class="eyebrow">Invoicing &amp; direct settlement</p>
-      <h2 id="f5">Invoice, settle and reconcile in one flow</h2>
-      <p class="lead">Issue invoices to counterparties and arrange direct settlement with other Trnzit users. Payment details come from a whitelisted address, not from an email, which means fewer errors and less room for fraud.</p>
+      <p class="eyebrow">Address whitelisting</p>
+      <h2 id="f5">Funds only go where you’ve agreed in advance</h2>
+      <p class="lead">Save the addresses you pay, and Trnzit will only send instructions to those addresses. Payment details come from your whitelist, not from an email, which means fewer errors and less room for fraud.</p>
       <ul class="checks">
-        <li>Invoices carry a verified, whitelisted destination</li>
-        <li>Settlement follows each side’s own approval policies</li>
-        <li>Paid invoices reconcile automatically against history</li>
+        <li>Whitelist addresses on EVM-compatible chains, Solana and Tron</li>
+        <li>On Teams and above, changes to the whitelist can require approval</li>
+        <li>Every addition and removal is recorded</li>
+        <li>Create payment requests on every plan. From Teams up, attach a PDF such as an invoice</li>
       </ul>
-      <p class="note"><strong>Settlement is always executed by your own custodian or wallet, on your instruction.</strong> Trnzit never transmits or holds funds.</p>
-      <p class="small muted"><span class="ph">[Confirm which plans include invoicing and direct settlement]</span></p>
+      <p class="note"><strong>Payments are always executed by your own exchange, custodian or wallet, on your instruction.</strong> Trnzit never transmits or holds funds.</p>
+      <p class="small muted">All plans.</p>
     </div>
-    <div class="reveal" style="--d:120ms">{{> mock-invoice}}</div>
+    <div class="reveal" style="--d:120ms">
+      <div class="mock" role="img" aria-label="Illustrative address whitelist with four saved addresses on Ethereum, Solana and Tron, and one addition awaiting approval. Fictional data.">
+        <div class="mock__bar" aria-hidden="true"><div class="mock__dots"><i></i><i></i><i></i></div><div class="mock__title">{{icon:list}} Address whitelist</div><span class="mock__fiction">Illustrative data</span></div>
+        <div class="mock__body" aria-hidden="true">
+          <div class="mock__row"><span class="mock__ico">{{icon:wallet}}</span><span><span class="mock__name">Arden Logistics (fictional)</span><br><span class="mock__meta num">0x7f3a…8b2c · Ethereum</span></span><span class="status status--ok">Approved</span></div>
+          <div class="mock__row"><span class="mock__ico">{{icon:wallet}}</span><span><span class="mock__name">Payroll provider (fictional)</span><br><span class="mock__meta num">7Hq2…Lm9P · Solana</span></span><span class="status status--ok">Approved</span></div>
+          <div class="mock__row"><span class="mock__ico">{{icon:vault}}</span><span><span class="mock__name">Custodian B, treasury vault</span><br><span class="mock__meta num">0x19c4…d07e · Ethereum</span></span><span class="status status--ok">Approved</span></div>
+          <div class="mock__row"><span class="mock__ico">{{icon:exchange}}</span><span><span class="mock__name">Exchange account B deposit</span><br><span class="mock__meta num">TQx8…4fNv · Tron</span></span><span class="status status--ok">Approved</span></div>
+          <div class="mock__row"><span class="mock__ico">{{icon:wallet}}</span><span><span class="mock__name">New supplier (fictional)</span><br><span class="mock__meta num">0x5be1…a93f · Ethereum</span></span><span class="status status--pending">1 of 2 approvals</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -134,7 +146,7 @@ nav: platform
         <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal">{{icon:multisig}}</span><span><b>Safe</b><span>Formerly Gnosis Safe · EVM-compatible assets</span></span></div>
         <div class="policy__rule" style="grid-template-columns:40px 1fr"><span class="icon-tile icon-tile--teal">{{icon:multisig}}</span><span><b>Squads</b><span>Solana-based assets</span></span></div>
       </div>
-      <p class="small muted">Signing keys are held by your own members, never by Trnzit. Approvals above payment thresholds on Teams; your own approval rules on Premium and Enterprise. <span class="ph">[Confirm which plans include multi-sig wallets and address whitelisting]</span></p>
+      <p class="small muted">Signing keys are held by your own members, never by Trnzit. Approvals above payment thresholds on Teams; your own approval rules on Premium and Enterprise. Address whitelisting on all plans. <span class="ph">[Confirm which plans include multi-sig wallets]</span></p>
     </div>
     <div class="reveal" style="--d:120ms">
       <div class="mock" role="img" aria-label="Illustrative policy settings: two of three approvals for payments up to 250,000 dollars, three of five above that, whitelisted addresses only, and three of five approvals to change a policy. Fictional data.">

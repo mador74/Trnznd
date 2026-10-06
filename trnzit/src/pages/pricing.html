@@ -38,12 +38,15 @@ nav: pricing
           <li>Automatic safety checks on every payment</li>
           <li>Unlimited payments</li>
           <li>Unlimited receipts</li>
+          <li>Payment request creation</li>
           <li>Add as many of your own software and hardware wallets as you like</li>
           <li>MetaMask, Phantom, Ledger and most other wallets</li>
           <li>Use all supported networks (EVM, Solana, Tron)</li>
           <li>Balances refreshed on demand</li>
           <li>Statement and CSV export</li>
+          <li>Address whitelisting</li>
           <li>Help centre, and email answered within 3 working days</li>
+          <li class="no">No PDF attachments on payment requests</li>
           <li class="no">No exchange or custodian connections</li>
         </ul>
       </article>
@@ -51,8 +54,8 @@ nav: pricing
         <h3 class="plan__name" id="p-teams">Teams</h3>
         <p class="plan__for">For a small team.</p>
         <div class="card-toggle" role="group" aria-label="Billing period for Teams"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
-        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="29" data-annual="290">$290</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="14.99" data-annual="149">$149</span></span><span class="plan__per" data-per>/year</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $29/month" data-annual-note="New users: first year, then $290/year">New users: first year, then $290/year</p>
+        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49" data-annual="490">$490</span></span><span class="plan__per" data-per>/year</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first year, then $990/year</p>
         <a class="btn btn--secondary btn--block" href="contact.html?plan=teams&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <p class="plan__plus">Everything in Free, plus:</p>
         <ul class="checks">
@@ -61,19 +64,18 @@ nav: pricing
           <li>Audit trails for who did what, and when</li>
           <li>Standard roles and authority permissions</li>
           <li>Up to 5 exchange and digital custody connections</li>
+          <li>Attach a PDF to payment requests, for easy invoice management</li>
           <li>White-glove onboarding</li>
           <li>Email answered within 1 working day</li>
-          <li class="no">No reconciliation</li>
-          <li class="no">No invoicing</li>
         </ul>
       </article>
       <article class="plan plan--featured reveal" style="--d:120ms" id="premium" data-plan-card aria-labelledby="p-premium">
         <span class="plan__badge">Most popular</span>
         <h3 class="plan__name" id="p-premium">Premium</h3>
-        <p class="plan__for">For growing teams.</p>
+        <p class="plan__for">For active teams with regular settlements.</p>
         <div class="card-toggle" role="group" aria-label="Billing period for Premium"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
-        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49.99" data-annual="499">$499</span></span><span class="plan__per" data-per>/year</span></div>
-        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first year, then $990/year</p>
+        <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="599" data-annual="5990">$5,990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="299" data-annual="2990">$2,990</span></span><span class="plan__per" data-per>/year</span></div>
+        <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $599/month" data-annual-note="New users: first year, then $5,990/year">New users: first year, then $5,990/year</p>
         <a class="btn btn--primary btn--block" href="contact.html?plan=premium&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
         <p class="plan__plus">Everything in Teams, plus:</p>
         <ul class="checks">
@@ -82,13 +84,11 @@ nav: pricing
           <li>Custom roles, based on permissions</li>
           <li>Up to 10 exchange and digital custody connections</li>
           <li>Priority support and named onboarding</li>
-          <li class="no">No reconciliation</li>
-          <li class="no">No invoicing</li>
         </ul>
       </article>
       <article class="plan reveal" style="--d:180ms" id="enterprise" aria-labelledby="p-enterprise">
         <h3 class="plan__name" id="p-enterprise">Enterprise</h3>
-        <p class="plan__for">For organisations that need seats, connections and terms to fit.</p>
+        <p class="plan__for">For organisations with multiple members and connections who need a bespoke solution.</p>
         <div class="card-toggle card-toggle--spacer" aria-hidden="true"></div>
         <div class="plan__price"><span class="plan__was plan__was--empty" aria-hidden="true">&nbsp;</span><span class="plan__amt plan__amt--text">Negotiated</span></div>
         <p class="plan__note">Priced to your organisation</p>
@@ -114,7 +114,7 @@ nav: pricing
     <div class="compare-wrap reveal" tabindex="0" role="region" aria-label="Plan comparison table, scrolls horizontally on small screens">
       <table class="compare">
         <thead>
-          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Free<span>No end date</span></th><th scope="col">Teams<span>From $149/yr</span></th><th scope="col" class="col-featured">Premium<span>From $499/yr</span></th><th scope="col">Enterprise<span>Negotiated</span></th></tr>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Free<span>No end date</span></th><th scope="col">Teams<span>From $490/yr</span></th><th scope="col" class="col-featured">Premium<span>From $2,990/yr</span></th><th scope="col">Enterprise<span>Negotiated</span></th></tr>
         </thead>
         <tbody>
           <tr class="group"><th scope="colgroup" colspan="5">Users &amp; connections</th></tr>
@@ -126,15 +126,16 @@ nav: pricing
           <tr class="group"><th scope="colgroup" colspan="5">Visibility &amp; records</th></tr>
           <tr><th scope="row">Unified balances</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Transaction history</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
-          <tr><th scope="row">Reconciliation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr class="group"><th scope="colgroup" colspan="5">Payment requests</th></tr>
+          <tr><th scope="row">Create payment requests</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Attach a PDF (e.g. an invoice)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Governance</th></tr>
           <tr><th scope="row">Roles &amp; permissions</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Standard</td><td class="col-featured">Custom</td><td>Custom</td></tr>
           <tr><th scope="row">Audit trail</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Approval rules</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Above payment thresholds</td><td class="col-featured">Your own rules</td><td>Your own rules</td></tr>
-          <tr><th scope="row">Address whitelisting</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr><th scope="row">Address whitelisting</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Multi-signature wallets (Safe, Squads)</th><td><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Payments &amp; trading</th></tr>
-          <tr><th scope="row">Invoicing &amp; direct settlement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr><th scope="row">Trade &amp; convert in your exchange accounts</th><td><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Support</th></tr>
           <tr><th scope="row">Support</th><td>Help centre; email within 3 working days</td><td>Email within 1 working day</td><td class="col-featured">Priority support</td><td>Named manager</td></tr>
@@ -142,7 +143,7 @@ nav: pricing
           <tr><th scope="row">Service agreement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Platform customisation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Billing</th></tr>
-          <tr><th scope="row">Price</th><td>Free</td><td><s>$290</s> $149/yr</td><td class="col-featured"><s>$990</s> $499/yr</td><td>Negotiated</td></tr>
+          <tr><th scope="row">Price</th><td>Free</td><td><s>$990</s> $490/yr</td><td class="col-featured"><s>$5,990</s> $2,990/yr</td><td>Negotiated</td></tr>
           <tr><th scope="row">Visa, Mastercard, Google Pay, Apple Pay or PayPal (USD)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td>By agreement</td></tr>
           <tr><th scope="row">Pay in USDT or USDC</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td>By agreement</td></tr>
           <tr><th scope="row">Free trial</th><td>No end date</td><td>30 days*</td><td class="col-featured">30 days*</td><td>By agreement</td></tr>

@@ -19,3 +19,10 @@ Removed on request because Trnzit cannot yet connect to banks or other fiat inst
 - Supported connections: crypto exchanges, crypto custodians, self-hosted software wallets, hardware wallets.
 - Supported chains: **EVM-compatible chains, Solana and Tron only**. Added to Platform §01, Home capability card, FAQ ("Which blockchains are supported?"), comparison table and Providers page.
 - Unchanged: paying for Trnzit by Visa, Mastercard, Google Pay, Apple Pay or PayPal (these are subscription payment methods, not connections).
+
+## Also removed later: reconciliation and invoicing
+
+- Platform §04 "Transaction history & reconciliation" became "Transaction history"; §05 "Invoicing & direct settlement" (with the invoice mock-up) was replaced by "Address whitelisting".
+- Home capability cards, Organisations "Reporting & reconciliation", Security wording, comparison rows "Reconciliation" and "Invoicing & direct settlement", and the greyed "No reconciliation"/"No invoicing" lines.
+- Mock-ups: invoice references (INV-2026-0147) became payment references (PAY-2026-0147); "Matched/Unmatched" statuses became "Confirmed/Pending".
+- The invoice mock-up file `src/partials/mock-invoice.html` is kept, unused, for later.

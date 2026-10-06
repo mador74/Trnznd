@@ -69,7 +69,15 @@
   }
 
   /* Scroll reveals */
-  var revealables = $$('.reveal, [data-count]');
+  var revealables = $$('.reveal, .glide, [data-count]');
+  /* An in-page link to a card that hasn't glided in yet: place it at once, so the jump lands where it should */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    var t = a && a.getAttribute('href').length > 1 && document.getElementById(a.getAttribute('href').slice(1));
+    if (t && t.classList.contains('glide') && !t.classList.contains('is-visible')) {
+      t.style.transition = 'none'; t.classList.add('is-visible'); void t.offsetHeight; t.style.transition = '';
+    }
+  });
   if ('IntersectionObserver' in window && !reduce) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {

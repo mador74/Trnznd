@@ -166,3 +166,19 @@
 
 /* Brand names keep their own case inside uppercase labels (eyebrows, footer headings) */
 .brand-case{text-transform:none}
+
+/* The same panels set out in a row (group CTA band) */
+.hero-products--row{grid-template-columns:repeat(3,minmax(0,1fr));max-width:none;margin-top:var(--space-7)}
+@media (max-width:960px){.hero-products--row{grid-template-columns:minmax(0,1fr);max-width:40rem}}
+
+/* Group landing page: after the hero, each section is a card on the hero's dark ground,
+   and glides up into place as it scrolls into view */
+.glide-stack{--stack-gap:clamp(8px,1.6vw,24px);background:#090E1C;padding:0 var(--stack-gap) var(--stack-gap);display:flow-root}
+.glide{position:relative;border-radius:28px;margin-bottom:var(--stack-gap);background:var(--white);box-shadow:0 40px 80px -40px rgba(0,0,0,.7)}
+.glide.section--alt{background:var(--cloud)}
+.glide-stack__cta{padding-block:clamp(1.5rem,1rem + 2vw,3rem) clamp(2rem,1.5rem + 3vw,4rem)}
+.glide-stack__cta .container{max-width:none;padding-inline:0}
+.glide-stack .cta-band{background:linear-gradient(160deg,#111a30 0%,#0b1122 60%);border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)}
+.js .glide{opacity:0;transform:translateY(96px) scale(.94);transform-origin:50% 0;transition:opacity .8s var(--ease),transform 1.1s cubic-bezier(.16,1,.3,1)}
+.js .glide.is-visible{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .glide{opacity:1;transform:none;transition:none}}

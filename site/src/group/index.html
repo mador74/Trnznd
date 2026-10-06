@@ -16,7 +16,8 @@ nav: about
   </div>
 </section>
 
-<section class="section" id="group" aria-labelledby="structure-title">
+<div class="glide-stack">
+<section class="section glide" id="group" aria-labelledby="structure-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">Group structure</p>
@@ -38,7 +39,7 @@ nav: about
   </div>
 </section>
 
-<section class="section section--alt" aria-labelledby="companies-title">
+<section class="section section--alt glide" aria-labelledby="companies-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">The companies</p>
@@ -61,7 +62,7 @@ nav: about
   </div>
 </section>
 
-<section class="section" aria-labelledby="products-title">
+<section class="section glide" aria-labelledby="products-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">The products</p>
@@ -103,7 +104,7 @@ nav: about
   </div>
 </section>
 
-<section class="section section--alt" aria-labelledby="values-title">
+<section class="section section--alt glide" aria-labelledby="values-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">Our values</p>
@@ -118,17 +119,18 @@ nav: about
   </div>
 </section>
 
-<section class="section section--tight" aria-labelledby="cta-title">
+<section class="section section--tight glide-stack__cta" aria-labelledby="cta-title">
   <div class="container">
-    <div class="cta-band reveal">
+    <div class="cta-band glide">
       <svg class="motif motif-arcs" viewBox="0 0 600 600" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="300" cy="300" r="290" stroke-width="1.5" stroke-dasharray="1500 320"/><circle cx="300" cy="300" r="220" stroke-width="1.5" stroke-dasharray="1100 280"/><circle cx="300" cy="300" r="150" stroke-width="1.5" stroke-dasharray="700 240"/></svg>
       <p class="eyebrow">Explore the group</p>
       <h2 id="cta-title" class="cta-band__lines"><span class="line">Stability you can hold.</span> <span class="line">Control that you govern.</span></h2>
-      <div class="btn-row" style="margin-top:32px">
-        <a class="btn btn--primary btn--lg" href="{{zend}}index.html">Visit Zend {{i:arrow}}</a>
-        <a class="btn btn--secondary btn--lg" href="{{trnzit}}index.html">Visit Trnzit</a>
-        <a class="btn btn--ghost" href="contact.html?type=general">Contact the group</a>
-      </div>
+      <ul class="hero-products hero-products--row">
+        <li><a href="{{zend}}index.html"><span class="hero-products__name">Visit Zend</span><span class="hero-products__desc">For globally stable settlement</span>{{i:arrow}}</a></li>
+        <li><a href="{{trnzit}}index.html"><span class="hero-products__name">Visit Trnzit</span><span class="hero-products__desc">The single control point for multiple wallets, exchanges and providers</span>{{i:arrow}}</a></li>
+        <li><a href="contact.html?type=general"><span class="hero-products__name">Contact the group</span><span class="hero-products__desc">Partnerships, press or anything else</span>{{i:arrow}}</a></li>
+      </ul>
     </div>
   </div>
 </section>
+</div>

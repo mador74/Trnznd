@@ -73,11 +73,6 @@
   <div class="container">
     <div class="pricing-head">
       <h2 id="plans-title" class="sr-only">Plans</h2>
-      <div class="billing-toggle" role="group" aria-label="Billing period" data-billing>
-        <button type="button" data-period="annual" aria-pressed="true">Annual <span class="save">2 months free</span></button>
-        <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
-      </div>
-      <p class="sr-only" aria-live="polite" data-billing-live></p>
       <div class="pay-row"><span class="pay-label">Pay with</span><ul class="pay-logos" aria-label="Accepted payment methods">
   <li class="pay-badge" title="Visa"><svg viewBox="-0.48 7.64 24.96 8.71" class="pay-logo" style="height:18px" role="img" aria-label="Visa"><path fill="#1A1F71" d="M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z"/></svg></li>
   <li class="pay-badge" title="Mastercard"><svg viewBox="-0.96 -0.96 49.92 31.92" class="pay-logo" style="height:28px" role="img" aria-label="Mastercard"><circle cx="15" cy="15" r="15" fill="#EB001B"/><circle cx="33" cy="15" r="15" fill="#F79E1B"/><path fill="#FF5F00" d="M24 3a15 15 0 0 1 0 24a15 15 0 0 1 0-24z"/></svg></li>
@@ -92,6 +87,13 @@
 
     <p class="offer reveal"><span class="chip chip--teal">New user discount</span> About half price for your first 12 months on every paid plan.</p>
     <p class="small muted" style="margin:-36px 0 var(--space-7);max-width:72ch">A new user is an organisation or individual that has never had a Trnzit account. You’re a returning user if you register with a different email address but connect a bank account, wallet, exchange account or other provider that is, or was, connected to another Trnzit account, or if you previously cancelled a Trnzit plan.</p>
+    <div class="billing-row">
+      <div class="billing-toggle" role="group" aria-label="Billing period for all plans" data-billing>
+        <button type="button" data-period="annual" aria-pressed="true">Annual <span class="save">2 months free</span></button>
+        <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-billing-live></p>
+    </div>
     <div class="plans plans--4">
       <article class="plan reveal" id="free" aria-labelledby="p-free">
         <h3 class="plan__name" id="p-free">Free</h3>

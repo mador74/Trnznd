@@ -15,16 +15,18 @@ nav: pricing
   <div class="container">
     <div class="pricing-head">
       <h2 id="plans-title" class="sr-only">Plans</h2>
-      <div class="billing-toggle" role="group" aria-label="Billing period" data-billing>
-        <button type="button" data-period="annual" aria-pressed="true">Annual <span class="save">2 months free</span></button>
-        <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
-      </div>
-      <p class="sr-only" aria-live="polite" data-billing-live></p>
       <div class="pay-row"><span class="pay-label">Pay with</span>{{> payment-logos}}</div>
     </div>
 
     <p class="offer reveal"><span class="chip chip--teal">New user discount</span> About half price for your first 12 months on every paid plan.</p>
     <p class="small muted" style="margin:-36px 0 var(--space-7);max-width:72ch">A new user is an organisation or individual that has never had a Trnzit account. You’re a returning user if you register with a different email address but connect a bank account, wallet, exchange account or other provider that is, or was, connected to another Trnzit account, or if you previously cancelled a Trnzit plan.</p>
+    <div class="billing-row">
+      <div class="billing-toggle" role="group" aria-label="Billing period for all plans" data-billing>
+        <button type="button" data-period="annual" aria-pressed="true">Annual <span class="save">2 months free</span></button>
+        <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-billing-live></p>
+    </div>
     <div class="plans plans--4">
       <article class="plan reveal" id="free" aria-labelledby="p-free">
         <h3 class="plan__name" id="p-free">Free</h3>

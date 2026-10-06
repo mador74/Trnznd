@@ -634,3 +634,4 @@ a:hover { text-decoration-color: var(--teal); }
 .card-toggle button[aria-pressed="true"] { background: var(--white); color: var(--midnight); box-shadow: var(--shadow-sm), 0 0 0 1px var(--border); }
 .plan .card-toggle + .plan__price { margin-top: var(--space-4); }
 @media (min-width: 1181px) { .plans--4 .plan__for { min-height: 6.4em; } }
+.billing-row { display: flex; justify-content: center; margin-bottom: var(--space-7); }

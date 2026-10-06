@@ -96,3 +96,30 @@
 .hero--long .container + .hero__grid{align-items:start}
 .hero--long .hero__visual>.mock.hero__main{margin-top:96px}
 @media (max-width:960px){.hero--long .hero__visual>.mock.hero__main{margin-top:104px}}
+
+/* Group structure diagram (About): group → two companies → one product each */
+.org{--line:#C9CED6;display:flex;flex-direction:column;align-items:center}
+.org__root{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 28px;border:1px solid var(--border);border-radius:var(--radius-card);background:var(--white);box-shadow:var(--shadow-md);font-family:var(--font-secondary);font-size:var(--fs-label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.org__root img{width:150px;height:auto}
+.org__branches{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-6);width:100%;max-width:880px;margin-top:56px}
+.org__branches::before{content:"";position:absolute;left:50%;top:-56px;height:28px;border-left:2px solid var(--line)}
+.org__branches::after{content:"";position:absolute;top:-28px;left:calc((100% - var(--space-6)) / 4);right:calc((100% - var(--space-6)) / 4);border-top:2px solid var(--line)}
+.org__branches{grid-template-rows:auto auto;grid-auto-flow:column;row-gap:32px}
+.org__col{display:contents}
+.org__node--company::before{content:"";position:absolute;left:50%;top:-30px;height:28px;border-left:2px solid var(--line)}
+.org__node{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:20px;border:1px solid var(--border);border-radius:var(--radius-card);background:var(--white);font-family:var(--font-secondary);font-size:var(--fs-small);color:var(--steel)}
+.org__node b{font-family:var(--font-primary);font-size:1.25rem;color:var(--midnight)}
+.org__node--company{border-color:rgba(0,212,170,.5);background:rgba(0,212,170,.06)}
+.org__node--product::before{content:"";position:absolute;left:50%;top:-33px;height:32px;border-left:2px dashed var(--teal)}
+.org__type{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+.org__logo{display:block;color:var(--midnight);margin:4px 0}
+.org__logo svg,.org__logo img{width:116px;height:auto}
+@media (max-width:640px){
+  .org__branches{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-flow:row;row-gap:32px;margin-top:40px}
+  .org__branches::before{top:-40px;height:40px}
+  .org__branches::after,.org__node--company::before{display:none}
+  .org__col + .org__col .org__node--company{margin-top:24px}
+}
+
+/* Link-style button on the dark CTA band */
+.cta-band .btn--ghost{color:var(--white)}

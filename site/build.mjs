@@ -135,7 +135,7 @@ ${links.map(([h, l]) => `          <li><a href="${/^https?:/.test(h) ? h : r + h
       </div>
 ${col('ZEND', [['index.html', 'ZEND'], ['index.html#how-it-works', 'How it works'], ['business.html', 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
 ${col('Resources', [['insights.html', 'Insights'], ['faq.html', 'FAQ'], ['resources.html#documents', 'Documents & policies'], ['resources.html#transparency', 'Reserve transparency']])}
-${col('Company', [['about.html', 'About Trnznd'], ['contact.html', 'Contact'], ['contact.html?type=access', 'Request access'], [TRNZIT_URL, 'Trnzit']])}
+${col('Company', [['about.html', 'The Trnznd Group'], ['contact.html', 'Contact'], ['contact.html?type=access', 'Request access'], [TRNZIT_URL, 'Trnzit']])}
 ${col('Legal', [['legal/notice.html', 'Important notice'], ['legal/risk.html', 'Risk disclosures'], ['legal/terms.html', 'Terms & conditions'], ['legal/privacy.html', 'Privacy'], ['legal/complaints.html', 'Complaints'], ['legal/cookies.html', 'Cookies']])}
     </div>
     <div class="disclaimer">

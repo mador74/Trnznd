@@ -123,3 +123,7 @@
 
 /* Link-style button on the dark CTA band */
 .cta-band .btn--ghost{color:var(--white)}
+
+/* CTA headline set as separate lines */
+.cta-band h2.cta-band__lines{max-width:none}
+.cta-band__lines .line{display:block}

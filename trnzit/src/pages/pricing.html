@@ -70,18 +70,20 @@ nav: pricing
       <article class="plan plan--featured reveal" style="--d:120ms" id="premium" data-plan-card aria-labelledby="p-premium">
         <span class="plan__badge">Most popular</span>
         <h3 class="plan__name" id="p-premium">Premium</h3>
-        <p class="plan__for">For teams that need approvals, invoicing and full reconciliation.</p>
+        <p class="plan__for">For growing teams.</p>
         <div class="card-toggle" role="group" aria-label="Billing period for Premium"><button type="button" data-card-period="annual" aria-pressed="true">Annual</button><button type="button" data-card-period="monthly" aria-pressed="false">Monthly</button></div>
         <div class="plan__price"><s class="plan__was"><span class="sr-only">Normal price </span><span data-was data-monthly="99" data-annual="990">$990</span></s><span class="plan__amt"><span class="sr-only">New-user price </span><span data-price data-monthly="49.99" data-annual="499">$499</span></span><span class="plan__per" data-per>/year</span></div>
         <p class="plan__note" data-plan-note data-monthly-note="New users: first 12 months, then $99/month" data-annual-note="New users: first year, then $990/year">New users: first year, then $990/year</p>
         <a class="btn btn--primary btn--block" href="contact.html?plan=premium&amp;billing=annual" data-plan-link>Start 30-day free trial</a>
+        <p class="plan__plus">Everything in Teams, plus:</p>
         <ul class="checks">
-          <li>Up to 5 users</li>
-          <li>Up to 5 connections</li>
-          <li>Full reconciliation</li>
-          <li>Invoicing &amp; direct settlement</li>
-          <li>M-of-N approval policies</li>
-          <li>Address whitelisting</li>
+          <li>5 additional seats (10 total)</li>
+          <li>Your own approval rules</li>
+          <li>Custom roles, based on permissions</li>
+          <li>Up to 10 exchange and digital custody connections</li>
+          <li>Priority support and named onboarding</li>
+          <li class="no">No reconciliation</li>
+          <li class="no">No invoicing</li>
         </ul>
       </article>
       <article class="plan reveal" style="--d:180ms" id="institution" data-plan-card aria-labelledby="p-institution">
@@ -115,24 +117,27 @@ nav: pricing
         </thead>
         <tbody>
           <tr class="group"><th scope="colgroup" colspan="5">Users &amp; connections</th></tr>
-          <tr><th scope="row">Users</th><td>1 seat</td><td>5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
-          <tr><th scope="row">Exchange &amp; custody connections</th><td>—</td><td>Up to 5</td><td class="col-featured">Up to 5</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Users</th><td>1 seat</td><td>5</td><td class="col-featured">10</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Exchange &amp; custody connections</th><td>—</td><td>Up to 5</td><td class="col-featured">Up to 10</td><td>Unlimited</td></tr>
           <tr><th scope="row">Your own software &amp; hardware wallets</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Crypto exchanges &amp; custodians</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Chains: EVM, Solana, Tron</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Visibility &amp; records</th></tr>
           <tr><th scope="row">Unified balances</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
           <tr><th scope="row">Transaction history</th><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
-          <tr><th scope="row">Reconciliation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured">Full</td><td>Full</td></tr>
+          <tr><th scope="row">Reconciliation</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Governance</th></tr>
-          <tr><th scope="row">Authorised members &amp; authority levels</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
-          <tr><th scope="row">Audit trail</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
-          <tr><th scope="row">M-of-N approval policies</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Payment thresholds</td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
-          <tr><th scope="row">Address whitelisting</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Roles &amp; permissions</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Standard</td><td class="col-featured">Custom</td><td>Custom</td></tr>
+          <tr><th scope="row">Audit trail</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Approval rules</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>Above payment thresholds</td><td class="col-featured">Your own rules</td><td>Your own rules</td></tr>
+          <tr><th scope="row">Address whitelisting</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr><th scope="row">Multi-signature wallets (Safe, Squads)</th><td><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Payments &amp; trading</th></tr>
-          <tr><th scope="row">Invoicing &amp; direct settlement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>
+          <tr><th scope="row">Invoicing &amp; direct settlement</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="col-featured"><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="ph">To confirm</span></td></tr>
           <tr><th scope="row">Trade &amp; convert in your exchange accounts</th><td><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td><td class="col-featured"><span class="ph">To confirm</span></td><td><span class="ph">To confirm</span></td></tr>
+          <tr class="group"><th scope="colgroup" colspan="5">Support</th></tr>
+          <tr><th scope="row">Support</th><td>Help centre; email within 3 working days</td><td>Email within 1 working day</td><td class="col-featured">Priority support</td><td>Priority support</td></tr>
+          <tr><th scope="row">Onboarding</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td>White-glove onboarding</td><td class="col-featured">Named onboarding</td><td>Named onboarding</td></tr>
           <tr class="group"><th scope="colgroup" colspan="5">Billing</th></tr>
           <tr><th scope="row">Price (new users, first year)</th><td>Free</td><td><s>$290</s> $149/yr</td><td class="col-featured"><s>$990</s> $499/yr</td><td><s>$2,490</s> $1,249/yr</td></tr>
           <tr><th scope="row">Visa, Mastercard, Google Pay, Apple Pay or PayPal (USD)</th><td><span class="no-mark" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td class="col-featured"><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td><td><span class="yes">{{icon:check}}</span><span class="sr-only">Included</span></td></tr>

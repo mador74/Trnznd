@@ -8,7 +8,7 @@ On the site, every placeholder is shown with a dashed blue outline (`.ph`, `.ph-
 - **Card pre-authorisation hold:** $15.
 - **Credentials:** Trnzit stores the API details used to connect accounts. Multi-sig signing keys are held by users, never by Trnzit. The copy now says "private keys" wherever it promises Trnzit holds none, and says plainly that Trnzit stores API details.
 - **Basic plan:** transaction history only, with no reconciliation and no invoicing.
-- **Design changes requested:** "Purpose Beyond Payment" removed from the footer (note: Brand Guide p.22 rule 04 asks for it on external communications); large hero Enso removed; header now reads "Treasury Management, by Trnznd" after the wordmark.
+- **Design changes requested:** "Purpose Beyond Payment" removed from the footer (note: Brand Guide p.22 rule 04 asks for it on external communications); large hero Enso removed; header now reads "Stablecoin Governance and Management, by Trnznd" after the wordmark (changed from "Treasury Management, by Trnznd").
 
 - **Multi-sig wallets:** Safe (formerly Gnosis Safe) for EVM-compatible assets, and Squads for Solana-based assets. Named on Platform §06, the new Providers page, FAQ and the Home trust strip (names only, no logos; check each brand's logo/trademark guidelines before adding logos).
 - **Providers page added** (`providers.html`, in the main menu) with placeholder slots for the exchanges and on/off-ramp providers to be listed, plus a placeholder to disclose any referral or commercial arrangements. Listing providers that users open accounts with may count as a financial promotion or introduction in some jurisdictions; include this in the legal review.

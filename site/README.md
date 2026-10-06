@@ -38,7 +38,7 @@ Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the lock-up, `{{dashboar
 
 ## Pages
 
-ZEND (home), Business, Insights, Resources, FAQ, About, Contact, the legal pages (important notice, risk, terms, privacy, cookies), the brand logo set and a 404 page.
+ZEND (home), Business, Insights, Resources, FAQ, About, Contact, the legal pages (important notice, risk, terms, privacy, complaints, cookies), the brand logo set and a 404 page.
 
 ## Before launch
 
@@ -51,7 +51,8 @@ grep -o 'class="ph">[^<]*' -r docs --include=*.html
 Also outstanding:
 
 - The contact form validates but has no endpoint; connect it in `site.js`.
-- The legal pages are outlines only, apart from the important notice, which was transcribed from the old footer and needs checking word for word.
+- The legal pages are outlines only, apart from the important notice, which matches the current site footer word for word. The current site already publishes Terms, Privacy, Risk Disclosures and a Complaints Policy: move their wording across.
+- Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
 - The “d” in the wordmark was built from the “n” of the traced artwork. Check it against the master logo (see `brand/logo.html`).
 - External URLs are set at the top of `build.mjs`: the Dashboard (`app.trnznd.io`) and Trnzit (`www.trnznd.io/trnzit/`).
 

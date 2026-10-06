@@ -115,4 +115,4 @@ Ordered by how much the answer changes the site.
 - Confirmed: conversions run through the exchange API, inside the same exchange account, into any asset that exchange lists. Transfers between exchanges, custodians and wallets are on-chain over supported networks (Ethereum/EVM, Solana, Tron).
 - Confirmed: a transaction made outside Trnzit on any connection (wallets, exchanges, custodians) automatically triggers an email and an alert. All plans, including Free. For organisations, administrators choose who is alerted per connection.
 - Site wording: "settlements, which are most often made in stablecoins" is the expected use, not a measured statistic.
-- **Placeholders/assumptions:** how quickly alerts are sent (not stated on the site); what the "alert" is besides email (in-app, push or both); the FAQ states Trnzit can't block transactions made outside the platform, as it holds no keys. Confirm this is accurate.
+- Confirmed: alerts are an email plus an in-platform notification, sent as soon as the transaction is identified. Trnzit can't block transactions made outside the platform, as it holds no keys (stated in the FAQ).

@@ -1,0 +1,351 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Trnznd art</title>
+<style>html,body{margin:0;background:#0A0F1E}canvas{display:block}</style>
+<canvas id="c"></canvas>
+<script>
+// Trnznd brand artwork, drawn in code so every image is original and repeatable.
+// Visual direction from the brand kit: Midnight field, faint grid and orbital dots,
+// a wireframe Earth with glowing trade routes, Enso arcs and light trails.
+// Teal leads, Electric Blue supports, Violet only as a rare highlight.
+// Usage: scenes.html?scene=globe&w=1920&h=1200&seed=7
+const P = new URLSearchParams(location.search);
+const W = +P.get('w') || 1920, H = +P.get('h') || 1200, SCENE = P.get('scene') || 'globe';
+const cv = document.getElementById('c'); cv.width = W; cv.height = H;
+const g = cv.getContext('2d');
+const C = { midnight: '#0A0F1E', navy: '#111827', teal: [0, 212, 170], blue: [0, 136, 255], violet: [108, 58, 237], cyan: [6, 182, 212] };
+const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const mix = (a, b, t) => [0, 1, 2].map((i) => Math.round(a[i] + (b[i] - a[i]) * t));
+const brand = (t) => (t < 0.55 ? mix(C.teal, C.blue, t / 0.55) : mix(C.blue, C.violet, (t - 0.55) / 0.45));
+let seed = +P.get('seed') || 7;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const S = Math.min(W, H) / 1200; // scale factor relative to a 1200px short side
+
+function field({ wash = [0.7, 0.4], grid = true } = {}) {
+  g.fillStyle = C.midnight; g.fillRect(0, 0, W, H);
+  const r = g.createRadialGradient(W * wash[0], H * wash[1], 0, W * wash[0], H * wash[1], Math.max(W, H) * 0.75);
+  r.addColorStop(0, 'rgba(17,40,64,0.95)'); r.addColorStop(0.45, 'rgba(14,26,46,0.6)'); r.addColorStop(1, 'rgba(10,15,30,0)');
+  g.fillStyle = r; g.fillRect(0, 0, W, H);
+  if (grid) {
+    g.strokeStyle = 'rgba(255,255,255,0.035)'; g.lineWidth = 1;
+    const step = 64 * S;
+    for (let x = (W % step) / 2; x < W; x += step) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+    for (let y = (H % step) / 2; y < H; y += step) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  }
+}
+function vignette(a = 0.65) {
+  const v = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
+  v.addColorStop(0, 'rgba(10,15,30,0)'); v.addColorStop(1, `rgba(6,9,18,${a})`);
+  g.fillStyle = v; g.fillRect(0, 0, W, H);
+}
+function grain(a = 10) {
+  const img = g.getImageData(0, 0, W, H), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (rnd() - 0.5) * a; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  g.putImageData(img, 0, 0);
+}
+function glowDot(x, y, r, col, a = 1) {
+  const gr = g.createRadialGradient(x, y, 0, x, y, r * 6);
+  gr.addColorStop(0, rgba(col, 0.55 * a)); gr.addColorStop(0.25, rgba(col, 0.18 * a)); gr.addColorStop(1, rgba(col, 0));
+  g.fillStyle = gr; g.beginPath(); g.arc(x, y, r * 6, 0, 7); g.fill();
+  g.fillStyle = `rgba(235,255,250,${0.95 * a})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+}
+function orbitDots(cx, cy, rx, ry, n, a) {
+  for (let i = 0; i < n; i++) {
+    const t = (i / n) * Math.PI * 2;
+    g.fillStyle = `rgba(255,255,255,${a * (0.4 + 0.6 * Math.abs(Math.sin(t * 3)))})`;
+    g.beginPath(); g.arc(cx + Math.cos(t) * rx, cy + Math.sin(t) * ry, 1.4 * S, 0, 7); g.fill();
+  }
+}
+
+// ── Wireframe Earth with trade routes between financial centres ──────────────
+const CITIES = {
+  london: [51.5, -0.1], rotterdam: [51.9, 4.5], zurich: [47.4, 8.5], dubai: [25.2, 55.3], mumbai: [19.1, 72.9],
+  singapore: [1.35, 103.8], jakarta: [-6.2, 106.8], shanghai: [31.2, 121.5], hongkong: [22.3, 114.2],
+  lagos: [6.5, 3.4], nairobi: [-1.3, 36.8], johannesburg: [-26.2, 28.0], saopaulo: [-23.5, -46.6],
+  buenosaires: [-34.6, -58.4], newyork: [40.7, -74.0], panama: [9.0, -79.5], istanbul: [41.0, 29.0], kualalumpur: [3.1, 101.7],
+};
+// Simplified continent outlines [lon, lat], hand-drawn at low resolution: enough for a dot-matrix Earth.
+const LAND = [
+  [[-17,21],[-16,28],[-9,32],[-5,36],[10,37],[11,33],[20,31],[32,31],[34,28],[39,22],[43,12],[51,12],[44,2],[40,-5],[40,-15],[35,-24],[32,-29],[27,-34],[20,-35],[18,-32],[14,-22],[12,-13],[13,-5],[9,0],[9,4],[4,6],[-8,4],[-13,8],[-17,14]],
+  [[-10,36],[-9,43],[-2,44],[-1,46],[-5,48],[2,51],[5,53],[8,54],[10,57],[5,58],[5,62],[14,68],[25,71],[31,70],[40,67],[45,68],[60,68],[60,55],[50,45],[40,41],[29,41],[26,40],[23,36],[20,40],[15,38],[18,40],[12,44],[13,45],[8,44],[3,43],[-1,37]],
+  [[26,41],[36,36],[35,32],[43,13],[52,16],[57,22],[60,25],[67,25],[73,20],[77,8],[80,13],[87,22],[92,22],[98,16],[98,8],[104,1],[104,10],[109,12],[106,20],[110,21],[117,23],[121,29],[122,37],[120,40],[127,40],[129,35],[130,42],[135,44],[141,52],[137,55],[143,59],[155,59],[162,62],[179,66],[179,72],[140,73],[110,77],[80,73],[60,70],[45,68],[60,55],[50,45],[40,41]],
+  [[130,31],[132,34],[136,35],[140,36],[142,40],[141,43],[145,44],[140,42],[138,38],[135,34]],
+  [[95,5],[98,4],[104,-2],[106,-6],[102,-4],[96,3]], [[109,1],[111,-3],[116,-4],[119,1],[117,7],[113,4]], [[105,-6],[114,-7],[114,-8],[106,-7]],
+  [[114,-22],[114,-34],[118,-35],[124,-33],[131,-31],[138,-35],[141,-38],[147,-38],[150,-37],[153,-29],[153,-25],[146,-19],[142,-11],[136,-12],[132,-11],[127,-14],[122,-17]],
+  [[-80,-1],[-80,8],[-77,9],[-72,12],[-63,11],[-55,6],[-50,2],[-44,-2],[-35,-6],[-35,-9],[-39,-13],[-41,-22],[-48,-26],[-53,-34],[-58,-38],[-65,-41],[-65,-47],[-68,-51],[-70,-55],[-74,-50],[-73,-40],[-71,-30],[-70,-18],[-76,-14],[-81,-6]],
+  [[-168,66],[-160,59],[-152,58],[-135,58],[-124,48],[-124,40],[-117,32],[-110,23],[-105,20],[-97,16],[-92,15],[-88,14],[-83,9],[-80,8],[-78,9],[-83,15],[-87,21],[-90,21],[-97,26],[-97,28],[-90,29],[-83,29],[-81,25],[-80,31],[-76,35],[-74,40],[-70,42],[-66,44],[-60,46],[-55,52],[-62,58],[-70,61],[-78,62],[-82,55],[-92,57],[-95,62],[-90,68],[-110,68],[-125,70],[-140,70],[-156,71],[-166,68]],
+  [[-45,60],[-40,65],[-22,70],[-20,76],[-30,82],[-55,82],[-70,78],[-55,70],[-52,64]],
+  [[-5,50],[1,51],[2,53],[0,54],[-2,56],[-2,58],[-5,58],[-6,56],[-3,54],[-5,52]],
+  [[44,-25],[47,-25],[50,-15],[49,-12],[44,-16]],
+];
+const onLand = (lon, lat) => LAND.some((poly) => {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+});
+const ROUTES = [['london', 'singapore'], ['rotterdam', 'shanghai'], ['lagos', 'london'], ['saopaulo', 'lagos'], ['dubai', 'mumbai'],
+  ['nairobi', 'dubai'], ['jakarta', 'rotterdam'], ['johannesburg', 'singapore'], ['newyork', 'london'], ['panama', 'zurich'],
+  ['buenosaires', 'johannesburg'], ['istanbul', 'hongkong'], ['kualalumpur', 'dubai'], ['saopaulo', 'newyork'], ['zurich', 'dubai']];
+
+function globe({ cx, cy, R, lon0 = 22, lat0 = 14, routes = ROUTES, arcLift = 0.12, density = 1 }) {
+  const rad = Math.PI / 180, cl = Math.cos(lat0 * rad), sl = Math.sin(lat0 * rad);
+  const proj = (lat, lon, r = 1) => {
+    const la = lat * rad, lo = (lon - lon0) * rad;
+    const x = Math.cos(la) * Math.sin(lo), y = cl * Math.sin(la) - sl * Math.cos(la) * Math.cos(lo);
+    const z = sl * Math.sin(la) + cl * Math.cos(la) * Math.cos(lo);
+    return [cx + x * R * r, cy - y * R * r, z];
+  };
+  // atmosphere
+  const at = g.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.35);
+  at.addColorStop(0, rgba(C.teal, 0.16)); at.addColorStop(0.35, rgba(C.blue, 0.07)); at.addColorStop(1, rgba(C.blue, 0));
+  g.fillStyle = at; g.beginPath(); g.arc(cx, cy, R * 1.35, 0, 7); g.fill();
+  const body = g.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
+  body.addColorStop(0, '#16304c'); body.addColorStop(0.65, '#0e1b30'); body.addColorStop(1, '#0a1324');
+  g.fillStyle = body; g.beginPath(); g.arc(cx, cy, R, 0, 7); g.fill();
+  // surface dots (Fibonacci sphere), front hemisphere only
+  const N = Math.round(16000 * density);
+  for (let i = 0; i < N; i++) {
+    const y = 1 - (i / (N - 1)) * 2, r0 = Math.sqrt(1 - y * y), th = 2.39996323 * i;
+    const lat = Math.asin(y) / rad, lon = Math.atan2(Math.sin(th) * r0, Math.cos(th) * r0) / rad;
+    const [px, py, z] = proj(lat, lon);
+    if (z <= 0) continue;
+    const land = onLand(lon, lat), lightA = 0.25 + 0.75 * Math.max(0, z);
+    g.fillStyle = land ? rgba(mix(C.teal, C.cyan, 0.35), 0.35 + 0.6 * lightA * z) : rgba(C.blue, 0.04 + 0.07 * z);
+    g.beginPath(); g.arc(px, py, (land ? 1.7 : 0.8) * (0.55 + 0.6 * z) * S, 0, 7); g.fill();
+  }
+  // graticule
+  g.lineWidth = 1 * S;
+  const line = (pts) => {
+    let on = false; g.beginPath();
+    for (const [x, y, z] of pts) { if (z > 0) { on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; } else on = false; }
+    g.stroke();
+  };
+  g.strokeStyle = rgba(C.teal, 0.11);
+  for (let lo = -180; lo < 180; lo += 15) line(Array.from({ length: 121 }, (_, i) => proj(-90 + i * 1.5, lo)));
+  for (let la = -75; la <= 75; la += 15) line(Array.from({ length: 241 }, (_, i) => proj(la, -180 + i * 1.5)));
+  // rim
+  g.strokeStyle = rgba(C.teal, 0.55); g.lineWidth = 1.6 * S; g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
+  // trade routes: great circles lifted off the surface
+  g.globalCompositeOperation = 'lighter';
+  const slerp = (a, b, t) => {
+    const v = (lat, lon) => [Math.cos(lat * rad) * Math.cos(lon * rad), Math.cos(lat * rad) * Math.sin(lon * rad), Math.sin(lat * rad)];
+    const A = v(...a), B = v(...b), d = Math.acos(Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2]));
+    const s1 = Math.sin((1 - t) * d) / Math.sin(d), s2 = Math.sin(t * d) / Math.sin(d);
+    const p = [A[0] * s1 + B[0] * s2, A[1] * s1 + B[1] * s2, A[2] * s1 + B[2] * s2];
+    return [Math.asin(p[2]) / rad, Math.atan2(p[1], p[0]) / rad, d];
+  };
+  routes.forEach(([a, b], k) => {
+    const pts = [];
+    for (let i = 0; i <= 90; i++) {
+      const t = i / 90, [la, lo, d] = slerp(CITIES[a], CITIES[b], t);
+      pts.push(proj(la, lo, 1 + Math.sin(Math.PI * t) * arcLift * Math.min(1, d)));
+    }
+    const col = k % 5 === 4 ? C.blue : C.teal;
+    for (const [w, al] of [[7, 0.05], [3.2, 0.12], [1.4, 0.75]]) {
+      g.lineWidth = w * S; g.beginPath(); let on = false;
+      pts.forEach(([x, y, z], i) => {
+        const vis = z > 0.02;
+        if (vis) { on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; } else on = false;
+      });
+      g.strokeStyle = rgba(col, al); g.stroke();
+    }
+    // a pulse travelling along the route
+    const [px, py, pz] = pts[Math.floor(rnd() * 70) + 10];
+    if (pz > 0.05) glowDot(px, py, 1.8 * S, col, 0.8);
+  });
+  g.globalCompositeOperation = 'source-over';
+  for (const [name, [la, lo]] of Object.entries(CITIES)) {
+    const [x, y, z] = proj(la, lo);
+    if (z > 0.05) glowDot(x, y, 2.4 * S * (0.6 + 0.4 * z), name === 'zurich' || name === 'panama' ? C.violet : C.teal, 0.5 + 0.5 * z);
+  }
+}
+
+// ── Enso of light: a single open brush ring made of many fine strokes ────────
+function enso({ cx, cy, R, start = -0.95, sweep = 5.55, strokes = 520, width = 0.16 }) {
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < strokes; i++) {
+    const off = (rnd() - 0.5) * 2, rr = R * (1 + off * width * (0.5 + 0.5 * rnd()));
+    const s0 = start + rnd() * 0.12, len = sweep * (0.72 + 0.28 * rnd()) * (1 - Math.abs(off) * 0.35);
+    const segs = 120;
+    for (let j = 0; j < segs; j++) {
+      const t0 = j / segs, t1 = (j + 1) / segs;
+      const a0 = s0 + len * t0, a1 = s0 + len * t1;
+      const taper = Math.sin(Math.PI * Math.min(1, t0 * 1.15)) ** 0.6;
+      const wob = Math.sin(a0 * 3 + i) * R * 0.004;
+      g.strokeStyle = rgba(brand(Math.min(1, (a0 - start) / sweep)), 0.035 + 0.05 * taper);
+      g.lineWidth = (0.6 + 1.6 * taper) * S;
+      g.beginPath(); g.arc(cx, cy, rr + wob, a0, a1); g.stroke();
+    }
+  }
+  // bright core along the stroke and a heavy brush head at the start
+  for (let j = 0; j < 200; j++) {
+    const t = j / 200, a = start + sweep * 0.98 * t;
+    g.strokeStyle = rgba(brand(t), 0.5 * (1 - t * 0.6)); g.lineWidth = (5 - 3.5 * t) * S;
+    g.beginPath(); g.arc(cx, cy, R, a, a + sweep / 200 + 0.002); g.stroke();
+  }
+  glowDot(cx + Math.cos(start) * R, cy + Math.sin(start) * R, 3.4 * S, C.teal, 0.9);
+  // particles drifting off the ring
+  for (let i = 0; i < 900; i++) {
+    const t = rnd(), a = start + sweep * t, rr = R * (1 + (rnd() - 0.5) * 0.5 * rnd());
+    g.fillStyle = rgba(brand(t), 0.15 + 0.5 * rnd() * rnd());
+    g.beginPath(); g.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, (0.5 + rnd() * 1.4) * S, 0, 7); g.fill();
+  }
+  g.globalCompositeOperation = 'source-over';
+}
+
+// ── Many volatile currencies converging into one stable line ─────────────────
+function convergence({ y0 = 0.55, lines = 9 }) {
+  const cy = H * y0, x0 = W * 0.04, x1 = W * 0.98, join = 0.62;
+  g.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < lines; k++) {
+    const spread = (k - (lines - 1) / 2) / ((lines - 1) / 2), ph = rnd() * 10, f1 = 2 + rnd() * 3, f2 = 7 + rnd() * 6;
+    const amp = H * (0.05 + 0.06 * rnd()), col = [C.blue, C.cyan, C.violet, C.blue, C.cyan][k % 5];
+    const path = [];
+    for (let i = 0; i <= 600; i++) {
+      const t = i / 600, x = x0 + (x1 - x0) * t, settle = Math.max(0, 1 - t / join) ** 1.6;
+      const noise = Math.sin(t * f1 * 6.28 + ph) * 0.6 + Math.sin(t * f2 * 6.28 + ph * 2) * 0.4 + (rnd() - 0.5) * 0.35;
+      path.push([x, cy + spread * H * 0.24 * settle + noise * amp * settle]);
+    }
+    for (const [w, al] of [[6, 0.04], [1.4, 0.4]]) {
+      g.beginPath(); path.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+      g.lineWidth = w * S; g.strokeStyle = rgba(col, al); g.stroke();
+    }
+  }
+  // the stable line
+  const sx = x0 + (x1 - x0) * join;
+  for (const [w, al] of [[26, 0.05], [10, 0.12], [3, 0.95]]) {
+    const lg = g.createLinearGradient(sx - W * 0.12, 0, x1, 0);
+    lg.addColorStop(0, rgba(C.teal, 0)); lg.addColorStop(0.25, rgba(C.teal, al)); lg.addColorStop(1, rgba(C.teal, al));
+    g.strokeStyle = lg; g.lineWidth = w * S; g.beginPath(); g.moveTo(sx - W * 0.12, cy); g.lineTo(x1, cy); g.stroke();
+  }
+  glowDot(sx, cy, 4 * S, C.teal, 1);
+  g.globalCompositeOperation = 'source-over';
+  // measurement ticks along the stable line
+  g.strokeStyle = 'rgba(255,255,255,0.12)'; g.lineWidth = 1;
+  for (let x = sx + 40 * S; x < x1; x += 40 * S) { g.beginPath(); g.moveTo(x, cy + 14 * S); g.lineTo(x, cy + 22 * S); g.stroke(); }
+}
+
+// ── Flow: many origins meet at one settlement point, then fan out ──────────
+function flow({ fx = 0.56, fy = 0.5, trails = 46 }) {
+  const X = W * fx, Y = H * fy;
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < trails; i++) {
+    const a = (i / (trails - 1)) * 2 - 1, b = ((i * 7) % trails) / (trails - 1) * 2 - 1;
+    const y0 = Y + a * H * 0.46 + (rnd() - 0.5) * H * 0.04, y1 = Y + b * H * 0.42;
+    const col = brand(0.15 + 0.6 * rnd());
+    const path = (ctx) => { ctx.moveTo(-20, y0); ctx.bezierCurveTo(W * 0.3, y0, X - W * 0.14, Y + a * H * 0.02, X, Y); ctx.bezierCurveTo(X + W * 0.14, Y + b * H * 0.02, W * 0.8, y1, W + 20, y1); };
+    for (const [w, al] of [[6, 0.03], [1.2, 0.28 + 0.25 * rnd()]]) {
+      g.beginPath(); path(g); g.lineWidth = w * S; g.strokeStyle = rgba(col, al); g.stroke();
+    }
+  }
+  const core = g.createRadialGradient(X, Y, 0, X, Y, H * 0.22);
+  core.addColorStop(0, rgba(C.teal, 0.35)); core.addColorStop(0.3, rgba(C.blue, 0.1)); core.addColorStop(1, rgba(C.blue, 0));
+  g.fillStyle = core; g.beginPath(); g.arc(X, Y, H * 0.22, 0, 7); g.fill();
+  for (let i = 0; i < 700; i++) { // motion streaks
+    const x = rnd() * W, t = Math.abs(x - X) / (W * 0.5), y = Y + (rnd() - 0.5) * H * 0.9 * Math.min(1, t * 1.4);
+    g.strokeStyle = rgba(brand(rnd() * 0.6), 0.1 + 0.3 * rnd() * (1 - t)); g.lineWidth = (0.6 + rnd()) * S;
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + (8 + rnd() * 30) * S, y); g.stroke();
+  }
+  glowDot(X, Y, 5 * S, C.teal, 1);
+  g.globalCompositeOperation = 'source-over';
+}
+
+// ── Reserve: currencies in orbit around one stable core ─────────────────────
+function reserve({ cx, cy, R }) {
+  const tilt = 0.32, orbits = 6;
+  g.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < orbits; k++) {
+    const r = R * (0.42 + k * 0.13), rot = -0.18 + k * 0.05, col = k === orbits - 1 ? C.violet : k % 2 ? C.blue : C.teal;
+    g.save(); g.translate(cx, cy); g.rotate(rot);
+    g.strokeStyle = rgba(col, 0.16); g.lineWidth = 1.2 * S; g.beginPath(); g.ellipse(0, 0, r, r * tilt, 0, 0, 7); g.stroke();
+    const a0 = rnd() * 6.28, len = 0.9 + rnd() * 0.8; // a bright trail behind each currency
+    for (let j = 0; j < 60; j++) {
+      const t = j / 60, a = a0 - len * (1 - t);
+      g.strokeStyle = rgba(col, 0.04 + 0.6 * t * t); g.lineWidth = (1 + 2.2 * t) * S;
+      g.beginPath(); g.ellipse(0, 0, r, r * tilt, 0, a, a + len / 60 + 0.004); g.stroke();
+    }
+    const px = Math.cos(a0) * r, py = Math.sin(a0) * r * tilt;
+    g.restore();
+    const c = Math.cos(rot), s2 = Math.sin(rot);
+    glowDot(cx + px * c - py * s2, cy + px * s2 + py * c, 2.8 * S, col, 0.95);
+  }
+  g.globalCompositeOperation = 'source-over';
+  enso({ cx, cy, R: R * 0.2, strokes: 160, width: 0.22 });
+}
+
+// ── Settlement network on a receding plane ───────────────────────────────────
+function network({ horizon = 0.36, nodes = 70 }) {
+  const hy = H * horizon, vx = W * 0.5;
+  const toScreen = (u, v) => { // u: -1..1 across, v: 0 (far) .. 1 (near)
+    const d = 0.08 + v ** 1.6 * 0.92; return [vx + u * W * 0.9 * d, hy + (H - hy) * d];
+  };
+  g.strokeStyle = rgba(C.teal, 0.12); g.lineWidth = 1 * S;
+  for (let i = -12; i <= 12; i++) { const [a, b] = toScreen(i / 12, 0), [c, d] = toScreen(i / 12, 1.15); g.beginPath(); g.moveTo(a, b); g.lineTo(c, d); g.stroke(); }
+  for (let j = 0; j <= 16; j++) { const v = j / 16; const [a, b] = toScreen(-1.2, v), [c] = toScreen(1.2, v); g.beginPath(); g.moveTo(a, b); g.lineTo(c, b); g.stroke(); }
+  const haze = g.createLinearGradient(0, hy - H * 0.08, 0, hy + H * 0.2);
+  haze.addColorStop(0, 'rgba(10,15,30,0)'); haze.addColorStop(0.35, 'rgba(10,15,30,0.85)'); haze.addColorStop(1, 'rgba(10,15,30,0)');
+  g.fillStyle = haze; g.fillRect(0, hy - H * 0.08, W, H * 0.28);
+  const pts = Array.from({ length: nodes }, () => { const u = (rnd() - 0.5) * 1.9, v = 0.08 + rnd() * 0.9; return [u, v, ...toScreen(u, v)]; });
+  g.globalCompositeOperation = 'lighter';
+  pts.forEach((p, i) => {
+    const order = pts.map((q, j) => [Math.hypot(p[0] - q[0], (p[1] - q[1]) * 1.6), j]).sort((a, b) => a[0] - b[0]);
+    const near = order.slice(1, 3).concat(i % 6 === 0 ? [order[order.length - 1 - (i % 5)]] : []);
+    near.forEach(([dist, j]) => {
+      const q = pts[j], span = Math.hypot(p[2] - q[2], p[3] - q[3]), lift = span * 0.22;
+      const mx = (p[2] + q[2]) / 2, my = (p[3] + q[3]) / 2 - lift;
+      const col = (i + j) % 7 === 0 ? C.blue : C.teal;
+      for (const [w, al] of [[5, 0.04], [1.3, 0.35 + 0.35 * p[1]]]) {
+        g.strokeStyle = rgba(col, al); g.lineWidth = w * S * (0.5 + p[1]);
+        g.beginPath(); g.moveTo(p[2], p[3]); g.quadraticCurveTo(mx, my, q[2], q[3]); g.stroke();
+      }
+    });
+  });
+  for (let k = 0; k < 260; k++) { // orbital dust above the plane
+    g.fillStyle = `rgba(255,255,255,${0.04 + 0.12 * rnd()})`; g.beginPath(); g.arc(rnd() * W, rnd() * hy * 1.1, (0.5 + rnd()) * S, 0, 7); g.fill();
+  }
+  pts.forEach((p, i) => glowDot(p[2], p[3], (1.2 + 2.6 * p[1]) * S, i % 17 === 0 ? C.violet : C.teal, 0.35 + 0.65 * p[1]));
+  g.globalCompositeOperation = 'source-over';
+}
+
+const SCENES = {
+  globe() { // wide: globe right of centre, room for type on the left
+    field({ wash: [0.66, 0.45] });
+    orbitDots(W * 0.64, H * 0.52, H * 0.62, H * 0.2, 140, 0.18);
+    globe({ cx: W * 0.64, cy: H * 0.52, R: H * 0.38 });
+    vignette(0.55); grain(8);
+  },
+  'globe-centre'() {
+    field({ wash: [0.5, 0.45] });
+    orbitDots(W * 0.5, H * 0.52, H * 0.66, H * 0.22, 160, 0.16);
+    globe({ cx: W * 0.5, cy: H * 0.52, R: H * 0.4, lon0: 60, lat0: 10 });
+    vignette(0.6); grain(8);
+  },
+  enso() {
+    field({ wash: [0.5, 0.5] });
+    orbitDots(W * 0.5, H * 0.5, H * 0.46, H * 0.46, 120, 0.12);
+    enso({ cx: W * 0.5, cy: H * 0.5, R: H * 0.32 });
+    vignette(0.6); grain(8);
+  },
+  stability() {
+    field({ wash: [0.7, 0.55] });
+    convergence({});
+    vignette(0.55); grain(8);
+  },
+  flow() {
+    field({ wash: [0.56, 0.5] });
+    flow({});
+    vignette(0.6); grain(8);
+  },
+  reserve() {
+    field({ wash: [0.5, 0.5] });
+    orbitDots(W * 0.5, H * 0.5, H * 0.75, H * 0.75, 200, 0.08);
+    reserve({ cx: W * 0.5, cy: H * 0.5, R: H * 0.62 });
+    vignette(0.6); grain(8);
+  },
+};
+SCENES[SCENE]();
+document.title = 'done';
+</script>

@@ -38,11 +38,21 @@ site/
     assets/css/trnznd.css   Trnznd-only additions
     assets/js/site.js       progressive enhancement (menus, reveals, tabs, form checks)
     assets/fonts/           Inter (Latin subset), self-hosted
-    assets/img/             brand photography (the Enso artifact), WebP
+    assets/img/             brand artwork rendered by site/art (see below), WebP
     assets/logo/            Trnznd logo set, plus the Trnzit lock-up used on the group card
 ```
 
 Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the lock-up, `{{dashboard}}` and `{{trnzit}}` the external URLs, and `{{root}}` the relative path to the site root.
+
+## Artwork
+
+The images are original brand artwork drawn in code, so there are no stock or third-party pictures to license. `site/art/scenes.html` draws each scene on a canvas: the wireframe Earth with trade routes, the Enso of light, currencies converging into one stable line, the settlement flow and the reserve orbits. `site/art/render.mjs` writes them to `src/assets/img/` as WebP:
+
+```bash
+NODE_PATH=$(npm root -g) node site/art/render.mjs   # needs Playwright with Chromium
+```
+
+Change a scene's seed or parameters in `render.mjs` to get a different composition.
 
 ## Pages
 

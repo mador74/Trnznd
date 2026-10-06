@@ -109,3 +109,10 @@ Ordered by how much the answer changes the site.
 - Confirmed: Trnzit is a treasury management platform currently focused on stablecoins on Ethereum and other EVM-compatible chains, Solana and Tron. Other assets remain visible in balances.
 - Stablecoins named on the site: USDT, USDC, EURC, USDS, USDe, DAI. **Placeholder:** which of these are supported on which network (not every issuer supports every chain, e.g. Tron) needs confirming by the technical team.
 - Demo screens now lead with stablecoins: the conversion example is USDT → USDC; one ETH balance remains to show non-stablecoin assets.
+
+## Conversions, transfers and outside-activity alerts (Oct 2026)
+
+- Confirmed: conversions run through the exchange API, inside the same exchange account, into any asset that exchange lists. Transfers between exchanges, custodians and wallets are on-chain over supported networks (Ethereum/EVM, Solana, Tron).
+- Confirmed: a transaction made outside Trnzit on any connection (wallets, exchanges, custodians) automatically triggers an email and an alert. All plans, including Free. For organisations, administrators choose who is alerted per connection.
+- Site wording: "settlements, which are most often made in stablecoins" is the expected use, not a measured statistic.
+- **Placeholders/assumptions:** how quickly alerts are sent (not stated on the site); what the "alert" is besides email (in-app, push or both); the FAQ states Trnzit can't block transactions made outside the platform, as it holds no keys. Confirm this is accurate.

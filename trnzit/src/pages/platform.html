@@ -93,7 +93,9 @@ nav: platform
         <li>One timeline across exchanges, custodians and wallets</li>
         <li>Filter by connection, asset, date or status</li>
         <li>Statement and CSV export <span class="ph">[Confirm any further export formats]</span></li>
+        <li><strong>Outside-activity alerts:</strong> if a transaction happens on a connected wallet, exchange account or custodian without going through Trnzit, you get an email and an alert</li>
       </ul>
+      <p>Connecting your own wallets adds a layer of protection: if anything moves from them outside Trnzit, you’ll know. For organisations, administrators choose who is alerted for each connection.</p>
       <p class="small muted">All plans.</p>
     </div>
     <div class="reveal" style="--d:120ms">{{> mock-history}}</div>
@@ -169,8 +171,10 @@ nav: platform
       <div class="feature__num" aria-hidden="true">07</div>
       <p class="eyebrow">Trade &amp; convert</p>
       <h2 id="f7">Trade in your own exchange accounts, from one interface</h2>
-      <p class="lead">Trade and convert assets in the exchange accounts you already hold, without logging in to each one. Orders go to your exchange and are executed there, under your approval policies.</p>
+      <p class="lead">Convert assets held in an exchange account into any other asset that exchange lists, through its API, without logging in to each one. Orders go to your exchange and are executed there, under your approval policies.</p>
       <ul class="checks">
+        <li>Conversions happen inside the same exchange account</li>
+        <li>Moving assets between exchanges, custodians or wallets is an on-chain transfer over a supported network: Ethereum and other EVM-compatible chains, Solana or Tron</li>
         <li>Quotes and execution come from your exchange, not from Trnzit</li>
         <li>Large trades can require approval, just like payments</li>
         <li>Every trade appears in your consolidated history</li>

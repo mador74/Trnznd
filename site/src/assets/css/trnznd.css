@@ -256,3 +256,10 @@
 .statement__lead{font-size:clamp(1.2rem,1.05rem + .55vw,1.5rem);line-height:1.55;color:var(--midnight);max-width:44rem;margin:0 auto var(--space-5)}
 .statement__body{max-width:38rem;margin:0 auto var(--space-6);color:var(--text-body)}
 .statement__lead,.statement__body{text-wrap:balance}
+
+/* Steps that appear one at a time once the list scrolls into view: a soft fade, 1.25s apart */
+.js .steps--sequence li{opacity:0;transform:translateY(10px);transition:opacity 1s cubic-bezier(.45,0,.25,1),transform 1s cubic-bezier(.45,0,.25,1)}
+.js .steps--sequence.is-visible li{opacity:1;transform:none}
+.js .steps--sequence.is-visible li:nth-child(2){transition-delay:1.25s}
+.js .steps--sequence.is-visible li:nth-child(3){transition-delay:2.5s}
+@media (prefers-reduced-motion:reduce){.js .steps--sequence li{opacity:1;transform:none;transition:none}}

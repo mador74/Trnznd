@@ -83,9 +83,6 @@
 @media (max-width:380px){.logo--header svg{width:88px}}
 
 /* Parent brand in the footer: the Trnznd master logo */
-.footer-parent{display:inline-flex;flex-direction:column;gap:10px;margin-top:var(--space-5);text-decoration:none;color:var(--ash);font-family:var(--font-secondary);font-size:var(--fs-label);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.footer-parent img{width:150px;height:auto}
-.footer-parent:hover{color:var(--white)}
 .parent-logo{width:180px;height:auto;margin-bottom:var(--space-5)}
 .group-card .logo-mark{min-height:50px}
 .group-card .logo-mark svg,.group-card .logo-mark img{width:132px;height:auto}
@@ -241,7 +238,7 @@
 
 /* Zend footer: a line space between the tagline block and the strapline; the parent credit in sentence case */
 .footer-brand p.footer-brand__more{margin-top:var(--space-4)}
-.footer-parent span{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}
+
 
 /* A page-hero headline set as fixed lines across the full width, above the two-column area */
 .page-hero h1.hero-lines{font-size:clamp(2rem,1rem + 2.9vw,3.4rem);line-height:1.08;max-width:none;margin-bottom:var(--space-7)}

@@ -17,7 +17,6 @@ const OUT = join(here, '..', 'src', 'assets', 'img');
 const IMAGES = [
   ['trade-routes', 'globe', 1920, 1200, 7],
   ['trade-routes-wide', 'globe', 2400, 1200, 7],
-  ['global-network', 'globe-centre', 1920, 1200, 11],
   ['enso-light', 'enso', 1920, 1200, 5],
   ['stability', 'stability', 1920, 1200, 3],
   ['stability-wide', 'stability', 2400, 1200, 3],
@@ -45,7 +44,7 @@ if name == 'og-image':
     im.save(f'{out}/{name}.jpg', 'JPEG', quality=86)
 else:
     im.save(f'{out}/{name}.webp', 'WEBP', quality=82, method=6)
-    if name in ('trade-routes', 'enso-light', 'stability', 'settlement-flow', 'reserve', 'global-network'):
+    if name in ('trade-routes', 'enso-light', 'stability', 'settlement-flow', 'reserve'):
         im.resize((960, 600), Image.LANCZOS).save(f'{out}/{name}-sm.webp', 'WEBP', quality=80, method=6)
 `, png, OUT, name]);
   console.log('rendered', name);

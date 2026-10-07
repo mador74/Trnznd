@@ -313,7 +313,9 @@ for (const site of SITES) {
       .replace(/\{\{logo\}\}/g, LOGO())
       .replace(/\{\{dashboard\}\}/g, DASHBOARD_URL), r, s)
       // shared assets live at the root of all three sites
-      .replace(/((?:src|href)=")(?:\.\.\/)*(assets\/|favicon\.svg)/g, `$1${r}$2`);
+      .replace(/((?:src|href)=")(?:\.\.\/)*(assets\/|favicon\.svg)/g, `$1${r}$2`)
+      // srcset holds several URLs: rewrite each asset path in it
+      .replace(/srcset="([^"]*)"/g, (m, v) => `srcset="${v.replace(/(^|,\s*)(?:\.\.\/)*(assets\/)/g, `$1${r}$2`)}"`);
     if (site.id === 'zend') {
       // contact and "about the group" are group pages
       content = content

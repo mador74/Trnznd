@@ -78,7 +78,7 @@ const groupNotice = (product) => `<p>${TRADING_NAME} ${product} ${NO_SOLICITATIO
 const SWITCH_CSS = '/* CTA panels: the call-to-action style on every site. Light by default; dark inside dark bands. All panels look the same at rest; only the one under the pointer (or keyboard focus) highlights. */.cta-panels{list-style:none;margin:var(--space-6) 0 0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));max-width:46rem}.center .cta-panels{margin-inline:auto}.cta-panels li a{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:16px;height:100%;padding:16px 20px;border:1px solid var(--border);border-radius:var(--radius-card);background:var(--white);color:var(--midnight);text-align:left;text-decoration:none;font-family:var(--font-secondary);box-shadow:var(--shadow-sm);transition:border-color var(--t-fast) var(--ease),background-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}.cta-panels li a:hover,.cta-panels li a:focus-visible{border-color:var(--teal);background:rgba(0,212,170,.14);box-shadow:0 0 0 1px var(--teal),var(--shadow-md);transform:translateY(-2px);text-decoration:none}.cta-panels li a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.cta-panels__name{grid-column:1;font-weight:700;font-size:1.0625rem;color:var(--midnight)}.cta-panels__desc{grid-column:1;margin-top:2px;font-size:var(--fs-small);line-height:1.45;color:var(--graphite)}.cta-panels li a>svg{grid-column:2;grid-row:1 / span 2;width:20px;height:20px;color:var(--teal);transition:transform var(--t-fast) var(--ease)}.cta-panels li a:hover>svg,.cta-panels li a:focus-visible>svg{transform:translateX(3px)}:is(.section--dark,.cta-band,.on-dark) .cta-panels li a{border-color:rgba(255,255,255,.14);background:rgba(10,15,30,.55);box-shadow:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}:is(.section--dark,.cta-band,.on-dark) .cta-panels li a:hover,:is(.section--dark,.cta-band,.on-dark) .cta-panels li a:focus-visible{border-color:var(--teal);background:rgba(0,212,170,.12);box-shadow:0 0 0 1px var(--teal),0 12px 32px -12px rgba(0,212,170,.35)}:is(.section--dark,.cta-band,.on-dark) .cta-panels__name{color:var(--teal)}:is(.section--dark,.cta-band,.on-dark) .cta-panels__desc{color:#C9CED6}.cta-panels--stack{grid-template-columns:minmax(0,1fr);max-width:min(36rem,48vw)}.cta-panels--row{max-width:none;margin-top:var(--space-7)}@media (max-width:960px){.cta-panels--stack{max-width:40rem}}.disclaimer p + p{margin-top:12px}:root{--switch-h:41px}html:has(.site-switch){scroll-padding-top:calc(88px + var(--switch-h))}html:has(.site-switch):has(.subnav){scroll-padding-top:calc(148px + var(--switch-h))}.site-switch{position:sticky;top:env(safe-area-inset-top,0px);z-index:51}.site-switch + .site-header{top:calc(env(safe-area-inset-top,0px) + var(--switch-h));background:var(--white);-webkit-backdrop-filter:none;backdrop-filter:none}.site-switch ~ * .subnav{top:calc(76px + var(--switch-h))}.site-switch .group-bar__inner{min-height:40px}.site-switch__list{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.site-switch .site-switch__list a{display:inline-block;padding:5px 10px;border-radius:8px;color:var(--steel);font-weight:600;text-decoration:none}.site-switch .site-switch__list a:hover{color:var(--midnight);background:var(--white);text-decoration:none}.site-switch .site-switch__list a[aria-current]{color:var(--midnight);background:var(--white);box-shadow:inset 0 -2px 0 var(--teal)}';
 function siteSwitch(r, current) {
   const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'Zend'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
-  const note = { group: '', zend: 'Zend is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Tech' }[current];
+  const note = { group: '', zend: 'Zend is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Technologies' }[current];
   return `<nav class="group-bar site-switch" aria-label="Trnznd Group sites"><style>${SWITCH_CSS}</style><div class="container group-bar__inner"><ul class="site-switch__list">${items.map(([id, h, l]) => `<li><a href="${r}${h}"${id === current ? ' aria-current="true"' : ''}>${l}</a></li>`).join('')}</ul>${note ? `<span>${note}</span>` : ''}</div></nav>`;
 }
 
@@ -197,7 +197,7 @@ function groupFooter(r) {
         <p><span class="tagline">Purpose Beyond Payment</span></p>
         <ul class="footer-entities">
           <li><strong>Trnznd S.A.</strong>Panama-incorporated technology company<br>Tower Financial Center, Panama</li>
-          <li><strong>Trnznd Tech</strong>UAE-incorporated technology and software company<br>DIFC Innovation Hub, UAE</li>
+          <li><strong>Trnznd Technologies</strong>UAE-incorporated technology and software company<br>DIFC Innovation Hub, UAE</li>
         </ul>
       </div>
 ${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
@@ -206,7 +206,7 @@ ${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & ter
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">
-      <p><strong>Important notice:</strong> Trnznd is a trading name of the Trnznd group of companies. Each product is offered by a separate legal entity within the group: Zend by Trnznd S.A., and Trnzit by Trnznd Tech, each under its own terms, notices and policies. Access to any product is at the sole discretion of the user and of the entity that provides it, and is subject to that entity’s onboarding, verification and eligibility requirements.</p>
+      <p><strong>Important notice:</strong> Trnznd is a trading name of the Trnznd group of companies. Each product is offered by a separate legal entity within the group: Zend by Trnznd S.A., and Trnzit by Trnznd Technologies, each under its own terms, notices and policies. Access to any product is at the sole discretion of the user and of the entity that provides it, and is subject to that entity’s onboarding, verification and eligibility requirements.</p>
       <p>${NO_SOLICITATION}</p>
     </div>
     <div class="footer-bottom">
@@ -345,7 +345,7 @@ for (const file of walk(TRNZIT)) {
   mkdirSync(dirname(join(OUT, outPath)), { recursive: true });
   if (!file.endsWith('.html')) { cpSync(file, join(OUT, outPath)); continue; }
   const r = '../'.repeat(outPath.split('/').length - 1);
-  const html = crossLinks(readFileSync(file, 'utf8').replace('{{site-switch}}', siteSwitch(r, 'trnzit')).replace('{{group-notice}}', groupNotice('Trnzit is provided by Trnznd Tech.')), r, r + 'trnzit/');
+  const html = crossLinks(readFileSync(file, 'utf8').replace('{{site-switch}}', siteSwitch(r, 'trnzit')).replace('{{group-notice}}', groupNotice('Trnzit is provided by Trnznd Technologies.')), r, r + 'trnzit/');
   if (/\{\{(group|zend|trnzit|root|site-switch|group-notice)\}\}/.test(html)) throw new Error(`Unresolved token in ${outPath}`);
   writeFileSync(join(OUT, outPath), html);
   tcount++;

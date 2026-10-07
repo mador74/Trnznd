@@ -6,7 +6,7 @@ www.trnznd.io is three connected sites in one build, all in the same look and fe
 |---|---|---|
 | `/` | The Trnznd Group: group brief, shared Contact page, group privacy and cookies | `src/group/` |
 | `/zend/` | Zend, the stablecoin from Trnznd S.A. | `src/zend/` |
-| `/trnzit/` | Trnzit, the stablecoin management platform from Trnznd Tech | `src/trnzit/` |
+| `/trnzit/` | Trnzit, the stablecoin management platform from Trnznd Technologies | `src/trnzit/` |
 
 A strip above every header links the three. It is plain HTML, CSS and a little JavaScript. There is no framework and nothing to install.
 
@@ -91,7 +91,7 @@ Also outstanding:
 - The legal pages are outlines only, apart from the important notice, which matches the current site footer word for word. The current site already publishes Terms, Privacy, Risk Disclosures and a Complaints Policy: move their wording across.
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
 - The site carries the Zend lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `zend/brand/logo.html`).
-- The group privacy notice must name the data controller for the shared contact form (Trnznd S.A., Trnznd Tech, or both).
+- The group privacy notice must name the data controller for the shared contact form (Trnznd S.A., Trnznd Technologies, or both).
 - The Dashboard URL (`app.trnznd.io`) is set at the top of `build.mjs`.
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

@@ -136,7 +136,6 @@ function zendHeader(r, s, current) {
       { href: `${s}resources.html#transparency`, label: 'Reserve transparency', sub: 'Reserve framework, attestations, audits' },
       { href: `${s}resources.html#guides`, label: 'Video guides', sub: 'How to Trnznd' },
     ] },
-    { id: 'about', href: `${r}index.html`, label: 'About' },
     { id: 'contact', href: `${r}contact.html`, label: 'Contact' },
   ];
   const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Dashboard</a>

@@ -188,7 +188,11 @@ function groupFooter(r) {
     <div class="footer-top">
       <div class="footer-brand">
         <a class="logo logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd Group home"></a>
-        <p><span class="tagline">Purpose Beyond Payment</span>Trnznd S.A., Panama · Trnznd Tech, DIFC Innovation Hub, UAE</p>
+        <p><span class="tagline">Purpose Beyond Payment</span></p>
+        <ul class="footer-entities">
+          <li><strong>Trnznd S.A.</strong>Panama-incorporated technology company<br>Tower Financial Center, Panama</li>
+          <li><strong>Trnznd Tech</strong>UAE-incorporated technology and software company<br>DIFC Innovation Hub, UAE</li>
+        </ul>
       </div>
 ${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
 ${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform']])}
@@ -196,7 +200,7 @@ ${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & ter
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">
-      <p>Trnznd S.A. is a technology company headquartered in Panama and the issuer of Zend. Trnznd Tech, the group’s technology and software arm, operates from the DIFC Innovation Hub in the UAE and offers Trnzit. Each product has its own terms, notices and policies.</p>
+      <p><strong>Important notice:</strong> Trnznd is a trading name of the Trnznd group of companies. Each product is offered by a separate legal entity within the group: Zend by Trnznd S.A., and Trnzit by Trnznd Tech, each under its own terms, notices and policies. Access to any product is at the sole discretion of the user and of the entity that provides it, and is subject to that entity’s onboarding, verification and eligibility requirements.</p>
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd Group. All rights reserved.</p>

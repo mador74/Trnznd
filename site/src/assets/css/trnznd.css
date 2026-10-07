@@ -236,3 +236,8 @@
 @keyframes intro-bg-now{from{transform:scale(1.14)}to{transform:none}}
 @keyframes intro-rise-now{from{transform:translateY(32px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.intro{display:none !important}}
+
+/* Group footer: each group company on its own block */
+.footer-brand p:has(.tagline){margin-bottom:0}
+.footer-entities{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:var(--space-4);max-width:36ch;color:var(--ash);font-size:var(--fs-small);line-height:1.55}
+.footer-entities strong{display:block;color:var(--white);font-weight:600}

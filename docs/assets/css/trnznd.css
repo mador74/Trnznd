@@ -171,22 +171,22 @@
 @media (prefers-reduced-motion:reduce){.js .glide{opacity:1;transform:none;transition:none}}
 
 /* Landing intro (group home, first visit in a session).
-   0.1s  the Enso is drawn in along its brush stroke, from the violet tail clockwise to the teal head
+   0.1s  the ring of light is drawn in along its stroke, from the violet tail clockwise to the teal head
    1.55s the Midnight ground drops away, leaving an iris set inside the ring; the iris and the Enso
          expand together at the same rate, so the page opens up through the middle of the Enso
    2.6s  the intro is gone; the hero settles and its text rises into place
    Skipped on any click, key, wheel or touch (html.intro-now), and never shown with reduced motion. */
 @property --intro-sweep{syntax:'<angle>';inherits:false;initial-value:0deg}
 .intro{display:none}
-.has-intro .intro{display:block;position:fixed;inset:0;z-index:200;overflow:hidden;pointer-events:auto;--enso:min(56vmin,420px);animation:intro-done 0s linear 2.6s forwards}
+.has-intro .intro{display:block;position:fixed;inset:0;z-index:200;overflow:hidden;pointer-events:auto;--enso:min(77vmin,580px);animation:intro-done 0s linear 2.6s forwards}
 .intro__ground{position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,#0e1830 0%,#090E1C 70%);animation:intro-off 0s linear 1.55s forwards}
-.intro__glow{position:absolute;left:50%;top:50%;width:calc(var(--enso) * 1.6);aspect-ratio:1;margin:calc(var(--enso) * -.8) 0 0 calc(var(--enso) * -.8);border-radius:50%;background:radial-gradient(circle,rgba(0,136,255,.22) 0%,rgba(0,212,170,.10) 35%,transparent 65%);transform:scale(.6);opacity:0;animation:intro-glow 1.3s cubic-bezier(.16,1,.3,1) .2s forwards,intro-glow-out .7s cubic-bezier(.76,0,.24,1) 1.55s forwards}
-.intro__iris{position:absolute;left:50%;top:50%;width:calc(var(--enso) * .58);aspect-ratio:1;margin:calc(var(--enso) * -.29) 0 0 calc(var(--enso) * -.29);border-radius:50%;box-shadow:0 0 0 250vmax #090E1C;animation:intro-iris 1s cubic-bezier(.76,0,.24,1) 1.55s forwards}
+.intro__glow{position:absolute;left:50%;top:50%;width:calc(var(--enso) * 1.16);aspect-ratio:1;margin:calc(var(--enso) * -.58) 0 0 calc(var(--enso) * -.58);border-radius:50%;background:radial-gradient(circle,rgba(0,136,255,.22) 0%,rgba(0,212,170,.10) 35%,transparent 65%);transform:scale(.6);opacity:0;animation:intro-glow 1.3s cubic-bezier(.16,1,.3,1) .2s forwards,intro-glow-out .7s cubic-bezier(.76,0,.24,1) 1.55s forwards}
+.intro__iris{position:absolute;left:50%;top:50%;width:calc(var(--enso) * .54);aspect-ratio:1;margin:calc(var(--enso) * -.27) 0 0 calc(var(--enso) * -.27);border-radius:50%;box-shadow:0 0 0 250vmax #090E1C;animation:intro-iris 1s cubic-bezier(.76,0,.24,1) 1.55s forwards}
 .intro__enso{position:absolute;left:50%;top:50%;width:var(--enso);height:auto;max-width:none;
-  /* centre the ring's inner hole (47.2% across, 53.7% down the artwork) on the viewport */
-  margin:calc(var(--enso) * -.5277) 0 0 calc(var(--enso) * -.472);transform-origin:47.2% 53.7%;
-  -webkit-mask-image:conic-gradient(from 121.5deg at 47.2% 53.7%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
-  mask-image:conic-gradient(from 121.5deg at 47.2% 53.7%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
+  /* centre the ring (50.04% across, 48.93% down the artwork) on the viewport */
+  margin:calc(var(--enso) * -.4897) 0 0 calc(var(--enso) * -.5004);transform-origin:50.04% 48.93%;
+  -webkit-mask-image:conic-gradient(from 122deg at 50.04% 48.93%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
+  mask-image:conic-gradient(from 122deg at 50.04% 48.93%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
   animation:intro-draw 1.15s cubic-bezier(.65,0,.35,1) .1s both,intro-enso-out 1s cubic-bezier(.76,0,.24,1) 1.55s forwards}
 @keyframes intro-draw{from{--intro-sweep:0deg;transform:rotate(-28deg) scale(.9)}to{--intro-sweep:390deg;transform:none}}
 @keyframes intro-glow{to{transform:none;opacity:1}}

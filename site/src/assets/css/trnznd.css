@@ -172,9 +172,11 @@
 
 /* Landing intro (group home, first visit in a session). Calm by design: slow, soft easing, no spin.
    0.1s   the ring of light is drawn in along its stroke, from the violet tail clockwise to the teal head (2.3s)
-   2.4s   it rests on screen (1.25s)
+   1.9s   the trnznd wordmark fades in at the centre of the ring (1s)
+   2.4s   the ring rests on screen, wordmark in place (1.25s)
    3.65s  the Midnight ground drops away, leaving an iris set inside the ring; the iris and the ring
-          expand together, gently, so the page opens up through the middle of the ring (2.2s)
+          expand together, gently, so the page opens up through the middle of the ring (2.2s);
+          the wordmark fades out as it widens
    4.6s   the hero text drifts up into place, one line after another
    5.9s   the intro is gone
    Skipped on any click, key, wheel or touch (html.intro-now: the same opening, sooner), and never shown with reduced motion. */
@@ -190,6 +192,12 @@
   -webkit-mask-image:conic-gradient(from 122deg at 50.04% 48.93%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
   mask-image:conic-gradient(from 122deg at 50.04% 48.93%,#000 calc(var(--intro-sweep) - 28deg),transparent var(--intro-sweep));
   animation:intro-draw 2.3s cubic-bezier(.45,0,.55,1) .1s both,intro-enso-out 2.2s cubic-bezier(.45,0,.25,1) 3.65s forwards}
+/* The trnznd wordmark fades in at the centre of the ring as the draw completes, then leaves with the opening */
+.intro__word{position:absolute;left:50%;top:50%;width:calc(var(--enso) * .36);height:auto;max-width:none;margin:calc(var(--enso) * -.0502) 0 0 calc(var(--enso) * -.18);opacity:0;animation:intro-word-in 1s cubic-bezier(.45,0,.25,1) 1.9s forwards,intro-word-out 1.2s cubic-bezier(.45,0,.25,1) 3.65s forwards}
+@keyframes intro-word-in{from{opacity:0;filter:blur(6px);transform:scale(.97)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes intro-word-out{from{opacity:1;filter:blur(0);transform:none}to{opacity:0;filter:blur(2px);transform:scale(1.5)}}
+.intro-now .intro__word{animation:intro-word-now .6s cubic-bezier(.45,0,.25,1) 0s forwards}
+@keyframes intro-word-now{to{opacity:0;transform:scale(1.3)}}
 @keyframes intro-draw{from{--intro-sweep:0deg;transform:rotate(-14deg) scale(.94)}to{--intro-sweep:390deg;transform:none}}
 @keyframes intro-glow{to{transform:none;opacity:1}}
 @keyframes intro-glow-out{from{transform:none;opacity:1}to{transform:scale(4);opacity:0}}

@@ -57,7 +57,7 @@ Group and Zend pages start with a meta block (title, description, nav). Inside a
 
 Each site keeps its own legal pages. Contact is shared: every site links to the group Contact page, and `?type=` preselects the enquiry (`access`, `team`, `trnzit`, `partnership`, `press`, `updates`, `general`). Organisation details are required only for the two Zend enquiry types.
 
-The group home page (`intro: yes` in its meta block) opens with a landing intro: the ring of light from the hero (`assets/img/intro-enso.webp`, keyed out of `enso-hero.webp` by brightness so the page shows through its middle) is drawn in on Midnight, then opens like a portal onto the page. It plays once per browser session, is skipped by any click, key, scroll or touch, and never plays for visitors who have reduced motion turned on. The markup and session check are in `build.mjs` (`INTRO`, `INTRO_HEAD`), the timeline in `trnznd.css`.
+The group home page (`intro: yes` in its meta block) opens with a landing intro: the ring of light from the hero (`assets/img/intro-enso.webp`, keyed out of `enso-hero.webp` by brightness so the page shows through its middle) is drawn in on Midnight, the trnznd wordmark (`assets/img/intro-wordmark.webp`, cut from the master logo) fades in at its centre, then it opens like a portal onto the page. It plays once per browser session, is skipped by any click, key, scroll or touch, and never plays for visitors who have reduced motion turned on. The markup and session check are in `build.mjs` (`INTRO`, `INTRO_HEAD`), the timeline in `trnznd.css`.
 
 Trnzit pages are finished HTML with their CSS and JavaScript inline, as imported. They are slower to edit than the group and Zend pages until they are moved onto the shared build.
 

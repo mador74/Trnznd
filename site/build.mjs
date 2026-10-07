@@ -238,7 +238,7 @@ if (INLINE) {
 // onto the page. Shown once per browser session, never with reduced motion, and skipped on any input.
 const INTRO_HEAD = (r) => `<link rel="preload" as="image" href="${r}assets/img/intro-enso.webp" imagesrcset="${r}assets/img/intro-enso-sm.webp 581w, ${r}assets/img/intro-enso.webp 1163w" imagesizes="min(77vmin, 580px)">
 <script>(function(){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;try{if(sessionStorage.getItem('trnznd-intro'))return;sessionStorage.setItem('trnznd-intro','1')}catch(e){}document.documentElement.classList.add('has-intro')})()</script>`;
-const INTRO = (r) => `<div class="intro" aria-hidden="true" data-intro><div class="intro__iris"></div><div class="intro__ground"></div><div class="intro__glow"></div><img class="intro__enso" src="${r}assets/img/intro-enso.webp" srcset="${r}assets/img/intro-enso-sm.webp 581w, ${r}assets/img/intro-enso.webp 1163w" sizes="min(77vmin, 580px)" width="1163" height="1164" alt="" decoding="sync"></div>`;
+const INTRO = (r) => `<div class="intro" aria-hidden="true" data-intro><div class="intro__iris"></div><div class="intro__ground"></div><div class="intro__glow"></div><img class="intro__enso" src="${r}assets/img/intro-enso.webp" srcset="${r}assets/img/intro-enso-sm.webp 581w, ${r}assets/img/intro-enso.webp 1163w" sizes="min(77vmin, 580px)" width="1163" height="1164" alt="" decoding="sync"><img class="intro__word" src="${r}assets/img/intro-wordmark.webp" width="1186" height="331" alt=""></div>`;
 
 function head(r, meta, outPath, site) {
   const url = SITE_URL + '/' + outPath.replace(/(^|\/)index\.html$/, '$1');

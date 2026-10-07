@@ -161,7 +161,7 @@ ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal
     </div>
     <div class="disclaimer">
       <p><strong>Important notice:</strong> Zend is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${s}legal/notice.html">Read the full notice</a>.</p>
-      ${groupNotice('Zend is offered by Trnznd S.A.')}
+      ${groupNotice('Zend is offered by Trnznd S.A. and is available on Ethereum, Solana and Tron.')}
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd, S.A. All rights reserved.</p>

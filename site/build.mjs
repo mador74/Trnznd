@@ -68,9 +68,14 @@ const icon = (name, cls = '') => {
 const LOGO = (label = 'Zend') =>
   `<svg viewBox="29 27 1688 606" role="img" aria-label="${label}"><use href="#lg-enso" fill="#00D4AA"/><use href="#lg-word" fill="currentColor"/></svg>`;
 
+// ── Site-wide legal lines: in the footer notice of every page on all three sites ──
+const TRADING_NAME = 'Trnznd is a trading name of the Trnznd group of companies.'; // the group notice opens with this sentence too
+const NO_SOLICITATION = 'Nothing on this website is an offer, invitation or solicitation to acquire any product or service in any jurisdiction, or to any person, where it would be unlawful to make one.';
+const groupNotice = (product) => `<p>${TRADING_NAME} ${product} ${NO_SOLICITATION}</p>`;
+
 // ── Cross-site strip: the same on every page of all three sites ─────────────
 // The strip sticks to the top with the site header directly under it, so the two scroll as one block.
-const SWITCH_CSS = ':root{--switch-h:41px}html:has(.site-switch){scroll-padding-top:calc(88px + var(--switch-h))}.site-switch{position:sticky;top:env(safe-area-inset-top,0px);z-index:51}.site-switch + .site-header{top:calc(env(safe-area-inset-top,0px) + var(--switch-h));background:var(--white);-webkit-backdrop-filter:none;backdrop-filter:none}.site-switch ~ * .subnav{top:calc(76px + var(--switch-h))}.site-switch .group-bar__inner{min-height:40px}.site-switch__list{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.site-switch .site-switch__list a{display:inline-block;padding:5px 10px;border-radius:8px;color:var(--steel);font-weight:600;text-decoration:none}.site-switch .site-switch__list a:hover{color:var(--midnight);background:var(--white);text-decoration:none}.site-switch .site-switch__list a[aria-current]{color:var(--midnight);background:var(--white);box-shadow:inset 0 -2px 0 var(--teal)}';
+const SWITCH_CSS = '.disclaimer p + p{margin-top:12px}:root{--switch-h:41px}html:has(.site-switch){scroll-padding-top:calc(88px + var(--switch-h))}.site-switch{position:sticky;top:env(safe-area-inset-top,0px);z-index:51}.site-switch + .site-header{top:calc(env(safe-area-inset-top,0px) + var(--switch-h));background:var(--white);-webkit-backdrop-filter:none;backdrop-filter:none}.site-switch ~ * .subnav{top:calc(76px + var(--switch-h))}.site-switch .group-bar__inner{min-height:40px}.site-switch__list{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.site-switch .site-switch__list a{display:inline-block;padding:5px 10px;border-radius:8px;color:var(--steel);font-weight:600;text-decoration:none}.site-switch .site-switch__list a:hover{color:var(--midnight);background:var(--white);text-decoration:none}.site-switch .site-switch__list a[aria-current]{color:var(--midnight);background:var(--white);box-shadow:inset 0 -2px 0 var(--teal)}';
 function siteSwitch(r, current) {
   const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'Zend'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
   const note = { group: '', zend: 'Zend is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Tech' }[current];
@@ -156,6 +161,7 @@ ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal
     </div>
     <div class="disclaimer">
       <p><strong>Important notice:</strong> Zend is designed as a settlement and treasury utility asset. It is not intended to be marketed, offered or used as an investment product, security, collective investment scheme, deposit, savings product or speculative instrument, and it carries no ownership rights in Trnznd, entitlement to profits, dividends, interest or voting rights, or any expectation of financial return. No asset is entirely free from risk. Access to Trnznd services is subject to onboarding, identity verification, compliance and eligibility requirements. <a href="${s}legal/notice.html">Read the full notice</a>.</p>
+      ${groupNotice('Zend is offered by Trnznd S.A.')}
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd, S.A. All rights reserved.</p>
@@ -201,6 +207,7 @@ ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/c
     </div>
     <div class="disclaimer">
       <p><strong>Important notice:</strong> Trnznd is a trading name of the Trnznd group of companies. Each product is offered by a separate legal entity within the group: Zend by Trnznd S.A., and Trnzit by Trnznd Tech, each under its own terms, notices and policies. Access to any product is at the sole discretion of the user and of the entity that provides it, and is subject to that entity’s onboarding, verification and eligibility requirements.</p>
+      <p>${NO_SOLICITATION}</p>
     </div>
     <div class="footer-bottom">
       <p style="margin:0">© ${YEAR} Trnznd Group. All rights reserved.</p>
@@ -336,8 +343,8 @@ for (const file of walk(TRNZIT)) {
   mkdirSync(dirname(join(OUT, outPath)), { recursive: true });
   if (!file.endsWith('.html')) { cpSync(file, join(OUT, outPath)); continue; }
   const r = '../'.repeat(outPath.split('/').length - 1);
-  const html = crossLinks(readFileSync(file, 'utf8').replace('{{site-switch}}', siteSwitch(r, 'trnzit')), r, r + 'trnzit/');
-  if (/\{\{(group|zend|trnzit|root|site-switch)\}\}/.test(html)) throw new Error(`Unresolved token in ${outPath}`);
+  const html = crossLinks(readFileSync(file, 'utf8').replace('{{site-switch}}', siteSwitch(r, 'trnzit')).replace('{{group-notice}}', groupNotice('Trnzit is provided by Trnznd Tech.')), r, r + 'trnzit/');
+  if (/\{\{(group|zend|trnzit|root|site-switch|group-notice)\}\}/.test(html)) throw new Error(`Unresolved token in ${outPath}`);
   writeFileSync(join(OUT, outPath), html);
   tcount++;
 }

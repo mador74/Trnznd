@@ -228,3 +228,7 @@
 .footer-brand p:has(.tagline){margin-bottom:0}
 .footer-entities{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:var(--space-4);max-width:36ch;color:var(--ash);font-size:var(--fs-small);line-height:1.55}
 .footer-entities strong{display:block;color:var(--white);font-weight:600}
+
+/* Zend footer: a line space between the tagline block and the strapline; the parent credit in sentence case */
+.footer-brand p.footer-brand__more{margin-top:var(--space-4)}
+.footer-parent span{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}

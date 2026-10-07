@@ -151,8 +151,9 @@ function zendFooter(r, s) {
     <div class="footer-top">
       <div class="footer-brand">
         <a class="logo" href="${s}index.html">${LOGO('Zend home')}</a>
-        <p><span class="tagline">Global Stability, by Trnznd</span>Purpose Beyond Payment. Engineered for stability, compliant by design, made to transcend barriers.</p>
-        <a class="footer-parent" href="${r}index.html#group"><span>A Trnznd Group product</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
+        <p><span class="tagline">Global Stability, by Trnznd</span>Purpose Beyond Payment.</p>
+        <p class="footer-brand__more">Engineered for stability, compliant by design, built to transcend barriers.</p>
+        <a class="footer-parent" href="${r}index.html#group"><span>Brought to you by Trnznd</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
 ${footerCol('<span class="brand-case">Zend</span>', [[`${s}index.html`, 'Zend'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
 ${footerCol('Resources', [[`${s}insights.html`, 'Insights'], [`${s}faq.html`, 'FAQ'], [`${s}resources.html#documents`, 'Documents & policies'], [`${s}resources.html#transparency`, 'Reserve transparency']])}

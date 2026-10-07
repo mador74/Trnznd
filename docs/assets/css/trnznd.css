@@ -263,3 +263,8 @@
 .js .steps--sequence.is-visible li:nth-child(2){transition-delay:1.25s}
 .js .steps--sequence.is-visible li:nth-child(3){transition-delay:2.5s}
 @media (prefers-reduced-motion:reduce){.js .steps--sequence li{opacity:1;transform:none;transition:none}}
+
+/* Impact programme card on the dark photo band */
+.impact-card{background:rgba(17,24,39,.78);border:1px solid rgba(0,212,170,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.impact-card h3{color:var(--white);margin-bottom:10px}
+.impact-card p{color:#C9CED6;margin:0}

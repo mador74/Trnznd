@@ -73,7 +73,7 @@ Change a scene's seed or parameters in `render.mjs` to get a different compositi
 
 ## Pages
 
-Group: the group brief (home), Contact, privacy, cookies and a 404 page. Zend: home, Business, Insights, Resources, FAQ, the legal pages (important notice, risk, terms, privacy, complaints, cookies) and the brand logo set. Trnzit: home, Platform, Security & Governance, Organisations, Individuals, Providers, Pricing, FAQ, About, Contact (trial sign-up), terms, privacy, cookies, the brand page and a 404 page.
+Group: the group brief (home), Contact, privacy, cookies and a 404 page. Zend: home, Business, Insights, Resources, FAQ, the legal pages (important notice, risk, terms, privacy, complaints, cookies) and the brand logo set. Trnzit: home, Platform, Security & Governance, Organisations, Individuals, Providers, Pricing, FAQ, Contact (trial sign-up), terms, privacy, cookies, the brand page and a 404 page.
 
 The Zend pages used to sit at the root (`/business.html`, `/faq.html` and so on). They now live under `/zend/`, so the old URLs need redirects at the host before launch.
 

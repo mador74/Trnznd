@@ -242,3 +242,7 @@
 /* Zend footer: a line space between the tagline block and the strapline; the parent credit in sentence case */
 .footer-brand p.footer-brand__more{margin-top:var(--space-4)}
 .footer-parent span{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}
+
+/* A page-hero headline set as fixed lines across the full width, above the two-column area */
+.page-hero h1.hero-lines{font-size:clamp(2rem,1rem + 2.9vw,3.4rem);line-height:1.08;max-width:none;margin-bottom:var(--space-7)}
+.hero-lines .line{display:block}

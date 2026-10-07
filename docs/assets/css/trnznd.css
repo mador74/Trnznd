@@ -246,3 +246,13 @@
 /* A page-hero headline set as fixed lines across the full width, above the two-column area */
 .page-hero h1.hero-lines{font-size:clamp(2rem,1rem + 2.9vw,3.4rem);line-height:1.08;max-width:none;margin-bottom:var(--space-7)}
 .hero-lines .line{display:block}
+
+/* Stand-alone statement section: a centred manifesto line with room to breathe, no picture */
+.statement{padding-block:clamp(6rem,4rem + 8vw,11rem);border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:radial-gradient(60% 70% at 50% 50%,rgba(0,212,170,.07) 0%,rgba(0,136,255,.04) 45%,transparent 75%),var(--white)}
+.statement .container--narrow{max-width:calc(58rem + 2 * var(--gutter))}
+.statement__arcs{left:50%;top:50%;width:min(980px,140vw);transform:translate(-50%,-50%);color:var(--teal);opacity:.12}
+.statement__title{font-size:clamp(2.4rem,1.2rem + 4.4vw,4.6rem);line-height:1.04;letter-spacing:-0.035em;max-width:none;margin:0 auto var(--space-6)}
+.statement__accent{display:block;background:linear-gradient(90deg,#00D4AA 0%,#0088FF 55%,#6C3AED 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.statement__lead{font-size:clamp(1.2rem,1.05rem + .55vw,1.5rem);line-height:1.55;color:var(--midnight);max-width:44rem;margin:0 auto var(--space-5)}
+.statement__body{max-width:38rem;margin:0 auto var(--space-6);color:var(--text-body)}
+.statement__lead,.statement__body{text-wrap:balance}

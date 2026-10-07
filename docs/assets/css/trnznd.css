@@ -268,3 +268,4 @@
 .impact-card{background:rgba(17,24,39,.78);border:1px solid rgba(0,212,170,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .impact-card h3{color:var(--white);margin-bottom:10px}
 .impact-card p{color:#C9CED6;margin:0}
+.card-by{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}

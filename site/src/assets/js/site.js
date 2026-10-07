@@ -84,6 +84,14 @@
     });
   }
 
+  /* A link to a collapsed FAQ answer (#id on a <details>) opens it */
+  var openTarget = function () {
+    var t = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+    if (t && t.tagName === 'DETAILS') t.open = true;
+  };
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+
   /* Scroll reveals */
   var revealables = $$('.reveal, .glide, [data-count]');
   /* An in-page link to a card that hasn't glided in yet: place it at once, so the jump lands where it should */

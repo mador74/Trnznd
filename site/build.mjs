@@ -186,11 +186,7 @@ function groupHeader(r, s, current) {
     { id: 'zend', href: `${r}zend/index.html`, label: 'Zend' },
     { id: 'trnzit', href: `${r}trnzit/index.html`, label: 'Trnzit' },
   ];
-  // Client sign-in to each product portal, then Contact (secondary buttons show on desktop via trnznd.css)
-  const actions = (sm) => `<span class="header-signin-label">Already a client?</span>
-        <a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Zend Portal</a>
-        <a class="btn btn--secondary${sm}" href="${TRNZIT_PORTAL_URL}">Enter Trnzit Portal</a>
-        <a class="btn btn--primary${sm}" href="${r}contact.html">Contact us</a>`;
+  const actions = (sm) => `<a class="btn btn--primary${sm}" href="${r}contact.html">Contact us</a>`;
   const logo = `<a class="logo logo--header logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-light.webp" width="135" height="45" alt="Trnznd Group home"><span class="logo__desc">Purpose<br> Beyond Payment</span></a>`;
   return headerShell(siteSwitch(r, 'group'), logo, navItems(nav, current), actions);
 }

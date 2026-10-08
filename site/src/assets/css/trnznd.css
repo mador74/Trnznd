@@ -261,6 +261,9 @@
 .founders li{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1px solid var(--border);border-radius:999px;background:var(--white);font-family:var(--font-secondary);font-weight:600;color:var(--midnight);box-shadow:var(--shadow-sm)}
 .founders .icon-tile{width:34px;height:34px;border-radius:50%;margin:0}
 .founders .icon-tile svg{width:17px;height:17px}
+.founders{margin-bottom:var(--space-4)}
+.statement__regions{margin:0 auto var(--space-6);text-align:center;text-wrap:balance;font-family:var(--font-secondary);font-size:var(--fs-small);font-weight:600;color:var(--graphite)}
+.statement__regions svg{display:inline-block;width:18px;height:18px;margin-right:6px;vertical-align:-4px;color:var(--teal)}
 /* "Coming soon" marker: base styles live in SWITCH_CSS (build.mjs) so all three sites share them */
 .cta-panels__name .tag-new{margin-left:8px;vertical-align:2px}
 .draft__label{margin:0 0 var(--space-5)}

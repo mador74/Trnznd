@@ -53,7 +53,7 @@ site/
     assets/logo/            Zend logo set, the Trnznd master logo (light/dark) and the Trnzit lock-up
 ```
 
-Group and Zend pages start with a meta block (title, description, nav). Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the Zend lock-up and `{{dashboard}}` the Dashboard URL. For links between sites, `{{group}}`, `{{zend}}` and `{{trnzit}}` give the relative path to each site's folder (so `{{zend}}faq.html`), and `{{root}}` the current site's own folder. In Trnzit pages `{{site-switch}}` marks where the strip goes.
+Group and Zend pages start with a meta block (title, description, nav). Inside a page, `{{i:name}}` inserts an icon, `{{logo}}` the Zend lock-up and `{{dashboard}}` the Zend Portal URL. For links between sites, `{{group}}`, `{{zend}}` and `{{trnzit}}` give the relative path to each site's folder (so `{{zend}}faq.html`), and `{{root}}` the current site's own folder. In Trnzit pages `{{site-switch}}` marks where the strip goes.
 
 Each site keeps its own legal pages. Contact is shared: every site links to the group Contact page, and `?type=` preselects the enquiry (`access`, `team`, `trnzit`, `partnership`, `press`, `updates`, `general`). Organisation details are required only for the two Zend enquiry types.
 
@@ -92,6 +92,6 @@ Also outstanding:
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
 - The site carries the Zend lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `zend/brand/logo.html`).
 - The group privacy notice must name the data controller for the shared contact form (Trnznd S.A., Trnznd Technologies, or both).
-- The portal addresses are set at the top of `build.mjs`: the Zend Dashboard (`zend.trnznd.io`) and the Trnzit portal (`app.trnznd.io`).
+- The portal addresses are set at the top of `build.mjs`: the Zend Portal (`zend.trnznd.io`) and the Trnzit Portal (`app.trnznd.io`).
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

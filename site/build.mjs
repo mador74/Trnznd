@@ -21,8 +21,8 @@ const INLINE = args.includes('--inline');
 const outArg = args.find((a) => !a.startsWith('--'));
 const OUT = outArg ? resolve(outArg) : join(here, '..', 'docs');
 const SITE_URL = 'https://www.trnznd.io';
-const DASHBOARD_URL = 'https://zend.trnznd.io';     // the Zend Dashboard: every "Enter Dashboard" / "Zend Dashboard" link
-const TRNZIT_PORTAL_URL = 'https://app.trnznd.io';  // the Trnzit portal: every "Enter Trnzit" / "Trnzit portal" link
+const DASHBOARD_URL = 'https://zend.trnznd.io';     // the Zend Portal: every "Enter Zend Portal" / "Zend Portal" link
+const TRNZIT_PORTAL_URL = 'https://app.trnznd.io';  // the Trnzit Portal: every "Enter Trnzit" / "Trnzit Portal" link
 const YEAR = 2026;
 
 // Icons: 24px stroke set, same weight and caps as Trnzit's.
@@ -141,7 +141,7 @@ function zendHeader(r, s, current) {
     ] },
     { id: 'contact', href: `${r}contact.html`, label: 'Contact' },
   ];
-  const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Dashboard</a>
+  const actions = (sm) => `<a class="btn btn--secondary${sm}" href="${DASHBOARD_URL}">Enter Zend Portal</a>
         <a class="btn btn--primary${sm}" href="${r}contact.html?type=access">Request access</a>`;
   const logo = `<a class="logo logo--header" href="${s}index.html">${LOGO('Zend home')}<span class="logo__desc">Global Stability,<br> by Trnznd</span></a>`;
   return headerShell(siteSwitch(r, 'zend'), logo, navItems(nav, current), actions);
@@ -157,7 +157,7 @@ function zendFooter(r, s) {
         <p class="footer-brand__more">Engineered for stability, compliant by design, built to transcend barriers.</p>
         <a class="footer-parent" href="${r}index.html#group"><span>Brought to you by Trnznd</span><img src="${r}assets/logo/trnznd-logo-dark.webp" width="150" height="50" alt="Trnznd"></a>
       </div>
-${footerCol('<span class="brand-case">Zend</span>', [[`${s}index.html`, 'Zend'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Dashboard']])}
+${footerCol('<span class="brand-case">Zend</span>', [[`${s}index.html`, 'Zend'], [`${s}index.html#how-it-works`, 'How it works'], [`${s}business.html`, 'For business'], [DASHBOARD_URL, 'Enter Zend Portal']])}
 ${footerCol('Resources', [[`${s}insights.html`, 'Insights'], [`${s}faq.html`, 'FAQ'], [`${s}resources.html#documents`, 'Documents & policies'], [`${s}resources.html#transparency`, 'Reserve transparency']])}
 ${footerCol('Company', [[`${r}index.html`, 'The Trnznd Group'], [`${r}contact.html`, 'Contact'], [`${r}contact.html?type=access`, 'Request access'], [`${r}trnzit/index.html`, 'Trnzit']])}
 ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal/risk.html`, 'Risk disclosures'], [`${s}legal/terms.html`, 'Terms & conditions'], [`${s}legal/privacy.html`, 'Privacy'], [`${s}legal/complaints.html`, 'Complaints'], [`${s}legal/cookies.html`, 'Cookies']])}
@@ -204,7 +204,7 @@ function groupFooter(r) {
         </ul>
       </div>
 ${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
-${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform'], [DASHBOARD_URL, 'Zend Dashboard'], [TRNZIT_PORTAL_URL, 'Trnzit portal']])}
+${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform'], [DASHBOARD_URL, 'Zend Portal'], [TRNZIT_PORTAL_URL, 'Trnzit Portal']])}
 ${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
     </div>

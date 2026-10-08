@@ -266,3 +266,10 @@
 .impact-card h3{color:var(--white);margin-bottom:10px}
 .impact-card p{color:#C9CED6;margin:0}
 .card-by{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}
+
+/* Group hero: client sign-in to each product portal */
+.hero-signin{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:var(--space-5);font-family:var(--font-secondary);font-size:var(--fs-small);color:var(--ash)}
+.hero-signin span{margin-right:4px}
+.hero-signin .btn svg{width:14px;height:14px}
+.has-intro .hero-enso .container>:nth-child(5){animation-delay:6.1s}
+.intro-now .hero-enso .container>:nth-child(5){animation-delay:1.3s}

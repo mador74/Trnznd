@@ -92,6 +92,6 @@ Also outstanding:
 - Insights: each post card needs its URL, date and, where the old card cut it off, its full title. Resources: link the Whitepaper, Governance Framework and Compliance Overview files.
 - The site carries the Zend lock-up (Teal Enso, zend wordmark, “Global Stability, by Trnznd”). Its “z”, “n” and “d” are traced from the Trnznd master logo; the “e” is new. Have a designer check the “e” (see `zend/brand/logo.html`).
 - The group privacy notice must name the data controller for the shared contact form (Trnznd S.A., Trnznd Technologies, or both).
-- The Dashboard URL (`app.trnznd.io`) is set at the top of `build.mjs`.
+- The portal addresses are set at the top of `build.mjs`: the Zend Dashboard (`zend.trnznd.io`) and the Trnzit portal (`app.trnznd.io`).
 
 The previous scroll-driven landing page (Vite, in `website/`) is retired. It is in git history at commit `13da6d5`.

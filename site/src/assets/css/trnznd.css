@@ -274,3 +274,4 @@
 .hero-enso .cta-panels li.cta-panels__portal a>svg{color:#fff}
 .hero-enso .cta-panels li.cta-panels__portal a:hover,.hero-enso .cta-panels li.cta-panels__portal a:focus-visible{background:linear-gradient(135deg,rgba(0,212,170,.2),rgba(255,255,255,.07));border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 12px 32px -12px rgba(0,212,170,.35)}
 @media (max-width:640px){.hero-enso .cta-panels--pairs{grid-template-columns:minmax(0,1fr)}}
+.hero-enso .cta-panels li.cta-panels__portal .cta-panels__desc{margin:0 0 2px}

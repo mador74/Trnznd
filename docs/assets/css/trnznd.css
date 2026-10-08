@@ -253,13 +253,6 @@
 .statement__lead{font-size:clamp(1.2rem,1.05rem + .55vw,1.5rem);line-height:1.55;color:var(--midnight);max-width:44rem;margin:0 auto var(--space-5)}
 .statement__body{max-width:38rem;margin:0 auto var(--space-6);color:var(--text-body)}
 .statement__lead,.statement__body{text-wrap:balance}
-/* Group home: the statement as a gliding card (Trnzit, new from the group) */
-.glide.statement{border:0;overflow:hidden}
-.statement--group .statement__title{font-size:clamp(2.1rem,1.1rem + 3.4vw,3.75rem);line-height:1.08}
-.statement__logo{display:block;width:132px;height:auto;margin:0 auto var(--space-4)}
-.statement__new{justify-content:center;color:var(--steel)}
-.statement__body--strong{color:var(--midnight);font-weight:600}
-.cta-panels.cta-panels--single{grid-template-columns:minmax(0,1fr);max-width:22rem}
 /* "Coming soon" marker: base styles live in SWITCH_CSS (build.mjs) so all three sites share them */
 .cta-panels__name .tag-new{margin-left:8px;vertical-align:2px}
 .draft__label{margin:0 0 var(--space-5)}

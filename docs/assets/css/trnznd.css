@@ -267,9 +267,7 @@
 .impact-card p{color:#C9CED6;margin:0}
 .card-by{text-transform:none;letter-spacing:0;font-size:var(--fs-small)}
 
-/* Group hero: client sign-in to each product portal */
-.hero-signin{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:var(--space-5);font-family:var(--font-secondary);font-size:var(--fs-small);color:var(--ash)}
-.hero-signin span{margin-right:4px}
-.hero-signin .btn svg{width:14px;height:14px}
-.has-intro .hero-enso .container>:nth-child(5){animation-delay:6.1s}
-.intro-now .hero-enso .container>:nth-child(5){animation-delay:1.3s}
+/* Group header: client sign-in to each product portal beside Contact */
+.header-signin-label{font-family:var(--font-secondary);font-size:var(--fs-small);color:var(--steel);white-space:nowrap}
+.header-actions:not(.header-actions--desktop) .header-signin-label{margin-top:var(--space-2)}
+@media (min-width:1281px) and (max-width:1440px){.header-actions--desktop .header-signin-label{display:none}}

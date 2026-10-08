@@ -80,7 +80,7 @@ const SWITCH_CSS = '@media (min-width:1281px){.header-actions--desktop .btn--sec
 // Trnzit's menu is longer than Zend's: tighten it on smaller desktops so both header buttons fit.
 const TRNZIT_HEADER_CSS = '@media (min-width:1281px){.nav__link,.nav__trigger{padding-inline:8px}.nav__list{gap:0}.header-inner{gap:var(--space-4)}}@media (min-width:1281px){.logo--header .logo__desc{display:none}}';
 function siteSwitch(r, current) {
-  const items = [['group', 'index.html', 'Trnznd Group'], ['zend', 'zend/index.html', 'Zend'], ['trnzit', 'trnzit/index.html', 'Trnzit']];
+  const items = [['group', 'index.html', 'Trnznd Group'], ['trnzit', 'trnzit/index.html', 'Trnzit'], ['zend', 'zend/index.html', 'Zend']];
   const note = { group: '', zend: 'Zend is a product of Trnznd S.A.', trnzit: 'Trnzit is a product of Trnznd Technologies' }[current];
   return `<nav class="group-bar site-switch" aria-label="Trnznd Group sites"><style>${SWITCH_CSS}${current === 'trnzit' ? TRNZIT_HEADER_CSS : ''}</style><div class="container group-bar__inner"><ul class="site-switch__list">${items.map(([id, h, l]) => `<li><a href="${r}${h}"${id === current ? ' aria-current="true"' : ''}>${l}</a></li>`).join('')}</ul>${note ? `<span>${note}</span>` : ''}</div></nav>`;
 }
@@ -183,8 +183,8 @@ ${footerCol('Legal', [[`${s}legal/notice.html`, 'Important notice'], [`${s}legal
 function groupHeader(r, s, current) {
   const nav = [
     { id: 'about', href: `${r}index.html`, label: 'The group' },
-    { id: 'zend', href: `${r}zend/index.html`, label: 'Zend' },
     { id: 'trnzit', href: `${r}trnzit/index.html`, label: 'Trnzit' },
+    { id: 'zend', href: `${r}zend/index.html`, label: 'Zend' },
   ];
   const actions = (sm) => `<a class="btn btn--primary${sm}" href="${r}contact.html">Contact us</a>`;
   const logo = `<a class="logo logo--header logo--group" href="${r}index.html"><img src="${r}assets/logo/trnznd-logo-light.webp" width="135" height="45" alt="Trnznd Group home"><span class="logo__desc">Purpose<br> Beyond Payment</span></a>`;
@@ -204,8 +204,8 @@ function groupFooter(r) {
         </ul>
       </div>
 ${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
-${footerCol('Products', [[`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform'], [DASHBOARD_URL, 'Zend Portal'], [TRNZIT_PORTAL_URL, 'Trnzit Portal']])}
-${footerCol('Product legal', [[`${r}zend/legal/notice.html`, 'Zend notices & terms'], [`${r}trnzit/legal/terms.html`, 'Trnzit terms']])}
+${footerCol('Products', [[`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform'], [`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [TRNZIT_PORTAL_URL, 'Trnzit Portal'], [DASHBOARD_URL, 'Zend Portal']])}
+${footerCol('Product legal', [[`${r}trnzit/legal/terms.html`, 'Trnzit terms'], [`${r}zend/legal/notice.html`, 'Zend notices & terms']])}
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}
     </div>
     <div class="disclaimer">

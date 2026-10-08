@@ -257,18 +257,16 @@
 .glide.statement{border:0;overflow:hidden}
 .statement--group .statement__title{font-size:clamp(2.1rem,1.1rem + 3.4vw,3.75rem);line-height:1.08}
 .statement__logo{display:block;width:132px;height:auto;margin:0 auto var(--space-4)}
-.statement__new{justify-content:center;align-items:center;gap:0;color:var(--graphite)}
+.statement__new{justify-content:center;color:var(--steel)}
 .statement__body--strong{color:var(--midnight);font-weight:600}
 .cta-panels.cta-panels--single{grid-template-columns:minmax(0,1fr);max-width:22rem}
-/* "New" and "Coming soon": quiet text labels, not promotional badges */
+/* "Coming soon" marker (.tag-new.tag-soon): a tinted label, not a promotional badge */
 .tag-new{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:3px 10px 3px 8px;border:1px solid rgba(0,212,170,.6);border-radius:999px;background:rgba(0,212,170,.13);font-family:var(--font-secondary);font-size:.8125rem;font-weight:700;letter-spacing:.01em;line-height:1.4;text-transform:none;color:#03785F;vertical-align:1px;white-space:nowrap}
 .tag-new::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .tag-soon{border-color:rgba(77,124,247,.55);background:rgba(77,124,247,.11);color:#3653C9}
 :is(.section--dark,.cta-band,.on-dark) .tag-new{border-color:rgba(0,212,170,.65);background:rgba(0,212,170,.18);color:#5EF0CF}
 :is(.section--dark,.cta-band,.on-dark) .tag-soon{border-color:rgba(123,150,255,.65);background:rgba(77,124,247,.24);color:#BFCBFF}
 .cta-panels__name .tag-new{margin-left:8px;vertical-align:2px}
-.statement__new::before{display:none}
-.statement__new .tag-new{margin:0 8px 0 0;vertical-align:0}
 .draft__label{margin:0 0 var(--space-5)}
 .draft__label .tag-new{margin:0}
 

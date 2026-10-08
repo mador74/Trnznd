@@ -253,6 +253,14 @@
 .statement__lead{font-size:clamp(1.2rem,1.05rem + .55vw,1.5rem);line-height:1.55;color:var(--midnight);max-width:44rem;margin:0 auto var(--space-5)}
 .statement__body{max-width:38rem;margin:0 auto var(--space-6);color:var(--text-body)}
 .statement__lead,.statement__body{text-wrap:balance}
+/* Group home: "Who we are" statement as a gliding card, with the founding disciplines */
+.glide.statement{border:0;overflow:hidden}
+.glide.statement .statement__title{font-size:clamp(2.1rem,1.1rem + 3.4vw,3.75rem);line-height:1.08}
+.statement__eyebrow{justify-content:center}
+.founders{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;list-style:none;margin:0 auto var(--space-6);padding:0}
+.founders li{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1px solid var(--border);border-radius:999px;background:var(--white);font-family:var(--font-secondary);font-weight:600;color:var(--midnight);box-shadow:var(--shadow-sm)}
+.founders .icon-tile{width:34px;height:34px;border-radius:50%;margin:0}
+.founders .icon-tile svg{width:17px;height:17px}
 /* "Coming soon" marker: base styles live in SWITCH_CSS (build.mjs) so all three sites share them */
 .cta-panels__name .tag-new{margin-left:8px;vertical-align:2px}
 .draft__label{margin:0 0 var(--space-5)}

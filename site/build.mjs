@@ -203,7 +203,7 @@ function groupFooter(r) {
           <li><strong>Trnznd Technologies</strong>UAE-incorporated technology and software company<br>DIFC Innovation Hub, UAE</li>
         </ul>
       </div>
-${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'What the group offers'], [`${r}contact.html`, 'Contact']])}
+${footerCol('Group', [[`${r}index.html`, 'The group'], [`${r}index.html#group`, 'Who we are'], [`${r}contact.html`, 'Contact']])}
 ${footerCol('Products', [[`${r}trnzit/index.html`, 'Trnzit'], [`${r}trnzit/platform.html`, 'Trnzit platform'], [`${r}zend/index.html`, 'Zend'], [`${r}zend/business.html`, 'Zend for business'], [TRNZIT_PORTAL_URL, 'Trnzit Portal'], [DASHBOARD_URL, 'Zend Portal']])}
 ${footerCol('Product legal', [[`${r}trnzit/legal/terms.html`, 'Trnzit terms'], [`${r}zend/legal/notice.html`, 'Zend notices & terms']])}
 ${footerCol('Group legal', [[`${r}legal/privacy.html`, 'Privacy'], [`${r}legal/cookies.html`, 'Cookies']])}

@@ -20,6 +20,7 @@ If anything here conflicts with what you see in the code, the code is the source
 | `screenshots/mobile-390/` | Full-page screenshot of every page at 390px wide (2x) | Visual reference |
 | `screenshots/states/` | Interactive states: Solutions menu, mobile menu, pricing monthly, FAQ open, form errors | Visual reference |
 | `graphics/` | Each diagram and product mock-up exported as a PNG (2x) | Reference only; the site uses live HTML/SVG versions |
+| `app-mockups/` | Sign-in screens (email step, password step; desktop and mobile) and the outside-activity alert email, in the site's style. For the app team, not the website | Reference only |
 | `brand/logo-svg/` | Master SVG logo set (the files the site uses) | Reference / other uses |
 | `brand/logo-png/` | PNG exports of every logo, 512px and 2048px wide, transparent | For use outside the website |
 | `brand/design-tokens.json` | Colours, type, spacing, radii, motion, mapped to the brand guide | Reference |

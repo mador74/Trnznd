@@ -118,3 +118,4 @@ Ordered by how much the answer changes the site.
 - Confirmed: alerts are an email plus an in-platform notification, sent as soon as the transaction is identified. Trnzit can't block transactions made outside the platform, as it holds no keys (stated in the FAQ).
 
 - Confirmed (Oct 2026): legal entity name is **Trnznd Technologies Ltd** (footer copyright, Terms and Privacy). Still needed: registered address, company number and governing law.
+- Confirmed (Oct 2026): sign-in safety note address www.trnznd.io is correct. "Create a free account" on the app sign-in links to the website form (`contact.html?plan=free`). The website form is the sign-up form; the portal's sign-up will mirror it and both feed the same back end.

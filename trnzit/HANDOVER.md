@@ -95,13 +95,13 @@ Notes on the CSP:
 ## 5. Things that are NOT wired up yet (developer action needed)
 
 1. **Contact / free-trial form** (`contact.html`). It validates in the browser, but `action="#"` and the JavaScript stops submission and shows a "not yet connected" message. To connect it:
-   - point the form at a real endpoint (CRM, email service or the Trnzit app's sign-up API);
+   - point the form at the Trnzit app's sign-up API. **Decision:** this website form is the sign-up form. The sign-up inside the Trnzit portal will mirror it (same fields, same rules) and both must feed the same back end, so an account created from either place is the same account;
    - replace the `status.textContent = …` placeholder at the end of `src/assets/js/site.js` with real submission and confirmation copy;
    - add spam protection, and record consent from the terms checkbox.
 
    Field names: `name`, `email`, `type` (organisation/individual), `organisation`, `plan` (free/business/premium/enterprise), `billing` (annual/monthly), `payment`, `terms`.
-2. **Plan pre-selection.** Every "Start free" and "Start 30-day free trial" button links to `contact.html?plan=<plan>&billing=<annual|monthly>`, and the form pre-selects from those parameters. If sign-up moves into the Trnzit app, change every link to `contact.html` (find them with `grep -rn 'contact.html' source/src`).
-3. **No "Sign in" link.** There's no link to the Trnzit app. Add one to `src/partials/header.html` once the app URL is known.
+2. **Plan pre-selection.** Every "Start free" and "Start 30-day free trial" button links to `contact.html?plan=<plan>&billing=<annual|monthly>`, and the form pre-selects from those parameters. Keep these links pointing at the website form.
+3. **Sign-in page (in the app).** See `app-mockups/` for the agreed two-step sign-in (email, then password or "Email me a sign-in link"). Its "Create a free account" button must link to the website form: `https://www.trnznd.io/trnzit/contact.html?plan=free`. The safety note names www.trnznd.io as the address to check (confirmed). The website has no "Sign in" link yet; add one to `src/partials/header.html` once the sign-in page's URL is known.
 4. **Email addresses.** Support, security and contact emails are placeholders (see the CSV).
 5. **Payment-method logos** (Visa, Mastercard, Google Pay, Apple Pay, PayPal, USDT, USDC) are simplified stand-ins in `src/partials/payment-logos.html`. Replace them with each brand's official artwork, used under that brand's guidelines, before launch.
 6. **Analytics and cookies.** None are installed. If you add any non-essential cookies or analytics, you'll need a consent mechanism first (UK PECR / EU ePrivacy), and the Cookies page must be updated.

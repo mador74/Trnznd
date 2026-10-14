@@ -119,3 +119,11 @@ Ordered by how much the answer changes the site.
 
 - Confirmed (Oct 2026): legal entity name is **Trnznd Technologies Ltd** (footer copyright, Terms and Privacy). Still needed: registered address, company number and governing law.
 - Confirmed (Oct 2026): sign-in safety note address www.trnznd.io is correct. "Create a free account" on the app sign-in links to the website form (`contact.html?plan=free`). The website form is the sign-up form; the portal's sign-up will mirror it and both feed the same back end.
+
+## Sign-in, sign-up and MFA flow (Oct 2026)
+
+- **Existing user:** email → password, or "Email me a sign-in link" → MFA code from authenticator app → portal. MFA is asked on every sign-in.
+- **New user:** "Create a free account" (website form) → welcome email with "Confirm my email" → back to the sign-in page showing "Email confirmed" → set up MFA (QR code plus manual key, verify a 6-digit code) → choose "For myself" or "For an organisation" (+ organisation name; the creator becomes Account Owner) → portal.
+- New users have no password at first: they sign in by emailed link and can add a password later in Settings.
+- MFA can be switched off later in portal Settings: individual accounts by the user; multi-user (organisation) accounts only by the Account Owner (whoever created the account) or Authorised Staff, according to that organisation's own policy.
+- **Open:** recovery if a user loses their authenticator app ("Can't use your authenticator app?" link on the MFA screen); sign-in link and confirmation link expiry times; whether the confirmation link signs the user straight in (mock-ups assume it does, landing on "Email confirmed").

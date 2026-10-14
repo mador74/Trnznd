@@ -116,3 +116,5 @@ Ordered by how much the answer changes the site.
 - Confirmed: a transaction made outside Trnzit on any connection (wallets, exchanges, custodians) automatically triggers an email and an alert. All plans, including Free. For organisations, administrators choose who is alerted per connection.
 - Site wording: "settlements, which are most often made in stablecoins" is the expected use, not a measured statistic.
 - Confirmed: alerts are an email plus an in-platform notification, sent as soon as the transaction is identified. Trnzit can't block transactions made outside the platform, as it holds no keys (stated in the FAQ).
+
+- Confirmed (Oct 2026): legal entity name is **Trnznd Technologies Ltd** (footer copyright, Terms and Privacy). Still needed: registered address, company number and governing law.

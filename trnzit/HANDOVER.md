@@ -107,9 +107,9 @@ Notes on the CSP:
 
 ## 6. Placeholders on the live site
 
-Unfinished content is wrapped in `<span class="ph">…</span>` and shows on the site as a highlighted box, so nothing unconfirmed can go live unnoticed. `docs/placeholders.csv` lists all 55, with file and line number. They fall into these groups:
+Unfinished content is wrapped in `<span class="ph">…</span>` and shows on the site as a highlighted box, so nothing unconfirmed can go live unnoticed. `docs/placeholders.csv` lists all 54, with file and line number. They fall into these groups:
 
-- **Contact details:** support, security and contact emails; phone; legal entity name.
+- **Contact details:** support, security and contact emails; phone; registered address and company number for Trnznd Technologies Ltd.
 - **Legal:** Terms, Privacy and Cookies pages are structured outlines awaiting counsel. There's also a legal review of the financial-promotion wording on the Trade & convert section and the Providers page.
 - **Technical sign-off:** the draft security practices (dashed box on Security & Governance, and one FAQ answer), API scopes per provider, authentication options, export formats.
 - **Product scope:** which plans include multi-sig wallets and trading ("To confirm" cells in the pricing table), supported custodians, stablecoins per network, accepted USDT/USDC payment networks, role names.

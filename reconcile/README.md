@@ -22,7 +22,10 @@ npm run dev        # http://localhost:5174
 npm test           # unit tests (matching, amounts, CSV, chain parsers)
 npm run build      # type-check + production build to dist/
 npm run publish:pages   # build and copy to ../docs/reconcile/ for GitHub Pages
+npm run build:artifact  # hosted-preview build for a claude.ai artifact (dist-artifact/)
 ```
+
+The hosted-preview build (`VITE_HOSTED_PREVIEW=1`) is for running inside a claude.ai artifact, which blocks calls to outside sites and direct downloads. In that build blockchain sync is switched off (demo data and CSV import still work), a banner says so, and exports go through the host's download confirmation. Everything else is identical.
 
 The build is static (no server). Open **Overview → Explore with demo data** to try it without real wallets.
 

@@ -8,9 +8,11 @@ import { addDays, formatDate, todayISO, type DateOrder } from '../lib/dates';
 import { outstanding, type RequestStatus, REQUEST_STATUS_LABEL } from '../lib/status';
 import { counterpartyOf, uniqueAmount } from '../lib/match';
 import { buildRequests, parseCSV, requestTemplateCSV, type RequestImportRow } from '../lib/csv';
-import { download } from '../lib/exports';
+import { saveFile } from './save';
 import { navigate, toast, useModel } from './hooks';
+import { HOSTED } from '../lib/env';
 import { Addr, Amount, copyText, Empty, Field, Icon, Modal, Net, QR, RequestBadge, Seg, TxLink } from './kit';
+import { askConfirm, askText } from './dialogs';
 
 export function Requests({ openId }: { openId?: string }) {
   const { data, d } = useModel();
@@ -422,8 +424,8 @@ function RequestDetail({ req, onClose, onEdit }: { req: PaymentRequest; onClose:
           {!allocs.length && (
             <button
               className="btn danger sm"
-              onClick={() => {
-                if (!window.confirm(`Delete ${req.number}? This cannot be undone.`)) return;
+              onClick={async () => {
+                if (!(await askConfirm(`Delete ${req.number}? This cannot be undone.`, { title: 'Delete request', confirmLabel: 'Delete', danger: true }))) return;
                 deleteRequest(req.id);
                 onClose();
               }}
@@ -435,7 +437,7 @@ function RequestDetail({ req, onClose, onEdit }: { req: PaymentRequest; onClose:
             {req.voided ? 'Reinstate' : 'Void'}
           </button>
           <span className="grow" />
-          <a className="btn sm" href={`#/requests/${req.id}/print`} target="_blank" rel="noreferrer">
+          <a className="btn sm" href={`#/requests/${req.id}/print`}>
             <Icon name="print" /> Print / PDF
           </a>
           <button className="btn sm primary" onClick={onEdit}>
@@ -519,8 +521,8 @@ function RequestDetail({ req, onClose, onEdit }: { req: PaymentRequest; onClose:
           {out > 0 && !req.voided && (
             <button
               className="btn xs"
-              onClick={() => {
-                const reason = window.prompt(`Write off the remaining ${formatAmount(out)} ${req.token}? Enter a reason:`, 'Short payment / bank or exchange fee');
+              onClick={async () => {
+                const reason = await askText(`Write off the remaining ${formatAmount(out)} ${req.token} on ${req.number}. The reason is kept in the audit trail.`, { title: 'Write off balance', label: 'Reason', defaultValue: 'Short payment / bank or exchange fee', confirmLabel: 'Write off' });
                 if (reason) addAdjustment(req.id, out, reason);
               }}
             >
@@ -620,9 +622,19 @@ export function PrintRequest({ id }: { id: string }) {
   return (
     <div className="print-page">
       <div className="print-actions">
-        <button className="btn primary" onClick={() => window.print()}>
+        <button
+          className="btn primary"
+          onClick={() => {
+            try {
+              window.print();
+            } catch {
+              toast('Printing is not available in this view.', 'error');
+            }
+          }}
+        >
           <Icon name="print" /> Print or save as PDF
         </button>
+        {HOSTED && <span className="small" style={{ color: '#4b5563', alignSelf: 'center' }}>Printing may be blocked in this hosted preview; it works when the app runs on its own.</span>}
         <a className="btn" href={`#/requests/${req.id}`}>
           Back
         </a>
@@ -719,7 +731,7 @@ function ImportRequestsDialog({ onClose }: { onClose: () => void }) {
       onClose={onClose}
       footer={
         <>
-          <button className="btn ghost" onClick={() => download('payment-requests-template.csv', requestTemplateCSV())}>
+          <button className="btn ghost" onClick={() => void saveFile('payment-requests-template.csv', requestTemplateCSV())}>
             <Icon name="download" /> Template
           </button>
           <span className="grow" />

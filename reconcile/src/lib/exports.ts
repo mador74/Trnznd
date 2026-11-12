@@ -152,9 +152,31 @@ export function parseBackup(text: string): AppData {
   return obj as AppData;
 }
 
-export function download(filename: string, content: string, mime = 'text/csv;charset=utf-8') {
+interface HostDownloads {
+  save(req: { filename: string; data: string | Blob }): Promise<{ status: string }>;
+}
+declare global {
+  interface Window {
+    claude?: { use(name: string): Promise<unknown> };
+  }
+}
+
+/**
+ * Save a generated file. Inside a claude.ai artifact the page may not download directly,
+ * so the host's `downloads` capability is used (the viewer confirms the save); everywhere
+ * else a normal browser download is started. Rejects with { code: 'declined' } when the
+ * viewer says no.
+ */
+export async function download(filename: string, content: string, mime = 'text/csv;charset=utf-8'): Promise<void> {
   // A UTF-8 BOM helps Excel open non-ASCII counterparty names correctly.
-  const body = mime.startsWith('text/csv') ? '﻿' + content : content;
+  const body = mime.startsWith('text/csv') ? '\uFEFF' + content : content;
+  if (typeof window !== 'undefined' && window.claude?.use) {
+    const host = (await window.claude.use('downloads').catch(() => null)) as HostDownloads | null;
+    if (host) {
+      await host.save({ filename, data: body });
+      return;
+    }
+  }
   const blob = new Blob([body], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

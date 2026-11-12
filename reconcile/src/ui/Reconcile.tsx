@@ -10,6 +10,7 @@ import { nameResolver } from '../lib/names';
 import { navigate, toast, useModel, type Model } from './hooks';
 import { Addr, Amount, ConfidenceBadge, DirIcon, Empty, Field, Icon, Modal, Net, TxLink } from './kit';
 import { RequestForm } from './Requests';
+import { askConfirm } from './dialogs';
 
 type Tab = 'todo' | 'done' | 'internal';
 
@@ -69,8 +70,8 @@ export function Reconcile() {
         <button
           className="btn primary"
           disabled={!plan.length}
-          onClick={() => {
-            if (!window.confirm(`Apply ${plan.length} high-confidence match${plan.length === 1 ? '' : 'es'}? You can undo any of them from the Reconciled tab.`)) return;
+          onClick={async () => {
+            if (!(await askConfirm(`Apply ${plan.length} high-confidence match${plan.length === 1 ? '' : 'es'}? You can undo any of them from the Reconciled tab.`, { title: 'Auto-match', confirmLabel: 'Apply matches' }))) return;
             const n = applySuggestions(plan);
             toast(`${n} transaction${n === 1 ? '' : 's'} auto-matched.`);
           }}

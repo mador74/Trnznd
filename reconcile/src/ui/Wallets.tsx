@@ -7,6 +7,7 @@ import { formatDate } from '../lib/dates';
 import { toast, useModel } from './hooks';
 import { Addr, Empty, Field, Icon, Modal, Net } from './kit';
 import { runSync, useSyncState } from './syncing';
+import { askConfirm } from './dialogs';
 
 export function Wallets() {
   const { data } = useModel();
@@ -91,10 +92,10 @@ export function Wallets() {
                       </button>{' '}
                       <button
                         className="btn xs ghost"
-                        onClick={() => {
+                        onClick={async () => {
                           const n = txCount(w.id);
-                          if (!window.confirm(`Remove wallet “${w.label}”?`)) return;
-                          const drop = n > 0 && window.confirm(`Also delete its ${n} transaction(s) and their matches? Press Cancel to keep them.`);
+                          if (!(await askConfirm(`Remove wallet “${w.label}”?`, { title: 'Remove wallet', confirmLabel: 'Remove', danger: true }))) return;
+                          const drop = n > 0 && (await askConfirm(`Also delete its ${n} transaction(s) and their matches?`, { title: 'Its transactions', confirmLabel: 'Delete them', cancelLabel: 'Keep them', danger: true }));
                           removeWallet(w.id, drop);
                         }}
                       >
@@ -257,8 +258,8 @@ function ContactDialog({ contact, onClose }: { contact?: Contact; onClose: () =>
           {contact && (
             <button
               className="btn danger sm"
-              onClick={() => {
-                if (!window.confirm(`Delete contact “${contact.name}”? Requests keep the name but lose the link.`)) return;
+              onClick={async () => {
+                if (!(await askConfirm(`Delete contact “${contact.name}”? Requests keep the name but lose the link.`, { title: 'Delete contact', confirmLabel: 'Delete', danger: true }))) return;
                 removeContact(contact.id);
                 onClose();
               }}

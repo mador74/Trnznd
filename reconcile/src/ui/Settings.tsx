@@ -5,6 +5,7 @@ import { formatAmount, parseAmount, toDecimalString } from '../lib/amount';
 import { SOLANA_PUBLIC_RPC } from '../chains/solana';
 import { toast, useModel } from './hooks';
 import { Field } from './kit';
+import { askConfirm } from './dialogs';
 
 export function SettingsPage() {
   const { data } = useModel();
@@ -101,8 +102,8 @@ export function SettingsPage() {
             <div>
               <button
                 className="btn"
-                onClick={() => {
-                  if (data.requests.length + data.transactions.length && !window.confirm('Replace all current data with the demo data set?')) return;
+                onClick={async () => {
+                  if (data.requests.length + data.transactions.length && !(await askConfirm('Replace all current data with the demo data set?', { title: 'Load demo data', confirmLabel: 'Replace', danger: true }))) return;
                   replaceAll(buildDemo(), 'Demo data loaded');
                   toast('Demo data loaded.');
                 }}
@@ -121,8 +122,8 @@ export function SettingsPage() {
             <div>
               <button
                 className="btn danger"
-                onClick={() => {
-                  if (!window.confirm('Delete ALL data in this browser? This cannot be undone.')) return;
+                onClick={async () => {
+                  if (!(await askConfirm('Delete ALL data in this browser? This cannot be undone.', { title: 'Clear all data', confirmLabel: 'Delete everything', danger: true }))) return;
                   resetAll();
                   toast('All data cleared.');
                 }}

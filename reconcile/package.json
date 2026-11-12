@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "publish:pages": "npm run build && rm -rf ../docs/reconcile && cp -r dist ../docs/reconcile",
+    "build:artifact": "tsc --noEmit && VITE_HOSTED_PREVIEW=1 vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { getState } from '../lib/store';
 import { syncWallet } from '../chains/sync';
 import { toast } from './hooks';
+import { HOSTED } from '../lib/env';
 
 let running = false;
 let message = '';
@@ -21,6 +22,10 @@ export function useSyncState(): { running: boolean; message: string } {
 
 export async function runSync(walletIds?: string[]) {
   if (running) return;
+  if (HOSTED) {
+    toast('Blockchain sync is switched off in this hosted preview because the host blocks calls to outside sites. Use the demo data or CSV import, or run the app on its own to sync.', 'error', 8000);
+    return;
+  }
   const wallets = getState().wallets.filter((w) => !w.demo && (!walletIds || walletIds.includes(w.id)));
   if (!wallets.length) {
     toast(getState().wallets.length ? 'Demo wallets are not synced. Add a real wallet address to fetch on-chain transfers.' : 'Add a wallet first.', 'error');

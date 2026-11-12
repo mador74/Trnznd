@@ -12,6 +12,8 @@ import { Wallets } from './Wallets';
 import { Reports } from './Reports';
 import { SettingsPage } from './Settings';
 import { runSync, useSyncState } from './syncing';
+import { DialogHost } from './dialogs';
+import { HOSTED } from '../lib/env';
 
 const NAV = [
   { key: 'dashboard', label: 'Overview', icon: 'home' },
@@ -31,8 +33,19 @@ export function App() {
     document.documentElement.dataset.theme = data.settings.theme;
   }, [data.settings.theme]);
   if (!hydrated) return <div className="empty">Loading…</div>;
-  if (route[0] === 'requests' && route[2] === 'print') return <PrintRequest id={route[1]} />;
-  return <Shell route={route} />;
+  if (route[0] === 'requests' && route[2] === 'print')
+    return (
+      <>
+        <PrintRequest id={route[1]} />
+        <DialogHost />
+      </>
+    );
+  return (
+    <>
+      <Shell route={route} />
+      <DialogHost />
+    </>
+  );
 }
 
 function Shell({ route }: { route: string[] }) {
@@ -73,7 +86,7 @@ function Shell({ route }: { route: string[] }) {
             </div>
           </div>
           {sync.running && <span className="small muted">{sync.message}</span>}
-          <button className="btn sm" onClick={() => runSync()} disabled={sync.running || !realWallets} title={realWallets ? 'Fetch new USDT/USDC transfers for all wallets' : 'Add a real wallet to sync'}>
+          <button className="btn sm" onClick={() => runSync()} disabled={HOSTED || sync.running || !realWallets} title={HOSTED ? 'Sync is off in the hosted preview' : realWallets ? 'Fetch new USDT/USDC transfers for all wallets' : 'Add a real wallet to sync'}>
             <Icon name="sync" /> {sync.running ? 'Syncing…' : 'Sync wallets'}
           </button>
           <button className="btn sm ghost" onClick={() => updateSettings({ theme: data.settings.theme === 'dark' ? 'light' : 'dark' })} title="Toggle light / dark">
@@ -81,6 +94,11 @@ function Shell({ route }: { route: string[] }) {
           </button>
         </header>
         <main className="content">
+          {HOSTED && (
+            <div className="notice warn small">
+              <strong>Hosted preview.</strong> This copy runs inside claude.ai, which blocks calls to outside sites, so blockchain sync is off: use <em>Explore with demo data</em> or CSV import. Data is kept only in this browser and may not survive here, so use Reports &amp; export → Backup for anything you want to keep.
+            </div>
+          )}
           {persistError && <div className="notice error">{persistError}</div>}
           {page === 'dashboard' && <Dashboard />}
           {page === 'reconcile' && <Reconcile />}

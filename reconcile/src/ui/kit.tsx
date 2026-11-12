@@ -60,7 +60,7 @@ export function Net({ chain, token, long = false }: { chain: Chain; token?: Toke
 }
 
 export function copyText(text: string) {
-  void navigator.clipboard?.writeText(text);
+  navigator.clipboard?.writeText(text).catch(() => undefined);
 }
 
 export function Addr({ chain, address, label, link = true, full = false }: { chain: Chain; address: string; label?: string; link?: boolean; full?: boolean }) {

@@ -4,10 +4,12 @@ import { CHAINS, TOKENS } from '../lib/types';
 import { replaceAll } from '../lib/store';
 import { CHAIN_NAMES } from '../lib/chains';
 import { type ExportDateFormat, formatDate, todayISO } from '../lib/dates';
-import { backupJSON, download, filterTransactions, parseBackup, reconciliationCSV, requestsCSV, statementCSV, transactionHistoryCSV, type TxFilter } from '../lib/exports';
+import { backupJSON, filterTransactions, parseBackup, reconciliationCSV, requestsCSV, statementCSV, transactionHistoryCSV, type TxFilter } from '../lib/exports';
 import { toast, useModel } from './hooks';
 import { Field, Icon } from './kit';
 import { FilePick } from './Requests';
+import { saveFile } from './save';
+import { askConfirm } from './dialogs';
 
 export function Reports() {
   const { data, d } = useModel();
@@ -50,7 +52,7 @@ export function Reports() {
             <h2>Transaction history</h2>
             <p className="small muted">Every transfer with its reconciliation status, matched requests, explanation and explorer link.</p>
           </div>
-          <button className="btn primary" disabled={!txs.length} onClick={() => download(`${slug}-transactions-${stamp}.csv`, transactionHistoryCSV(data, d, txs, fmt))}>
+          <button className="btn primary" disabled={!txs.length} onClick={() => void saveFile(`${slug}-transactions-${stamp}.csv`, transactionHistoryCSV(data, d, txs, fmt))}>
             <Icon name="download" /> Download {txs.length} row{txs.length === 1 ? '' : 's'}
           </button>
         </div>
@@ -111,7 +113,7 @@ export function Reports() {
               <h2>Payment requests</h2>
               <p className="small muted">Amount, settled, outstanding, written off, status and settling transactions.</p>
             </div>
-            <button className="btn" disabled={!data.requests.length} onClick={() => download(`${slug}-payment-requests-${stamp}.csv`, requestsCSV(data, d, fmt))}>
+            <button className="btn" disabled={!data.requests.length} onClick={() => void saveFile(`${slug}-payment-requests-${stamp}.csv`, requestsCSV(data, d, fmt))}>
               <Icon name="download" /> CSV
             </button>
           </div>
@@ -123,7 +125,7 @@ export function Reports() {
               <h2>Reconciliation audit trail</h2>
               <p className="small muted">One line per match and write-off: which transaction settled which request, how and when.</p>
             </div>
-            <button className="btn" disabled={!data.allocations.length && !data.adjustments.length} onClick={() => download(`${slug}-reconciliation-${stamp}.csv`, reconciliationCSV(data, d, fmt))}>
+            <button className="btn" disabled={!data.allocations.length && !data.adjustments.length} onClick={() => void saveFile(`${slug}-reconciliation-${stamp}.csv`, reconciliationCSV(data, d, fmt))}>
               <Icon name="download" /> CSV
             </button>
           </div>
@@ -170,7 +172,7 @@ export function Reports() {
               disabled={!stmtWallet}
               onClick={() => {
                 const w = data.wallets.find((x) => x.id === stmtWallet)!;
-                download(`${slug}-${w.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${stmtToken}-statement-${stamp}.csv`, statementCSV(data, d, stmtWallet, stmtToken, fmt, { from: from || undefined, to: to || undefined }));
+                void saveFile(`${slug}-${w.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${stmtToken}-statement-${stamp}.csv`, statementCSV(data, d, stmtWallet, stmtToken, fmt, { from: from || undefined, to: to || undefined }));
               }}
             >
               <Icon name="download" /> Statement CSV
@@ -192,7 +194,7 @@ export function Reports() {
               <input type="checkbox" checked={withKeys} onChange={(e) => setWithKeys(e.target.checked)} /> Include API keys in the file
             </label>
             <div>
-              <button className="btn primary" onClick={() => download(`${slug}-backup-${stamp}.json`, backupJSON(data, withKeys), 'application/json')}>
+              <button className="btn primary" onClick={() => void saveFile(`${slug}-backup-${stamp}.json`, backupJSON(data, withKeys), 'application/json')}>
                 <Icon name="download" /> Download backup (.json)
               </button>
             </div>
@@ -203,7 +205,7 @@ export function Reports() {
             onFile={async (f) => {
               try {
                 const parsed = parseBackup(await f.text());
-                if (!window.confirm(`Replace ALL current data with “${f.name}” (${parsed.requests.length} requests, ${parsed.transactions.length} transactions)? This cannot be undone.`)) return;
+                if (!(await askConfirm(`Replace ALL current data with “${f.name}” (${parsed.requests.length} requests, ${parsed.transactions.length} transactions)? This cannot be undone.`, { title: 'Restore backup', confirmLabel: 'Replace data', danger: true }))) return;
                 const keepKeys = { etherscanApiKey: data.settings.etherscanApiKey, trongridApiKey: data.settings.trongridApiKey };
                 replaceAll({ ...parsed, settings: { ...keepKeys, ...parsed.settings } });
                 toast('Backup restored.');

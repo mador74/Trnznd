@@ -15,6 +15,7 @@ import { Addr, Amount, DirIcon, Empty, Field, Icon, Modal, Net, TxBadge } from '
 import { FilePick } from './Requests';
 import { ExplainDialog, MatchDialog } from './Reconcile';
 import { runSync, useSyncState } from './syncing';
+import { askConfirm } from './dialogs';
 
 const PAGE = 200;
 
@@ -223,8 +224,8 @@ function TxDetail({ tx, onClose }: { tx: Transaction; onClose: () => void }) {
           <>
             <button
               className="btn danger sm"
-              onClick={() => {
-                if (!window.confirm('Delete this transaction from the ledger? Its matches are removed too. A later sync or import may add it again.')) return;
+              onClick={async () => {
+                if (!(await askConfirm('Delete this transaction from the ledger? Its matches are removed too. A later sync or import may add it again.', { title: 'Delete transaction', confirmLabel: 'Delete', danger: true }))) return;
                 deleteTransaction(tx.id);
                 onClose();
               }}

@@ -71,11 +71,17 @@ export async function hydrate(): Promise<void> {
       if (ls) state = normalise(JSON.parse(ls));
     }
   } catch {
-    const ls = typeof localStorage !== 'undefined' ? localStorage.getItem(LS_KEY) : null;
-    if (ls) state = normalise(JSON.parse(ls));
+    try {
+      const ls = localStorage.getItem(LS_KEY);
+      if (ls) state = normalise(JSON.parse(ls));
+    } catch {
+      // Storage is blocked (e.g. a sandboxed or private view): run in memory and say so.
+      persistError = 'This browser view does not allow saving, so changes will be lost when the page closes. Download a backup from Reports & export to keep your work.';
+    }
+  } finally {
+    hydrated = true;
+    emit();
   }
-  hydrated = true;
-  emit();
 }
 
 /** Fill in fields added in later versions so older backups keep loading. */
